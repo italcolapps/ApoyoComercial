@@ -1,0 +1,240 @@
+<div class="header-container">
+  <!-- Título y Ruta -->
+  <div class="breadcrumb">
+    <span class="breadcrumb-path">Administración</span>
+    <span class="breadcrumb-separator">></span>
+    <span class="breadcrumb-current">Usuarios</span>
+  </div>
+
+  <!-- Encabezado Principal -->
+  <div class="header-content">
+    <div class="title-section">
+      <h1 class="page-title">Usuarios</h1>
+      <div class="stats">
+        <p-badge value="No Usuarios: {{listaUsuarios.length}}" severity="info" styleClass="custom-badge"></p-badge>
+      </div>
+    </div>
+
+    <!-- Botones y Selector -->
+    <div class="action-section">
+      <div class="line-dropdown">
+        <p-dropdown 
+          [options]="listaLineas" 
+          [(ngModel)]="selectedLinea" 
+          optionLabel="nombre"
+          [showClear]="true"
+          (onChange)="onLineaChange($event)">
+        </p-dropdown>
+      </div>
+      <button class="btn add-btn" (click)="showModal()">
+        <i class="pi pi-user-plus"></i>
+        <span>Agregar</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+  <!-- Tabla de Usuarios -->
+  <div class="table-container">
+    <p-table [value]="listaUsuarios" 
+             [paginator]="true" 
+             [rows]="10"
+             [showCurrentPageReport]="true" 
+             [rowsPerPageOptions]="[10,25,50]"
+             styleClass="p-datatable-sm p-datatable-striped"
+             [loading]="loading"
+             [sortMode]="'multiple'">
+      <ng-template pTemplate="header">
+        <tr>
+          <th colspan="6" class="table-header">
+            <ion-icon name="people-outline" class="header-icon"></ion-icon>
+            LISTADO DE USUARIOS
+          </th>
+        </tr>
+        <tr>
+          <th pSortableColumn="tipoDocumento">
+            Tipo Doc
+            <p-sortIcon field="tipoDocumento"></p-sortIcon>
+            <p-columnFilter type="text" field="tipoDocumento" display="menu"></p-columnFilter>
+          </th>
+          <th pSortableColumn="numDocumento">
+            No Documento
+            <p-sortIcon field="numDocumento"></p-sortIcon>
+            <p-columnFilter type="text" field="numDocumento" display="menu"></p-columnFilter>
+          </th>
+          <th pSortableColumn="nombre">
+            Nombre
+            <p-sortIcon field="nombre"></p-sortIcon>
+            <p-columnFilter type="text" field="nombre" display="menu"></p-columnFilter>
+          </th>
+          <th pSortableColumn="rolUser">
+            Rol
+            <p-sortIcon field="rolUser"></p-sortIcon>
+            <p-columnFilter type="text" field="rolUser" display="menu"></p-columnFilter>
+          </th>
+          <th pSortableColumn="estadoUsuario">
+            Estado
+            <p-sortIcon field="estadoUsuario"></p-sortIcon>
+            <p-columnFilter type="boolean" field="estadoUsuario" display="menu"></p-columnFilter>
+          </th>
+          <th>Acciones</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-usuario>
+        <tr>
+          <td class="text-center">{{usuario.tipodocumento}}</td>
+          <td class="text-center">{{usuario.numDocumento}}</td>
+          <td class="text-center">{{usuario.nombre}} {{usuario.apellido}}</td>
+          <td class="text-center">{{usuario.rolUser}}</td>
+          <td class="text-center">
+            <span [class]="'estado-badge ' + (usuario.estadoUsuario ? 'activo' : 'inactivo')">
+              {{usuario.estadoUsuario ? 'Activo' : 'Inactivo'}}
+            </span>
+          </td>
+          <td class="text-center">
+            <button pButton 
+                    pTooltip="Editar" 
+                    tooltipPosition="top"
+                    icon="pi pi-pencil" 
+                    class="p-button-rounded p-button-primary p-button-sm"
+                    (click)="editarUsuario(usuario)">
+            </button>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="6" class="text-center">
+            {{ selectedLinea ? 'No hay usuarios registrados para esta línea' : 'Seleccione una línea para ver los usuarios' }}
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+
+
+
+<p-dialog [(visible)]="displayModal" 
+          [modal]="true" 
+          [header]="edit ? 'Actualizar Usuario' : 'Agregar Usuario'" 
+          [style]="{ width: '70vw' }">
+  <form [formGroup]="UsuarioForm" (ngSubmit)="edit ? actualizarUsuario() : RegistrarUsuarios()">
+    <ion-grid class="form-grid">
+
+            <!-- Fila 2: Tipo de Documento y Número de Documento -->
+            <ion-row>
+              <ion-col size="12" size-sm="6" size-lg="6">
+                <p-floatLabel>
+                  <p-dropdown 
+                    id="idTipoDocumento"
+                    [options]="listaTipoDocumento"
+                    formControlName="idTipoDocumento"
+                    optionLabel="nombre"
+                    optionValue="id"
+                    placeholder="Seleccionar Tipo de Documento"
+                    class="compact-dropdown">
+                  </p-dropdown>
+                  <label for="idTipoDocumento">Tipo de Documento</label>
+                </p-floatLabel>
+              </ion-col>
+              <ion-col size="12" size-sm="6" size-lg="6">
+                <p-floatLabel>
+                  <input id="numDocumento" type="text" pInputText formControlName="numDocumento" class="compact-input" />
+                  <label for="numDocumento">Número de Documento</label>
+                </p-floatLabel>
+              </ion-col>
+            </ion-row>
+      
+      <!-- Fila 1: Nombre y Apellido -->
+      <ion-row>
+        <ion-col size="12" size-sm="6" size-lg="6">
+          <p-floatLabel>
+            <input id="nombre" type="text" pInputText formControlName="nombre" class="compact-input" />
+            <label for="nombre">Nombre</label>
+          </p-floatLabel>
+        </ion-col>
+        <ion-col size="12" size-sm="6" size-lg="6">
+          <p-floatLabel>
+            <input id="apellido" type="text" pInputText formControlName="apellido" class="compact-input" />
+            <label for="apellido">Apellido</label>
+          </p-floatLabel>
+        </ion-col>
+      </ion-row>
+
+      <!-- Fila 3: Teléfono y Email -->
+      <ion-row>
+        <ion-col size="12" size-sm="6" size-lg="6">
+          <p-floatLabel>
+            <input id="telefono" type="text" pInputText formControlName="telefono" class="compact-input" />
+            <label for="telefono">Teléfono</label>
+          </p-floatLabel>
+        </ion-col>
+        <ion-col size="12" size-sm="6" size-lg="6">
+          <p-floatLabel>
+            <input id="email" type="email" pInputText formControlName="email" class="compact-input" />
+            <label for="email">Email</label>
+          </p-floatLabel>
+        </ion-col>
+      </ion-row>
+
+      <!-- Fila 4: Rol y Línea -->
+      <ion-row>
+        <ion-col size="12" size-sm="6" size-lg="6">
+          <p-floatLabel>
+            <p-dropdown 
+              id="idRol"
+              [options]="listaRoles"
+              formControlName="idRol"
+              optionLabel="nombre"
+              optionValue="id"
+              placeholder="Seleccionar Rol"
+              class="compact-dropdown">
+            </p-dropdown>
+            <label for="idRol">Rol</label>
+          </p-floatLabel>
+        </ion-col>
+        
+        <ion-col size="12" size-sm="6" size-lg="6">
+          <p-floatLabel>
+            <p-multiSelect 
+              id="linea"
+              [options]="listaLineas"
+              formControlName="linea"
+              optionLabel="nombre"
+              optionValue="id"
+              defaultLabel="Seleccionar Líneas"
+              [style]="{'width': '100%'}"
+              [panelStyle]="{'width': '100%'}"
+              display="chip"
+              class="compact-dropdown">
+            </p-multiSelect>
+            <label for="linea">Líneas</label>
+          </p-floatLabel>
+        </ion-col>
+      </ion-row>
+      <ion-row class="button-row">
+        <ion-col>
+          <div class="button-container">
+            <button pButton 
+                    type="submit" 
+                    [label]="edit ? 'Actualizar' : 'Guardar'"
+                    class="p-button-primary action-button"
+                    [disabled]="!UsuarioForm.valid">
+            </button>
+            <button pButton 
+                    type="button" 
+                    label="Cancelar" 
+                    class="p-button-secondary action-button" 
+                    (click)="closeModal()">
+            </button>
+          </div>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </form>
+</p-dialog>
+
+<p-confirmDialog [style]="{width: '450px'}" 
+                acceptButtonStyleClass="p-button-success" 
+                rejectButtonStyleClass="p-button-secondary">
+</p-confirmDialog>

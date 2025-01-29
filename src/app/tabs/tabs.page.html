@@ -1,20 +1,50 @@
-<ion-tabs>
+<div class="card">
+    <p-toolbar 
+        styleClass="bg-blue-gradient shadow-2" 
+        [style]="{ 'background-image': 'linear-gradient(to right, #bed1ee, #8baed9)' }">
+        
+        <!-- Logo -->
+        <ng-template pTemplate="start">
+            <img src="assets/img/italcol.png" alt="Logo Left" class="rounded-logo" />
+            <div class="user-info">
+                <span class="user-name">{{ userData.Nombre }} {{ userData.Apellido }}</span>
+                <span class="user-role">{{ RolText }}</span>
+            </div>
+        </ng-template>
+  
+        <!-- Botones -->
+        <ng-template pTemplate="center">
+            <div class="tabs-container">
+                <a 
+                    *ngFor="let tab of tabs; trackBy: trackByRoute"
+                    class="tab-item"
+                    [routerLink]="!tab.action && !tab.isSubMenuTrigger ? tab.route : null"
+                    routerLinkActive="active-tab"
+                    [routerLinkActiveOptions]="{ exact: true }"
+                    (click)="tab.action ? handleAction(tab.action) : (tab.isSubMenuTrigger ? toggleSubMenu() : null)">
+                    <div class="icon-container">
+                        <i [class]="tab.icon"></i>
+                        <span>{{ tab.label }}</span>
+                    </div>
+                </a>
+            </div>
+        </ng-template>
+    </p-toolbar>
+  
+    <div class="main-container">
+      <!-- Menú lateral -->
+      <div *ngIf="showSubMenu" class="lateral-buttons">
+          <button *ngFor="let item of subMenuItems"
+                  [routerLink]="item.route"
+                  class="lateral-button"
+                  [pTooltip]="item.label">
+              <i [class]="item.icon"></i>
+          </button>
+      </div>
 
-  <ion-tab-bar slot="bottom">
-    <ion-tab-button tab="tab1" href="/tabs/tab1">
-      <ion-icon aria-hidden="true" name="triangle"></ion-icon>
-      <ion-label>Tab 1</ion-label>
-    </ion-tab-button>
-
-    <ion-tab-button tab="tab2" href="/tabs/tab2">
-      <ion-icon aria-hidden="true" name="ellipse"></ion-icon>
-      <ion-label>Tab 2</ion-label>
-    </ion-tab-button>
-
-    <ion-tab-button tab="tab3" href="/tabs/tab3">
-      <ion-icon aria-hidden="true" name="square"></ion-icon>
-      <ion-label>Tab 3</ion-label>
-    </ion-tab-button>
-  </ion-tab-bar>
-
-</ion-tabs>
+      <!-- Contenido principal -->
+      <div class="content-container" [class.with-menu]="showSubMenu">
+        <router-outlet></router-outlet>
+      </div>
+    </div>
+  </div>

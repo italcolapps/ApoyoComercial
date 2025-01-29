@@ -1,0 +1,213 @@
+<div class="header-container">
+  <!-- Título y Ruta -->
+  <div class="breadcrumb">
+    <span class="breadcrumb-path">Seguimiento</span>
+    <span class="breadcrumb-separator">></span>
+    <span class="breadcrumb-current">Oportunidades</span>
+  </div>
+
+  <!-- Encabezado Principal -->
+  <div class="header-content">
+    <div class="title-section">
+      <h1 class="page-title">Oportunidades Comerciales</h1>
+    </div>
+
+        <!-- Botones y Selector -->
+        <div class="action-section">
+          <p-dropdown 
+            [options]="listaLineas" 
+            [(ngModel)]="selectedLinea" 
+            optionLabel="nombre"
+            [filter]="true"
+            filterBy="nombre" 
+            [showClear]="true"
+            placeholder="Filtrar por Línea"
+            styleClass="w-20rem"
+            (onChange)="onLineaChange($event)"
+            class="line-dropdown">
+          </p-dropdown>
+          <p-dropdown 
+            [options]="listaClientes" 
+            [(ngModel)]="selectedCliente" 
+            optionLabel="nombre"
+            [filter]="true"
+            filterBy="nombre" 
+            [showClear]="true"
+            placeholder="Filtrar por Cliente"
+            styleClass="w-20rem"
+            (onChange)="onClienteChange($event)"
+            class="line-dropdown">
+          </p-dropdown>
+          <p-dropdown 
+            [options]="listaVisitaClientes" 
+            [(ngModel)]="selectedVisita" 
+            optionLabel="actividadRealizada"
+            [filter]="true"
+            filterBy="actividadRealizada" 
+            [showClear]="true"
+            placeholder="Filtrar por Visita"
+            styleClass="w-20rem"
+            (onChange)="onVisitaChange($event)"
+            class="line-dropdown">
+        </p-dropdown>
+          <button class="btn add-btn" (click)="showModal()">
+            <i class="pi pi-briefcase"></i>
+            Agregar
+          </button>
+        </div>
+
+    </div>
+  </div>
+
+  <!-- Tabla de Oportunidades -->
+  <div class="table-container" *ngIf="selectedVisita && listaOportunidades.length > 0">
+    <p-table [value]="[1]" styleClass="p-datatable-sm vertical-table">
+      <ng-template pTemplate="header">
+        <div class="table-header-container">
+          <div class="header-title">
+            <i class="pi pi-briefcase"></i>
+            <span>Consulta de Oportunidades Comerciales</span>
+          </div>
+          <button pButton 
+                  icon="pi pi-pencil" 
+                  class="p-button-rounded p-button-primary p-button-sm"
+                  pTooltip="Editar Oportunidad"
+                  tooltipPosition="top"
+                  (click)="editarOportunidad(listaOportunidades[0])">
+          </button>
+        </div>
+      </ng-template>
+      <ng-template pTemplate="body">
+        <!-- Datos de la Visita -->
+        <tr>
+          <th>Actividad Realizada</th>
+          <td>{{selectedVisita.actividadRealizada}}</td>
+        </tr>
+        <tr>
+          <th>Calidad de Información</th>
+          <td>{{selectedVisita.calidadInformacion}}</td>
+        </tr>
+        <tr>
+          <th>Compromiso Director</th>
+          <td>{{selectedVisita.compromisoDirector}}</td>
+        </tr>
+        <tr>
+          <th>Compromiso Gerente Zona</th>
+          <td>{{selectedVisita.compromisoGerenteZona}}</td>
+        </tr>
+        <tr>
+          <th>Fecha Oportunidad</th>
+          <td>{{listaOportunidades[0].fecha | date:'dd/MM/yyyy HH:mm'}}</td>
+        </tr>
+        <tr>
+          <th>Descripción Oportunidad</th>
+          <td>{{listaOportunidades[0].descripcion}}</td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+
+  <p-dialog [(visible)]="displayModal" 
+             [modal]="true" 
+             [responsive]="true" 
+             [header]="(edit ? 'Actualizar Oportunidad Comercial - ' : 'Crear Oportunidad Comercial') ">
+          <ng-template pTemplate="header">
+            <div class="dialog-header">
+              <i class="pi pi-briefcase"></i>
+              <span>{{edit ? 'Actualizar Oportunidad Comercial - ' : 'Crear Oportunidad Comercial'}}</span>
+            </div>
+          </ng-template>
+
+          <form [formGroup]="OportunidadForm">
+            <ion-grid>
+              <ion-row class="form-row">
+                <ion-col size="12" size-md="6">
+                  <span class="p-float-label">
+                    <input pInputText [value]="selectedCliente?.nombre" readonly>
+                    <label>Nombre Cliente</label>
+                  </span>
+                </ion-col>
+                <ion-col size="12" size-md="6">
+                  <span class="p-float-label">
+                    <input pInputText [value]="selectedCliente?.canallistaText" readonly>
+                    <label>Canal</label>
+                  </span>
+                </ion-col>
+              </ion-row>
+
+              <ion-row class="form-row">
+                <ion-col size="12" size-md="6">
+                  <span class="p-float-label">
+                    <input pInputText [value]="selectedCliente?.tipoCliente" readonly>
+                    <label>Tipo Cliente</label>
+                  </span>
+                </ion-col>
+                <ion-col size="12" size-md="6">
+                  <span class="p-float-label">
+                    <input pInputText [value]="selectedCliente?.departamentoText + ' - ' + selectedCliente?.municipioText" readonly>
+                    <label>Ubicación</label>
+                  </span>
+                </ion-col>
+              </ion-row>
+
+              <ion-row class="form-row">
+                <ion-col size="12" size-md="6">
+                  <span class="p-float-label">
+                    <input pInputText [value]="selectedVisita?.toneladas" readonly>
+                    <label>Toneladas</label>
+                  </span>
+                </ion-col>
+
+                <ion-col size="12" size-md="6">
+                  <span class="p-float-label">
+                    <p-calendar formControlName="fecha" 
+                    [showIcon]="true"
+                    [showOnFocus]="false">
+                  </p-calendar>
+                    <label>Fecha Compromiso</label>
+                  </span>
+                </ion-col>
+              </ion-row>
+
+              <ion-row class="form-row" style="margin-bottom: 10px;">
+
+                <ion-col size="12">
+                  <span class="p-float-label">
+                    <textarea pInputTextarea formControlName="descripcion" rows="4"></textarea>
+                    <label>Descripcion</label>
+                  </span>
+                </ion-col>
+              </ion-row>
+
+
+                    <!-- Botones -->
+      <ion-row class="button-row">
+        <ion-col>
+          <div class="button-container">
+            <button pButton 
+                    type="submit" 
+                    [label]="edit ? 'Actualizar' : 'Guardar'"
+                    class="p-button-primary action-button"
+                    [disabled]="!OportunidadForm.valid"
+                    (click)="edit ? actualizarOportunidad() : RegistrarOportunidad()">
+            </button>
+            <button pButton 
+                    type="button" 
+                    label="Cancelar" 
+                    class="p-button-secondary action-button" 
+                    (click)="closeModal()">
+            </button>
+          </div>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+          </form>
+</p-dialog>
+
+    <!-- Confirm Dialog -->
+    <p-confirmDialog 
+      header="Confirmación" 
+      icon="pi pi-exclamation-triangle"
+      acceptLabel="Sí"
+      rejectLabel="No">
+    </p-confirmDialog>

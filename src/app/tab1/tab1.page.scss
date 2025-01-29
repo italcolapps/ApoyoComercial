@@ -1,0 +1,64 @@
+.form-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem;
+  display: flex;
+  justify-content: flex-start; 
+  margin-left: 5rem; 
+
+  .form-card {
+    width: 100%;
+    padding: 2rem;
+    background-color: #eaf3ff;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+
+    .p-card-header {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #2984c6;
+    }
+
+    p-fieldset {
+      border: 2px solid #bed1ee;
+      border-radius: 8px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      background-color: #ffffff;
+
+      legend {
+        font-size: 1.2rem;
+        font-weight: bold;
+        color: #2984c6;
+        padding: 0 0.5rem;
+      }
+
+      p-inputgroup {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-bottom: 1.5rem;
+
+        input,
+        textarea,
+        p-calendar {
+          width: 100%;
+        }
+
+        textarea {
+          resize: none;
+        }
+      }
+    }
+
+    .form-actions {
+      display: flex;
+      justify-content: center;
+      margin-top: 2rem;
+
+      button {
+        padding: 0.8rem 2rem;
+      }
+    }
+  }
+}

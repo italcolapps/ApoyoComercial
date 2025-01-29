@@ -1,0 +1,982 @@
+/* Contenedor Principal */
+.header-container {
+  padding: 16px;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+
+  .breadcrumb {
+    margin-bottom: 16px;
+    font-size: 14px;
+
+    .breadcrumb-path { color: #666; }
+    .breadcrumb-separator { margin: 0 8px; color: #999; }
+    .breadcrumb-current { color: #333; font-weight: 500; }
+  }
+
+  .header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+}
+
+/* Breadcrumb (ruta) */
+.breadcrumb {
+  font-size: 0.9rem;
+  color: #888;
+  margin-bottom: 1rem;
+
+  .breadcrumb-path {
+    font-weight: 600;
+    color: #555;
+  }
+
+  .breadcrumb-separator {
+    margin: 0 0.5rem;
+    color: #4e4d4d;
+  }
+
+  .breadcrumb-current {
+    font-weight: bold;
+    color: #333;
+  }
+}
+
+/* Encabezado Principal */
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Título y Estadísticas */
+.title-section {
+  display: flex;
+  flex-direction: column;
+
+  .page-title {
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 0.5rem;
+  }
+
+  .stats {
+    display: flex;
+    gap: 1.5rem;
+
+    .stat-item {
+      font-size: 0.9rem;
+      color: #666;
+      display: flex;
+      align-items: center;
+
+      .stat-icon {
+        font-size: 1.2rem;
+        color: #4a90e2;
+        margin-right: 0.5rem;
+      }
+    }
+
+    .line-dropdown {
+      min-width: 200px;
+
+      ::ng-deep {
+        .p-dropdown {
+          height: 2.2rem;
+
+          .p-dropdown-label {
+            padding-top: 0.3rem;
+            padding-bottom: 0.3rem;
+            font-size: 0.9rem;
+          }
+        }
+      }
+    }
+  }
+}
+
+/* Botones y Selector */
+.action-section {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: 1rem 0;
+
+  .line-dropdown {
+    min-width: 200px;
+
+    ::ng-deep {
+      .p-dropdown {
+        height: 2.2rem;
+
+        .p-dropdown-label {
+          padding-top: 0.3rem;
+          padding-bottom: 0.3rem;
+          font-size: 0.9rem;
+        }
+      }
+    }
+  }
+
+  .add-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 4px;
+    background-color: #4a90e2;
+    color: white;
+    cursor: pointer;
+    font-size: 0.9rem;
+    height: 2.2rem;
+
+    i {
+      font-size: 1rem;
+    }
+
+    &:hover {
+      background-color: var(--ion-color-primary-shade);
+    }
+  }
+}
+
+/* Grid para formularios */
+ion-grid {
+  padding: 8px;
+
+  ion-row {
+    margin-bottom: 8px;
+
+    ion-col {
+      padding: 4px;
+    }
+  }
+}
+
+/* Responsive adjustments for mobile */
+@media screen and (max-width: 768px) {
+  ion-grid {
+    padding: 4px;
+
+    ion-row {
+      margin-bottom: 6px;
+
+      ion-col {
+        padding: 2px;
+      }
+    }
+  }
+}
+
+/* Estilos para inputs y selectores */
+.compact-input,
+.compact-dropdown {
+  height: 2.5rem; /* Reduce la altura */
+  font-size: 0.85rem; /* Texto más pequeño */
+  display: flex;
+  justify-content: left;
+}
+
+.compact-dropdown .p-dropdown {
+  padding: 0.2rem 0.5rem; /* Ajustar padding interno del selector */
+}
+
+.p-float-label {
+  margin-bottom: 0.5rem; /* Espaciado entre float-labels */
+
+  input,
+  .p-dropdown {
+    font-size: 0.85rem; /* Reducir tamaño de texto */
+    padding: 0.4rem; /* Compactar inputs y selectores */
+  }
+
+  label {
+    font-size: 0.8rem; /* Tamaño más pequeño para la etiqueta */
+    font-weight: bold; /* Destacar etiquetas */
+    color: #4a90e2; /* Color del texto de la etiqueta */
+  }
+
+  input:focus,
+  .p-dropdown:focus {
+    outline: none;
+    border-color: #4a90e2; /* Cambiar color del borde al enfocar */
+  }
+}
+
+/* Botones compactos */
+.compact-button {
+  padding: 0.4rem 1rem; /* Botones más pequeños */
+  font-size: 0.85rem; /* Reducir tamaño del texto */
+}
+
+/* Formulario y acciones */
+.form-actions {
+  display: flex;
+  justify-content: flex-end; /* Botones alineados a la derecha */
+  gap: 1rem; /* Espaciado entre botones */
+  margin-top: 1rem; /* Espaciado superior */
+}
+
+/* Personalización de p-dropdown y p-multiSelect */
+.p-dropdown,
+.p-multiSelect {
+  width: 100%; /* Asegurar que ocupen todo el ancho de la columna */
+  border-radius: 4px; /* Bordes redondeados */
+  font-size: 0.85rem; /* Texto más compacto */
+}
+
+/* Botones dentro de PrimeNG */
+.p-button {
+  border-radius: 4px; /* Bordes redondeados */
+  font-size: 0.85rem; /* Texto pequeño */
+}
+
+/* Ajuste de estilos responsivos */
+@media screen and (max-width: 768px) {
+  ion-grid {
+    padding: 0;
+
+    ion-row {
+      margin-bottom: 0.8rem; /* Espaciado menor en pantallas móviles */
+    }
+  }
+
+  .compact-input,
+  .compact-dropdown {
+    font-size: 0.8rem; /* Texto más pequeño para inputs en móviles */
+    height: 2.3rem; /* Reducir la altura */
+  }
+
+  .p-float-label {
+    margin-bottom: 0.4rem;
+
+    label {
+      font-size: 0.75rem; /* Etiquetas más pequeñas */
+    }
+  }
+
+  .form-actions {
+    flex-direction: column; /* Botones en columna para móviles */
+    align-items: stretch; /* Ocupan todo el ancho */
+    gap: 0.8rem; /* Espaciado entre botones */
+  }
+
+  .p-button {
+    font-size: 0.8rem; /* Texto más pequeño para botones */
+  }
+}
+
+/* Estilos para mejor espaciado y diseño de formularios */
+.form-grid {
+  padding: 1rem;
+  max-width: 800px;
+  margin: 0 auto;
+
+  ion-row {
+    margin-bottom: 1.5rem;
+  }
+
+  ion-col {
+    display: flex;
+    justify-content: center;
+  }
+
+  .p-float-label {
+    margin-bottom: 0.5rem;
+    width: 280px;
+  }
+
+  .compact-input, 
+  .compact-dropdown {
+    width: 280px;
+    height: 2.0rem;
+  }
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 2rem;
+  padding: 0 1rem;
+
+  .compact-button {
+    height: 2.5rem;
+  }
+}
+
+:host ::ng-deep {
+  .p-dialog .p-dialog-content {
+    padding: 1.5rem;
+  }
+
+  .p-float-label {
+    display: block;
+
+    input, .p-dropdown {
+      height: 2.0rem;
+      font-size: 0.9rem;
+      width: 280px;
+    }
+
+    label {
+      font-size: 0.9rem;
+    }
+  }
+
+  .p-dropdown {
+    .p-dropdown-label {
+      padding-top: 0.4rem;
+      padding-bottom: 0.4rem;
+    }
+  }
+
+  .p-inputtext {
+    padding-top: 0.4rem;
+    padding-bottom: 0.4rem;
+  }
+
+  // Estilos para el ConfirmDialog
+  .p-confirm-dialog {
+    .p-dialog-header {
+      background-color: #4a90e2;
+      color: white;
+      padding: 0.8rem;
+      
+      .p-dialog-title {
+        font-size: 1rem;
+        font-weight: 500;
+      }
+
+      .p-dialog-header-icon {
+        color: white;
+        
+        &:hover {
+          background-color: rgba(255, 255, 255, 0.1);
+        }
+      }
+    }
+
+    .p-dialog-content {
+      padding: 1.5rem 1.2rem;
+
+      .p-confirm-dialog-icon {
+        color: #f59e0b;
+        font-size: 1.5rem;
+        margin-right: 0.6rem;
+      }
+
+      .p-confirm-dialog-message {
+        font-size: 0.95rem;
+        color: #374151;
+      }
+    }
+
+    .p-dialog-footer {
+      padding: 0.8rem 1.2rem;
+      display: flex;
+      justify-content: flex-end;
+      gap: 0.6rem;
+
+      button {
+        min-width: 100px;
+        padding: 0.5rem 1rem;
+        font-weight: 500;
+        font-size: 0.9rem;
+
+        &.p-confirm-dialog-accept {
+          background-color: #4a90e2;
+          border-color: #4a90e2;
+
+          &:hover {
+            background-color: darken(#4a90e2, 10%);
+            border-color: darken(#4a90e2, 10%);
+          }
+        }
+
+        &.p-confirm-dialog-reject {
+          background-color: #6c757d;
+          border-color: #6c757d;
+
+          &:hover {
+            background-color: darken(#6c757d, 10%);
+            border-color: darken(#6c757d, 10%);
+          }
+        }
+      }
+    }
+  }
+}
+
+.table-container {
+  padding: 1rem;
+  
+  ::ng-deep {
+    .p-datatable {
+      border: 1px solid #777879;
+      border-radius: 4px;
+
+      .p-datatable-header {
+        padding: 0.5rem 1rem;
+        border: 1px solid #cfcfcf;
+      }
+      
+      .p-datatable-thead > tr > th {
+        padding: 0.5rem;
+        font-size: 0.9rem;
+        background-color: #4a90e2 !important;
+        color: white !important;
+        white-space: nowrap;
+        text-align: center;
+        border: 1px solid #dee2e6;
+
+        &.table-header {
+          font-size: 14px;
+          font-weight: 600;
+          letter-spacing: 0.5px;
+          padding: 1rem;
+          background-color: #4a90e2 !important;
+          border-bottom: 2px solid #fff;
+
+          .header-icon {
+            vertical-align: middle;
+            margin-right: 8px;
+            font-size: 1.3rem;
+          }
+        }
+
+        .p-column-title,
+        .p-sortable-column-icon,
+        .p-column-filter {
+          color: white !important;
+        }
+
+        .p-column-filter-menu-button {
+          color: white !important;
+        }
+      }
+      
+      .p-datatable-tbody > tr > td {
+        padding: 0.5rem;
+        font-size: 0.9rem;
+        text-align: center;
+        border: 1px solid #6f92bf;
+      }
+
+      .estado-badge {
+        padding: 0.25rem 0.5rem;
+        border-radius: 4px;
+        font-size: 0.8rem;
+        font-weight: 500;
+        color: #000000;
+        
+        &.activo {
+          background-color: rgba(var(--ion-color-success-rgb), 0.2);
+        }
+        
+        &.inactivo {
+          background-color: rgba(var(--ion-color-danger-rgb), 0.2);
+        }
+      }
+
+      .p-button.p-button-sm {
+        width: 2rem;
+        height: 2rem;
+        
+        .p-button-icon {
+          font-size: 0.8rem;
+        }
+      }
+    }
+
+    // Estilos para el menú de filtros
+    .p-column-filter-overlay {
+      min-width: 200px !important;
+      width: auto !important;
+      max-width: 250px !important;
+
+      .p-column-filter-row-items {
+        padding: 0.3rem;
+        
+        .p-column-filter-row-item {
+          padding: 0.4rem 0.8rem;
+          font-size: 0.9rem;
+        }
+      }
+
+      .p-column-filter-constraint {
+        padding: 0.5rem;
+      }
+
+      .p-column-filter-operator {
+        padding: 0.5rem;
+      }
+
+      .p-column-filter-buttonbar {
+        padding: 0.5rem;
+      }
+    }
+
+    .p-paginator {
+      border: 1px solid #dee2e6;
+      .p-paginator-current {
+        margin-left: auto;
+      }
+    }
+
+    .p-tooltip {
+      font-size: 0.8rem;
+    }
+
+    .text-center {
+      text-align: center;
+    }
+  }
+}
+
+/* Estilos para el MultiSelect */
+::ng-deep {
+  .p-multiselect {
+    width: 100%;
+    
+    .p-multiselect-label {
+      padding: 0.5rem;
+    }
+
+    &.p-multiselect-chip {
+      .p-multiselect-token {
+        padding: 0.15rem 0.5rem;
+        margin: 0.1rem;
+        background: #4a90e2;
+      }
+    }
+  }
+
+  .p-multiselect-panel {
+    .p-multiselect-items {
+      padding: 0.5rem 0;
+      
+      .p-multiselect-item {
+        padding: 0.5rem 1rem;
+        
+        &:hover {
+          background: rgba(74, 144, 226, 0.1);
+        }
+        
+        &.p-highlight {
+          background: #4a90e2;
+          color: #ffffff;
+        }
+      }
+    }
+  }
+}
+
+/* Estilos para los botones del modal */
+.button-row {
+  margin-top: 2rem;
+}
+
+.button-container {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+}
+
+.action-button {
+  min-width: 120px;
+}
+
+:host ::ng-deep {
+  .p-button {
+    &.action-button {
+      padding: 0.75rem 1.5rem;
+      font-weight: 500;
+    }
+  }
+
+  .p-dialog {
+    .p-dialog-header {
+      padding: 1rem 1.5rem;
+      background-color: #4a90e2;
+      color: white;
+      border-top-left-radius: 6px;
+      border-top-right-radius: 6px;
+      
+      .dialog-header {
+        i {
+          color: white;
+          font-size: 1.3rem;
+          margin-right: 0.5rem;
+        }
+        
+        span {
+          color: white;
+          font-size: 1.2rem;
+          font-weight: 500;
+        }
+      }
+
+      .p-dialog-header-icon {
+        color: white;
+        
+        &:hover {
+          background-color: rgba(255, 255, 255, 0.1);
+        }
+      }
+    }
+  }
+}
+
+/* Estilos para el form */
+ion-grid {
+  padding: 8px;
+
+  ion-row {
+    margin-bottom: 8px;
+
+    ion-col {
+      padding: 4px;
+    }
+  }
+}
+
+:host ::ng-deep {
+  .p-float-label {
+    margin-bottom: 0.5rem;
+  }
+
+  .p-dropdown {
+    width: 100%;
+  }
+
+  .p-calendar {
+    width: 100%;
+    .p-inputtext {
+      height: 37px;
+      font-size: 14px;
+    }
+    .p-button {
+      height: 37px;
+      width: 37px;
+      .p-button-icon {
+        font-size: 14px;
+      }
+    }
+  }
+
+  .p-inputnumber {
+    width: 100%;
+  }
+
+  .p-inputtextarea {
+    width: 100%;
+  }
+
+  .p-inputtextarea {
+    resize: vertical;
+    min-height: 120px;  // Altura mínima para el textarea
+  }
+
+  // Ajustes adicionales para los inputs
+  .p-float-label input.p-inputtext {
+    width: 100%;
+  }
+
+  // Espacio adicional para el multiselect cuando muestra chips
+  .p-multiselect.p-multiselect-chip .p-multiselect-token {
+    margin: 0.2rem;
+  }
+
+  // Estilos para el panel del calendario
+  .p-datepicker {
+    font-size: 10px !important;
+    
+    table {
+      font-size: 10px !important;
+      
+      th {
+        padding: 0.3rem !important;
+      }
+      
+      td {
+        padding: 0.3rem !important;
+        
+        > span {
+          width: 18px !important;
+          height: 18px !important;
+          font-size: 12px !important;
+        }
+      }
+    }
+    
+    .p-datepicker-header {
+      padding: 0.3rem !important;
+      
+      .p-datepicker-title {
+        .p-datepicker-month,
+        .p-datepicker-year {
+          font-size: 13px !important;
+        }
+      }
+    }
+  }
+}
+
+/* Estilos para el dialog header */
+.dialog-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  i {
+    font-size: 1.2rem;
+  }
+
+  span {
+    font-weight: 500;
+  }
+}
+
+/* Estilos para el espaciado de los campos del formulario */
+.form-row {
+  margin-bottom: 1.5rem;  // Espacio entre filas
+  padding: 0.5rem 0;      // Padding vertical adicional
+
+
+  ion-col {
+    padding-top: 0.3rem;    // Padding superior para las columnas
+    padding-bottom: 0.3rem; // Padding inferior para las columnas
+  }
+}
+
+.button-row {
+  margin-top: 2.5rem;  // Espacio adicional antes de los botones
+  padding-top: 1rem;   // Padding adicional arriba de los botones
+}
+
+// Ajustes específicos para campos readonly
+input[readonly] {
+  opacity: 0.8;
+  background-color: #cce3faf1;
+  margin-bottom: 0.5rem;
+}
+
+// Ajustes para los dropdowns
+.p-dropdown {
+  margin-bottom: 0.5rem;
+}
+
+// Ajustes para el calendario
+.p-calendar {
+  margin-bottom: 0.5rem;
+}
+
+// Ajustes para los números
+.p-inputnumber {
+  margin-bottom: 0.5rem;
+}
+
+/* Estilos para la tabla vertical */
+:host ::ng-deep {
+  .vertical-table {
+    .p-datatable-wrapper {
+      border: 1px solid #dee2e6;
+      border-radius: 4px;
+    }
+
+    tr {
+      display: flex;
+      border-bottom: 1px solid #dee2e6;
+      
+      &:last-child {
+        border-bottom: none;
+      }
+    }
+
+    th, td {
+      padding: 1rem;
+      flex: 1;
+      display: flex;
+      align-items: center;
+    }
+
+    th {
+      background-color: #4a90e2;
+      color: white;
+      font-weight: 600;
+      font-size: 0.9rem;
+      justify-content: flex-end;
+      border-right: 1px solid #dee2e6;
+      width: 200px;
+      flex: 0 0 200px;
+    }
+
+    td {
+      background-color: #ffffff;
+      color: #495057;
+      font-size: 0.9rem;
+      flex: 1;
+    }
+  }
+}
+
+/* Estilos para el encabezado de la tabla */
+.table-header-container {
+  display: grid;
+  grid-template-columns: 2rem 1fr 2rem;
+  align-items: center;
+  padding: 1rem;
+  background-color: #4a90e2;
+  border: 1px solid #ffffff;
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
+
+  .header-title {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.8rem;
+    color: white;
+    grid-column: 2;
+
+    i {
+      font-size: 1.5rem;
+    }
+
+    span {
+      font-size: 1.2rem;
+      font-weight: 500;
+    }
+  }
+
+  .p-button-sm {
+    width: 2rem;
+    height: 2rem;
+    grid-column: 3;
+    
+    .p-button-icon {
+      font-size: 1rem;
+    }
+  }
+}
+
+/* Estilos para la tabla de evaluaciones */
+.evaluation-table {
+  .p-datatable {
+    border: 1px solid #4a90e2;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+
+    .evaluation-grid {
+      border-collapse: separate;
+      border-spacing: 0;
+      width: 100%;
+
+      tr {
+        margin: 8px 0;
+      }
+
+      td, th {
+        border: 1px solid #4a90e2;
+        padding: 12px;
+      }
+    }
+
+    th {
+      background-color: #4a90e2;
+      color: white;
+      font-weight: 600;
+      text-align: center;
+      
+      &.aspecto-header {
+        width: 40%;
+      }
+      
+      &.respuesta-header {
+        width: 12%;
+      }
+      
+      &.total-header {
+        width: 12%;
+      }
+    }
+
+    td {
+      vertical-align: middle;
+      text-align: center;
+      
+      &.aspecto-cell {
+        text-align: left;
+        padding-left: 15px;
+      }
+      
+      &.respuesta-cell {
+        text-align: center;
+      }
+      
+      &.total-cell {
+        text-align: center;
+        font-weight: 500;
+      }
+    }
+
+    .totals-row {
+      td {
+        font-weight: bold;
+      }
+      
+      .aspecto-cell {
+        background-color: #4a90e2;
+        color: white;
+      }
+    }
+
+    .p-radiobutton {
+      .p-radiobutton-box {
+        width: 18px;
+        height: 18px;
+        margin: 0 auto;
+        
+        &.p-highlight {
+          border-color: #4a90e2;
+          background-color: #4a90e2;
+        }
+
+        &:not(.p-disabled):hover {
+          border-color: #4a90e2;
+        }
+      }
+    }
+  }
+}
+
+.aspecto-header,
+.respuesta-header,
+.total-header {
+  background-color: #4a90e2;
+  border: 1px solid #4a90e2;
+  color: white;
+}
+
+.totals-row {
+  .aspecto-cell {
+    background-color: #4a90e2;
+    color: white;
+    font-weight: bold;
+  }
+}
+
+.dialog-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--ion-color-primary-tint);
+}

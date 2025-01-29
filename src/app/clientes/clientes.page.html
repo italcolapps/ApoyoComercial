@@ -1,0 +1,631 @@
+<p-tabMenu [model]="items" [activeItem]="activeItem" (activeItemChange)="onActiveItemChange($event)"></p-tabMenu>
+
+<div *ngIf="activeItem.id === 'clientes'">
+  <!-- Contenido de clientes -->
+   
+<div class="header-container">
+  <!-- Título y Ruta -->
+  <div class="breadcrumb">
+    <span class="breadcrumb-path">Administración</span>
+    <span class="breadcrumb-separator">></span>
+    <span class="breadcrumb-current">Clientes</span>
+  </div>
+
+  <!-- Encabezado Principal -->
+  <div class="header-content">
+    <div class="title-section">
+      <h1 class="page-title">Clientes</h1>
+      <div class="stats">
+        <p-badge value="No Clientes: {{listaClientes.length}}" severity="info" styleClass="custom-badge"></p-badge>
+      </div>
+    </div>
+
+    <!-- Botones y Selector -->
+    <div class="action-section">
+      <p-dropdown 
+        [options]="listaLineas" 
+        [(ngModel)]="selectedLinea" 
+        optionLabel="nombre"
+        [showClear]="true"
+        placeholder="Filtrar por Línea"
+        (onChange)="onLineaChange($event)"
+        class="line-dropdown">
+      </p-dropdown>
+      <button class="btn add-btn" (click)="showModal()">
+        <i class="pi pi-user-plus"></i>
+        Agregar
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Tabla de Clientes -->
+<div class="table-container">
+  <p-table 
+    [value]="listaClientes" 
+    [loading]="loading"
+    [paginator]="true" 
+    [rows]="10"
+    [showCurrentPageReport]="true"
+    [rowsPerPageOptions]="[10,25,50]"
+    styleClass="p-datatable-sm p-datatable-striped"
+    [loading]="loading"
+    [sortMode]="'multiple'"
+    currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} clientes">
+
+    <!-- Header de la tabla -->
+    <ng-template pTemplate="header">
+      <tr>
+        <th colspan="6" class="table-header">
+          <ion-icon name="people-outline" class="header-icon"></ion-icon>
+          LISTADO DE CLIENTES
+        </th>
+      </tr>
+      <tr>
+        <th pSortableColumn="numDocumento">
+          Documento 
+          <p-sortIcon field="numDocumento"></p-sortIcon>
+          <p-columnFilter type="text" field="numDocumento" display="menu"></p-columnFilter>
+        </th>
+        <th pSortableColumn="nombre">
+          Nombre
+          <p-sortIcon field="nombre"></p-sortIcon>
+          <p-columnFilter type="text" field="nombre" display="menu"></p-columnFilter>
+        </th>
+        <th pSortableColumn="telefono">
+          Teléfono
+          <p-sortIcon field="telefono"></p-sortIcon>
+          <p-columnFilter type="text" field="telefono" display="menu"></p-columnFilter>
+        </th>
+        <th pSortableColumn="email">
+          Email
+          <p-sortIcon field="email"></p-sortIcon>
+          <p-columnFilter type="text" field="email" display="menu"></p-columnFilter>
+        </th>
+        <th pSortableColumn="tipoCliente">
+          Tipo Cliente
+          <p-sortIcon field="tipoCliente"></p-sortIcon>
+          <p-columnFilter type="text" field="tipoCliente" display="menu"></p-columnFilter>
+        </th>
+        <th>Acciones</th>
+      </tr>
+    </ng-template>
+
+    <!-- Cuerpo de la tabla -->
+    <ng-template pTemplate="body" let-cliente>
+      <tr>
+        <td>{{cliente.numDocumento}}</td>
+        <td>{{cliente.nombre}}</td>
+        <td>{{cliente.telefono}}</td>
+        <td>{{cliente.email}}</td>
+        <td>{{cliente.tipoCliente}}</td>
+        <td class="actions-cell">
+          <button pButton 
+                  type="button" 
+                  icon="pi pi-pencil" 
+                  pTooltip="Editar"
+                  tooltipPosition="top"
+                  class="p-button-rounded p-button-primary p-button-sm"
+                  (click)="editarCliente(cliente)">
+          </button>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>
+
+<!-- Modal de Cliente -->
+<p-dialog [(visible)]="displayModal" 
+          [modal]="true" 
+          [header]="edit ? 'Actualizar Cliente' : 'Agregar Cliente'" 
+          [style]="{ width: '80vw' }"
+          [contentStyle]="{ 'padding': '20px' }">
+  <form [formGroup]="ClienteForm" (ngSubmit)="edit ? actualizarCliente() : RegistrarCliente()" class="form-container">
+    <ion-grid class="form-grid">
+      <!-- Tipo de Cliente y Tipo de Documento -->
+      <ion-row class="form-row">
+        <ion-col size="12" size-md="6">
+          <div class="field-container">
+            <p-floatLabel>
+              <p-dropdown 
+                id="tipoClienteLista"
+                [options]="listaTipoCliente"
+                formControlName="tipoClienteLista"
+                optionLabel="nombre"
+                optionValue="id"
+                [showClear]="true"
+                placeholder="Seleccione el tipo de cliente">
+              </p-dropdown>
+              <label for="tipoClienteLista">Tipo de Cliente</label>
+            </p-floatLabel>
+          </div>
+        </ion-col>
+        <ion-col size="12" size-md="6">
+          <div class="field-container">
+            <p-floatLabel>
+              <p-dropdown 
+                id="idTipoDocumentoLista"
+                [options]="listaTipoDocumento"
+                formControlName="idTipoDocumentoLista"
+                optionLabel="nombre"
+                optionValue="id"
+                [showClear]="true"
+                placeholder="Seleccione el tipo de documento">
+              </p-dropdown>
+              <label for="idTipoDocumentoLista">Tipo de Documento</label>
+            </p-floatLabel>
+          </div>
+        </ion-col>
+      </ion-row>
+
+      <!-- Número de Documento y Nombre -->
+      <ion-row class="form-row">
+        <ion-col size="12" size-md="6">
+          <div class="field-container">
+            <p-floatLabel>
+              <input pInputText 
+                     id="numDocumento" 
+                     type="text" 
+                     formControlName="numDocumento">
+              <label for="numDocumento">Número de Documento</label>
+            </p-floatLabel>
+          </div>
+        </ion-col>
+        <ion-col size="12" size-md="6">
+          <div class="field-container">
+            <p-floatLabel>
+              <input pInputText 
+                     id="nombre" 
+                     type="text" 
+                     formControlName="nombre">
+              <label for="nombre">Nombre</label>
+            </p-floatLabel>
+          </div>
+        </ion-col>
+      </ion-row>
+
+      <!-- Teléfono y Email -->
+      <ion-row class="form-row">
+        <ion-col size="12" size-md="6">
+          <div class="field-container">
+            <p-floatLabel>
+              <input pInputText 
+                     id="telefono" 
+                     type="tel" 
+                     formControlName="telefono">
+              <label for="telefono">Teléfono</label>
+            </p-floatLabel>
+          </div>
+        </ion-col>
+        <ion-col size="12" size-md="6">
+          <div class="field-container">
+            <p-floatLabel>
+              <input pInputText 
+                     id="email" 
+                     type="email" 
+                     formControlName="email">
+              <label for="email">Email</label>
+            </p-floatLabel>
+          </div>
+        </ion-col>
+      </ion-row>
+
+      <!-- País y Departamento -->
+      <ion-row class="form-row">
+        <ion-col size="12" size-md="6">
+          <div class="field-container">
+            <p-floatLabel>
+              <p-dropdown 
+                id="idPais"
+                [options]="listaPais"
+                formControlName="idPais"
+                optionLabel="nombre"
+                optionValue="id"
+                [showClear]="true"
+                placeholder="Seleccione el país"
+                (onChange)="getDepartamento($event)">
+              </p-dropdown>
+              <label for="idPais">País</label>
+            </p-floatLabel>
+          </div>
+        </ion-col>
+        <ion-col size="12" size-md="6">
+          <div class="field-container">
+            <p-floatLabel>
+              <p-dropdown 
+                id="idDepartamento"
+                [options]="listaDepartamento"
+                formControlName="idDepartamento"
+                optionLabel="nombre"
+                optionValue="id"
+                [showClear]="true"
+                placeholder="Seleccione el departamento"
+                (onChange)="getMunicipio($event)">
+              </p-dropdown>
+              <label for="idDepartamento">Departamento</label>
+            </p-floatLabel>
+          </div>
+        </ion-col>
+      </ion-row>
+
+      <!-- Municipio y Dirección -->
+      <ion-row class="form-row">
+        <ion-col size="12" size-md="6">
+          <div class="field-container">
+            <p-floatLabel>
+              <p-dropdown 
+                id="idMunicipio"
+                [options]="listaMuncipio"
+                formControlName="idMunicipio"
+                optionLabel="nombre"
+                optionValue="id"
+                [showClear]="true"
+                placeholder="Seleccione el municipio">
+              </p-dropdown>
+              <label for="idMunicipio">Municipio</label>
+            </p-floatLabel>
+          </div>
+        </ion-col>
+        <ion-col size="12" size-md="6">
+          <div class="field-container">
+            <p-floatLabel>
+              <input pInputText 
+                     id="direccion" 
+                     type="text" 
+                     formControlName="direccion">
+              <label for="direccion">Dirección</label>
+            </p-floatLabel>
+          </div>
+        </ion-col>
+      </ion-row>
+
+      <!-- Líneas y Tipo de Canal -->
+      <ion-row class="form-row">
+        <ion-col size="12" size-md="6">
+          <div class="field-container">
+            <p-floatLabel>
+              <p-dropdown 
+                id="canallista"
+                [options]="listaTipoCanal"
+                formControlName="canallista"
+                optionLabel="nombre"
+                optionValue="id"
+                [showClear]="true"
+                placeholder="Seleccione el canal">
+              </p-dropdown>
+              <label for="canallista">Canal</label>
+            </p-floatLabel>
+          </div>
+        </ion-col>
+        <ion-col size="12" size-md="6">
+          <div class="field-container">
+            <p-floatLabel>
+              <p-multiSelect 
+                id="linea"
+                [options]="listaLineas"
+                formControlName="linea"
+                optionLabel="nombre"
+                optionValue="id"
+                [showClear]="true"
+                placeholder="Seleccione las líneas"
+                display="chip"
+                class="compact-dropdown">
+              </p-multiSelect>
+              <label for="linea">Líneas</label>
+            </p-floatLabel>
+          </div>
+        </ion-col>
+      </ion-row>
+
+      <!-- Botones -->
+      <ion-row class="button-row">
+        <ion-col>
+          <div class="button-container">
+            <button pButton 
+                    type="submit" 
+                    [label]="edit ? 'Actualizar' : 'Guardar'"
+                    class="p-button-primary action-button"
+                    [disabled]="!ClienteForm.valid">
+            </button>
+            <button pButton 
+                    type="button" 
+                    label="Cancelar" 
+                    class="p-button-secondary action-button" 
+                    (click)="closeModal()">
+            </button>
+          </div>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </form>
+</p-dialog>
+
+<p-confirmDialog 
+  header="Confirmación" 
+  icon="pi pi-exclamation-triangle"
+  acceptLabel="Sí"
+  rejectLabel="No">
+</p-confirmDialog>
+</div>
+
+<div *ngIf="activeItem.id === 'gerentesZona'">
+  <div class="header-container">
+    <!-- Título y Ruta -->
+    <div class="breadcrumb">
+      <span class="breadcrumb-path">Administración</span>
+      <span class="breadcrumb-separator">></span>
+      <span class="breadcrumb-current">Gerentes de Zona</span>
+    </div>
+  
+    <!-- Encabezado Principal -->
+    <div class="header-content">
+      <div class="title-section">
+        <h1 class="page-title">Gerentes de Zona</h1>
+        <div class="stats">
+          <p-badge value="No Clientes: {{listaGerenteZona.length}}" severity="info" styleClass="custom-badge"></p-badge>
+        </div>
+      </div>
+  
+      <!-- Botones y Selector -->
+      <div class="action-section">
+        <p-dropdown 
+          [options]="listaLineas" 
+          [(ngModel)]="selectedLinea" 
+          optionLabel="nombre"
+          [showClear]="true"
+          placeholder="Filtrar por Línea"
+          (onChange)="onLineaChange($event)"
+          class="line-dropdown">
+        </p-dropdown>
+        <button class="btn add-btn" (click)="showModal()">
+          <i class="pi pi-user-plus"></i>
+          Agregar
+        </button>
+      </div>
+      
+    </div>
+  </div>
+
+  <!-- Tabla de Gerentes de Zona -->
+<div class="table-container">
+  <p-table 
+    [value]="listaGerenteZona" 
+    [loading]="loading"
+    [paginator]="true" 
+    [rows]="10"
+    [showCurrentPageReport]="true"
+    [rowsPerPageOptions]="[10,25,50]"
+    styleClass="p-datatable-sm p-datatable-striped"
+    [loading]="loading"
+    [sortMode]="'multiple'"
+    currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} Gerentes de Zona">
+
+    <!-- Header de la tabla -->
+    <ng-template pTemplate="header">
+      <tr>
+        <th colspan="6" class="table-header">
+          <ion-icon name="people-outline" class="header-icon"></ion-icon>
+          LISTADO DE GERENTES DE ZONA
+        </th>
+      </tr>
+      <tr>
+        <th pSortableColumn="numDocumento">
+          Documento 
+          <p-sortIcon field="numDocumento"></p-sortIcon>
+          <p-columnFilter type="text" field="numDocumento" display="menu"></p-columnFilter>
+        </th>
+        <th pSortableColumn="nombre">
+          Nombre
+          <p-sortIcon field="nombre"></p-sortIcon>
+          <p-columnFilter type="text" field="nombre" display="menu"></p-columnFilter>
+        </th>
+        <th pSortableColumn="telefono">
+          Teléfono
+          <p-sortIcon field="telefono"></p-sortIcon>
+          <p-columnFilter type="text" field="telefono" display="menu"></p-columnFilter>
+        </th>
+        <th pSortableColumn="email">
+          Email
+          <p-sortIcon field="email"></p-sortIcon>
+          <p-columnFilter type="text" field="email" display="menu"></p-columnFilter>
+        </th>
+        <th pSortableColumn="nombreZona">
+          Zona
+          <p-sortIcon field="nombreZona"></p-sortIcon>
+          <p-columnFilter type="text" field="nombreZona" display="menu"></p-columnFilter>
+        </th>
+        <th>Acciones</th>
+      </tr>
+    </ng-template>
+
+    <!-- Cuerpo de la tabla -->
+    <ng-template pTemplate="body" let-gz>
+      <tr>
+        <td>{{gz.numDocumento}}</td>
+        <td>{{gz.nombreCompleto}}</td>
+        <td>{{gz.telefono}}</td>
+        <td>{{gz.email}}</td>
+        <td>{{gz.nombreZona}}</td>
+        <td class="actions-cell">
+          <button pButton 
+                  type="button" 
+                  icon="pi pi-pencil" 
+                  pTooltip="Editar"
+                  tooltipPosition="top"
+                  class="p-button-rounded p-button-primary p-button-sm"
+                  (click)="editarGerenteZona(gz)">
+          </button>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>
+
+<!-- Modal de Cliente -->
+<p-dialog [(visible)]="displayModal" 
+          [modal]="true" 
+          [header]="edit ? 'Actualizar Gerente de Zona' : 'Agregar Gerente de Zona'" 
+          [style]="{ width: '80vw' }"
+          [contentStyle]="{ 'padding': '20px' }">
+  <form [formGroup]="GerenteZonaForm" (ngSubmit)="edit ? actualizarGerenteZona() : RegistrarGerenteZona()" class="form-container">
+    <ion-grid class="form-grid">
+      <!-- Tipo de Cliente y Tipo de Documento -->
+      <ion-row class="form-row">
+        <ion-col size="12" size-md="6">
+          <div class="field-container">
+            <p-floatLabel>
+              <p-dropdown 
+                id="id"
+                [options]="listaTipoDocumento"
+                formControlName="idTipoDocumento"
+                optionLabel="nombre"
+                optionValue="id"
+                [showClear]="true"
+                placeholder="Seleccione el tipo de documento">
+              </p-dropdown>
+              <label for="idTipoDocumento">Tipo de Documento</label>
+            </p-floatLabel>
+          </div>
+        </ion-col>
+
+        <ion-col size="12" size-md="6">
+          <div class="field-container">
+            <p-floatLabel>
+              <input pInputText 
+                     id="numDocumento" 
+                     type="text" 
+                     formControlName="numDocumento">
+              <label for="numDocumento">Número de Documento</label>
+            </p-floatLabel>
+          </div>
+        </ion-col>
+      </ion-row>
+
+      <!-- Número de Documento y Nombre -->
+      <ion-row class="form-row">
+        <ion-col size="12" size-md="6">
+          <div class="field-container">
+            <p-floatLabel>
+              <input pInputText 
+                     id="nombre" 
+                     type="text" 
+                     formControlName="nombre">
+              <label for="nombre">Nombre</label>
+            </p-floatLabel>
+          </div>
+        </ion-col>
+
+        <ion-col size="12" size-md="6">
+          <div class="field-container">
+            <p-floatLabel>
+              <input pInputText 
+                     id="apellido" 
+                     type="text" 
+                     formControlName="apellido">
+              <label for="apellido">Apellido</label>
+            </p-floatLabel>
+          </div>
+        </ion-col>
+
+
+      </ion-row>
+
+      <!-- Teléfono y Email -->
+      <ion-row class="form-row">
+        <ion-col size="12" size-md="6">
+          <div class="field-container">
+            <p-floatLabel>
+              <input pInputText 
+                     id="telefono" 
+                     type="tel" 
+                     formControlName="telefono">
+              <label for="telefono">Teléfono</label>
+            </p-floatLabel>
+          </div>
+        </ion-col>
+        <ion-col size="12" size-md="6">
+          <div class="field-container">
+            <p-floatLabel>
+              <input pInputText 
+                     id="email" 
+                     type="email" 
+                     formControlName="email">
+              <label for="email">Email</label>
+            </p-floatLabel>
+          </div>
+        </ion-col>
+      </ion-row>
+
+
+      <!-- Líneas y Tipo de Canal -->
+      <ion-row class="form-row">
+        <ion-col size="12" size-md="6">
+          <div class="field-container">
+            <p-floatLabel>
+              <p-dropdown 
+                id="idLinea"
+                [options]="listaLineas"
+                formControlName="idLinea"
+                optionLabel="nombre"
+                optionValue="id"
+                [showClear]="true"
+                [filter]="true"
+                filterBy="nombre" 
+                placeholder="Seleccione la linea">
+              </p-dropdown>
+              <label for="idLinea">Linea</label>
+            </p-floatLabel>
+          </div>
+        </ion-col>
+
+        <ion-col size="12" size-md="6">
+          <div class="field-container">
+            <p-floatLabel>
+              <p-dropdown 
+                id="idZona"
+                [options]="listaZonas"
+                formControlName="idZona"
+                optionLabel="nombre"
+                optionValue="id"
+                [showClear]="true"
+                [filter]="true"
+                filterBy="nombre" 
+                placeholder="Seleccione la zona">
+              </p-dropdown>
+              <label for="idZona">Zona</label>
+            </p-floatLabel>
+          </div>
+        </ion-col>
+      </ion-row>
+
+      <!-- Botones -->
+      <ion-row class="button-row">
+        <ion-col>
+          <div class="button-container">
+            <button pButton 
+                    type="submit" 
+                    [label]="edit ? 'Actualizar' : 'Guardar'"
+                    class="p-button-primary action-button"
+                    [disabled]="!GerenteZonaForm.valid">
+            </button>
+            <button pButton 
+                    type="button" 
+                    label="Cancelar" 
+                    class="p-button-secondary action-button" 
+                    (click)="closeModal()">
+            </button>
+          </div>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </form>
+</p-dialog>
+
+<p-confirmDialog 
+  header="Confirmación" 
+  icon="pi pi-exclamation-triangle"
+  acceptLabel="Sí"
+  rejectLabel="No">
+</p-confirmDialog>
+  
+</div>

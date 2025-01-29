@@ -1,0 +1,41 @@
+<div class="login-container">
+
+  <div class="left-col"></div>
+
+  <div class="right-col">
+    <div class="login-form-wrapper">
+      <div class="company-logo">
+        <img src="assets/img/italcol.png" alt="Logo de la empresa" />
+      </div>
+      <h1>Iniciar Sesión</h1>
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+        <div class="form-field">
+          <label for="email">
+            <i class="pi pi-envelope"></i>
+            Correo
+          </label>
+          <input pInputText id="email" type="email" formControlName="email" placeholder="Ingresar correo" />
+          <small *ngIf="emailControl?.invalid && emailControl?.touched" class="error-msg">
+            Ingresa un correo válido
+          </small>
+        </div>
+
+        <div class="form-field">
+          <label for="password">
+            <i class="pi pi-key"></i>
+            Contraseña
+          </label>
+          <p-password id="password" formControlName="password" [feedback]="false" placeholder="Ingresar contraseña"></p-password>
+          <small *ngIf="passwordControl?.invalid && passwordControl?.touched" class="error-msg">
+            La contraseña es requerida
+          </small>
+          <span class="forgot-password-link">
+            <a href="/forgot-password">¿Olvidaste tu contraseña?</a>
+          </span>
+        </div>
+
+        <button pButton type="submit" label="Ingresar" class="login-button" (click)="loginUser()"></button>
+      </form>
+    </div>
+  </div>
+</div>

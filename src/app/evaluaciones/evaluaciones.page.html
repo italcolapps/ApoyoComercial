@@ -1,0 +1,275 @@
+<div class="header-container">
+  <!-- Título y Ruta -->
+  <div class="breadcrumb">
+    <span class="breadcrumb-path">Seguimiento</span>
+    <span class="breadcrumb-separator">></span>
+    <span class="breadcrumb-current">Evaluacion Gerentes de Zona</span>
+  </div>
+
+  <!-- Encabezado Principal -->
+  <div class="header-content">
+    <div class="title-section">
+      <h1 class="page-title">Evaluacion Gerentes de Zona</h1>
+    </div>
+
+        <!-- Botones y Selector -->
+        <div class="action-section">
+          <p-dropdown 
+          [options]="listaLineas" 
+          [(ngModel)]="selectedLinea" 
+          optionLabel="nombre"
+          [showClear]="true"
+          placeholder="Filtrar por Línea"
+          (onChange)="onLineaChange($event)"
+          class="line-dropdown">
+        </p-dropdown>
+        <p-dropdown 
+        [options]="listaGerenteZona" 
+        [(ngModel)]="selectedGZ" 
+        optionLabel="nombreCompleto"
+        [filter]="true"
+        filterBy="nombre" 
+        [showClear]="true"
+        placeholder="Gerente de Zona"
+        styleClass="w-20rem"
+        (onChange)="onGerenteZonaChange($event)"
+        class="line-dropdown">
+        </p-dropdown>
+        <button class="btn add-btn" (click)="showModal()">
+          <i class="pi pi-user-plus"></i>
+          Agregar
+        </button>
+        </div>
+
+    </div>
+  </div>
+
+  <div class="table-container">
+    <p-table 
+      [value]="listaEvaluaciones" 
+      [loading]="loading"
+      [paginator]="true" 
+      [rows]="10"
+      [showCurrentPageReport]="true"
+      [rowsPerPageOptions]="[10,25,50]"
+      styleClass="p-datatable-sm p-datatable-striped"
+      [loading]="loading"
+      [sortMode]="'multiple'"
+      currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} Evaluaciones">
+  
+      <!-- Header de la tabla -->
+      <ng-template pTemplate="header">
+        <tr>
+          <th colspan="6" class="table-header">
+            <ion-icon name="people-outline" class="header-icon"></ion-icon>
+            LISTADO DE EVALUACIONES
+          </th>
+        </tr>
+        <tr>
+          <th pSortableColumn="fechaRegistro">
+            Fecha de Registro
+            <p-sortIcon field="fechaRegistro"></p-sortIcon>
+            <p-columnFilter type="text" field="fechaRegistro" display="menu"></p-columnFilter>
+          </th>
+          <th pSortableColumn="gerenteZonaNombre">
+            Gerente Zona
+            <p-sortIcon field="gerenteZonaNombre"></p-sortIcon>
+            <p-columnFilter type="text" field="gerenteZonaNombre" display="menu"></p-columnFilter>
+          </th>
+          <th pSortableColumn="nombreZona">
+            Zona
+            <p-sortIcon field="nombreZona"></p-sortIcon>
+            <p-columnFilter type="text" field="nombreZona" display="menu"></p-columnFilter>
+          </th>
+          <th pSortableColumn="observaciones">
+            Observaciones
+            <p-sortIcon field="observaciones"></p-sortIcon>
+            <p-columnFilter type="text" field="observaciones" display="menu"></p-columnFilter>
+          </th>
+
+          <th>Acciones</th>
+        </tr>
+      </ng-template>
+  
+      <!-- Cuerpo de la tabla -->
+      <ng-template pTemplate="body" let-evaluacion>
+        <tr>
+          <td>{{evaluacion.fechaRegistro | date:'dd/MM/yyyy'}}</td>
+          <td>{{evaluacion.gerenteZonaNombre}}</td>
+          <td>{{selectedGZ.nombreZona}}</td>
+          <td>{{evaluacion.observaciones}}</td>
+          <td class="actions-cell">
+            <button pButton 
+                    type="button" 
+                    icon="pi pi-pencil" 
+                    pTooltip="Editar"
+                    tooltipPosition="top"
+                    class="p-button-rounded p-button-primary p-button-sm"
+                    style="margin-right: 0.5rem;"
+                    (click)="editarEvaluacion(evaluacion)">
+            </button>
+            <button pButton 
+            type="button" 
+            icon="pi pi-star-fill" 
+            pTooltip="Evaluar"
+            tooltipPosition="top"
+            class="p-button-rounded p-button-primary p-button-sm"
+            (click)="abrirEvaluacion(evaluacion)"
+            >
+            </button>
+            
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+
+  
+  <p-dialog [(visible)]="displayModal" 
+             [modal]="true" 
+             [responsive]="true" 
+             [header]="(edit ? 'Actualizar Evaluación' : 'Crear Evaluación') ">
+             <ng-template pTemplate="header">
+              <div class="dialog-header">
+                <i class="pi pi-list-check"></i>
+                <span>{{edit ? 'Actualizar Evaluación' : 'Crear Evaluación'}}</span>
+              </div>
+            </ng-template>
+
+            <form [formGroup]="EvaluacionForm">
+              <ion-grid>
+                <ion-row class="form-row">
+                  <ion-col size="12" size-md="6">
+                    <span class="p-float-label">
+                      <input pInputText [value]="selectedGZ?.nombreCompleto" readonly>
+                      <label>Gerente de Zona</label>
+                    </span>
+                  </ion-col>
+                  <ion-col size="12" size-md="6">
+                    <span class="p-float-label">
+                      <input pInputText [value]="selectedGZ?.nombreZona" readonly>
+                      <label>Zona</label>
+                    </span>
+                  </ion-col>
+                  <ion-col size="12" style="margin-top: 15px;">
+                    <span class="p-float-label">
+                      <p-calendar formControlName="fechaRegistro" 
+                      [showIcon]="true"
+                      [showOnFocus]="false">
+                    </p-calendar>
+                      <label>Fecha Registro</label>
+                    </span>
+                  </ion-col>
+                  <ion-col size="12" style="margin-top: 15px;">
+                    <span class="p-float-label">
+                      <textarea pInputTextarea formControlName="observaciones" rows="4"></textarea>
+                      <label>Observaciones</label>
+                    </span>
+                  </ion-col>
+                </ion-row>
+
+              <!-- Botones -->
+              <ion-row class="button-row">
+                <ion-col>
+                  <div class="button-container">
+                    <button pButton 
+                            type="submit" 
+                            [label]="edit ? 'Actualizar' : 'Guardar'"
+                            class="p-button-primary action-button"
+                            [disabled]="!EvaluacionForm.valid"
+                            (click)="edit ? actualizarEvaluacion() : RegistrarEvaluacion()">
+                    </button>
+                    <button pButton 
+                            type="button" 
+                            label="Cancelar" 
+                            class="p-button-secondary action-button" 
+                            (click)="closeModal()">
+                    </button>
+                  </div>
+                </ion-col>
+              </ion-row>
+              </ion-grid>
+            </form>
+    </p-dialog>
+
+    <!-- Modal de Evaluación -->
+    <p-dialog [(visible)]="displayEvaluacionModal" 
+              [modal]="true" 
+              [responsive]="true"
+              [style]="{width: '90vw'}"
+              header="Evaluación del Gerente de Zona">
+
+     <ion-row class="form-row">
+       <ion-col size="12" size-md="6">
+         <span class="p-float-label">
+           <input pInputText [value]="selectedGZ?.nombreCompleto" readonly>
+           <label>Gerente de Zona</label>
+         </span>
+       </ion-col>
+       <ion-col size="12" size-md="6">
+         <span class="p-float-label">
+           <input pInputText [value]="selectedGZ?.nombreZona" readonly>
+           <label>Zona</label>
+         </span>
+       </ion-col>
+     </ion-row>
+
+      <div class="evaluation-table">
+        <p-table [value]="evaluacionesData" styleClass="p-datatable evaluation-grid">
+          <ng-template pTemplate="header">
+            <tr>
+              <th class="aspecto-header">ASPECTO</th>
+              <th *ngFor="let resp of listaRespuestas" class="respuesta-header">{{resp.nombre}}</th>
+              <th class="total-header">TOTAL</th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-aspecto>
+            <tr>
+              <td class="aspecto-cell">{{aspecto.nombre}}</td>
+              <td *ngFor="let resp of listaRespuestas" class="respuesta-cell">
+                <p-radioButton 
+                  [name]="'respuesta_' + aspecto.id"
+                  [value]="resp.id"
+                  [(ngModel)]="aspecto.respuesta">
+                </p-radioButton>
+              </td>
+              <td class="total-cell">{{aspecto.respuesta ? getPercentageForResponse(aspecto.respuesta) : '0,0%'}}</td>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="footer">
+            <tr class="totals-row">
+              <td class="aspecto-cell">TOTAL</td>
+              <td *ngFor="let resp of listaRespuestas" class="respuesta-cell">
+                {{getTotalForResponse(resp.id)}}
+              </td>
+              <td class="total-cell">{{getTotalPercentage()}}%</td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </div>
+
+      <ng-template pTemplate="footer">
+        <div class="dialog-footer">
+          <button pButton 
+                  type="button" 
+                  label="Guardar" 
+                  class="p-button-primary action-button"
+                  (click)="guardarEvaluacion()">
+          </button>
+          <button pButton 
+                  type="button" 
+                  label="Cancelar" 
+                  class="p-button-secondary action-button" 
+                  (click)="closeEvaluacionModal()">
+          </button>
+        </div>
+      </ng-template>
+    </p-dialog>
+
+    <!-- Confirm Dialog -->
+    <p-confirmDialog 
+    header="Confirmación" 
+    icon="pi pi-exclamation-triangle"
+    acceptLabel="Sí"
+    rejectLabel="No">
+    </p-confirmDialog>

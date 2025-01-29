@@ -1,0 +1,156 @@
+/* Contenedor Principal */
+.header-container {
+  padding: 16px;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+}
+
+/* Tabla */
+.table-container {
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 1rem;
+  margin: 1rem;
+
+  .table-header {
+    background: #f8f9fa;
+    padding: 1rem;
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #333;
+    display: flex;
+    align-items: center;
+    
+    .header-icon {
+      margin-right: 0.5rem;
+      font-size: 1.4rem;
+      color: #4a90e2;
+    }
+  }
+}
+
+/* Estilos PrimeNG personalizados */
+::ng-deep {
+  .p-datatable {
+    .p-datatable-header {
+      background: #f8f9fa;
+      border: none;
+      padding: 1rem;
+    }
+
+    .p-datatable-thead > tr > th {
+      background: #f8f9fa;
+      border: none;
+      padding: 0.75rem 1rem;
+      font-weight: 600;
+      color: #333;
+    }
+
+    .p-datatable-tbody > tr {
+      &:nth-child(even) {
+        background: #f8f9fa;
+      }
+
+      > td {
+        padding: 0.75rem 1rem;
+        border: none;
+        border-bottom: 1px solid #f2f2f2;
+      }
+
+      &:hover {
+        background: #f0f7ff !important;
+      }
+    }
+  }
+
+  .p-dialog {
+    .p-dialog-header {
+      background: #f8f9fa;
+      padding: 1rem;
+      
+      .p-dialog-title {
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: #333;
+      }
+    }
+
+    .p-dialog-content {
+      padding: 1.5rem;
+    }
+  }
+
+  .p-calendar, .p-inputtextarea, .p-multiselect {
+    width: 100%;
+    
+    .p-inputtext {
+      padding: 0.5rem;
+      font-size: 0.9rem;
+    }
+
+    &.p-float-label {
+      label {
+        font-size: 0.9rem;
+      }
+    }
+  }
+
+  .p-button {
+    &.p-button-sm {
+      padding: 0.4rem;
+      font-size: 0.875rem;
+    }
+  }
+}
+
+/* Botones de acción */
+.actions-cell {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+
+  .p-button {
+    margin: 0 0.2rem;
+  }
+}
+
+/* Formulario */
+ion-grid {
+  padding: 0;
+
+  ion-row {
+    margin: 0 -0.5rem;
+
+    ion-col {
+      padding: 0.5rem;
+    }
+  }
+}
+
+/* Responsive */
+@media screen and (max-width: 768px) {
+  .table-container {
+    margin: 0.5rem;
+    padding: 0.5rem;
+  }
+
+  ion-grid {
+    ion-row {
+      ion-col {
+        padding: 0.25rem;
+      }
+    }
+  }
+
+  ::ng-deep {
+    .p-datatable {
+      .p-datatable-thead > tr > th,
+      .p-datatable-tbody > tr > td {
+        padding: 0.5rem;
+      }
+    }
+  }
+}

@@ -1,17 +1,116 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>
-      Tab 1
-    </ion-title>
-  </ion-toolbar>
-</ion-header>
+<div class="form-container">
+  <p-card class="form-card">
+    <!-- Encabezado similar a ion-header -->
+    <div class="form-header">
+      <h1>Visita del Cliente</h1>
+    </div>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Tab 1</ion-title>
-    </ion-toolbar>
-  </ion-header>
+    <form [formGroup]="visitForm" (ngSubmit)="onSubmit()">
+      <!-- Sección Detalles de la Visita -->
+      <p-card class="details-card">
 
-  <app-explore-container name="Tab 1 page"></app-explore-container>
-</ion-content>
+        <div class="form-section">
+    
+
+          <!-- CANAL (Valor automático) -->
+          <p-inputgroup>
+            <p-inputgroup-addon>
+              <i class="pi pi-share-alt"></i>
+            </p-inputgroup-addon>
+            <input pInputText [(ngModel)]="channel" [ngModelOptions]="{standalone: true}" placeholder="Canal" readonly />
+          </p-inputgroup>
+
+          <!-- UBICACIÓN (Valor automático) -->
+          <p-inputgroup>
+            <p-inputgroup-addon>
+              <i class="pi pi-map-marker"></i>
+            </p-inputgroup-addon>
+            <input pInputText [(ngModel)]="location" [ngModelOptions]="{standalone: true}" placeholder="Ubicación" readonly />
+          </p-inputgroup>
+
+          <!-- CLIENTE (Valor automático) -->
+          <p-inputgroup>
+            <p-inputgroup-addon>
+              <i class="pi pi-user"></i>
+            </p-inputgroup-addon>
+            <input pInputText [(ngModel)]="client" [ngModelOptions]="{standalone: true}" placeholder="Cliente" readonly />
+          </p-inputgroup>
+
+          <!-- TIPO DE CLIENTE (Valor automático) -->
+          <p-inputgroup>
+            <p-inputgroup-addon>
+              <i class="pi pi-users"></i>
+            </p-inputgroup-addon>
+            <input pInputText [(ngModel)]="clientType" [ngModelOptions]="{standalone: true}" placeholder="Tipo de Cliente" readonly />
+          </p-inputgroup>
+
+          <!-- LINEA (Valor automático) -->
+          <p-inputgroup>
+            <p-inputgroup-addon>
+              <i class="pi pi-briefcase"></i>
+            </p-inputgroup-addon>
+            <input pInputText [(ngModel)]="line" [ngModelOptions]="{standalone: true}" placeholder="Línea" readonly />
+          </p-inputgroup>
+
+          <!-- TONELADAS (Valor automático) -->
+          <p-inputgroup>
+            <p-inputgroup-addon>
+              <i class="pi pi-box"></i>
+            </p-inputgroup-addon>
+            <input pInputText [(ngModel)]="tonnage" [ngModelOptions]="{standalone: true}" placeholder="Toneladas" readonly />
+          </p-inputgroup>
+        </div>
+      </p-card>
+
+      <!-- Sección Compromisos -->
+      <p-card class="commitments-card">
+        <h2>Compromisos</h2>
+        <div class="form-section">
+          <!-- ACTIVIDADES REALIZADAS -->
+          <p-inputgroup>
+            <p-inputgroup-addon>
+              <i class="pi pi-file"></i>
+            </p-inputgroup-addon>
+            <textarea
+              pInputTextarea
+              formControlName="activities"
+              rows="3"
+              placeholder="Actividades Realizadas"
+            ></textarea>
+          </p-inputgroup>
+
+          <!-- COMPROMISO PARA EL G. ZONA -->
+          <p-inputgroup>
+            <p-inputgroup-addon>
+              <i class="pi pi-file-edit"></i>
+            </p-inputgroup-addon>
+            <textarea
+              pInputTextarea
+              formControlName="commitmentZone"
+              rows="3"
+              placeholder="Compromiso para el G. Zona"
+            ></textarea>
+          </p-inputgroup>
+
+          <!-- COMPROMISO PARA EL DIRECTOR -->
+          <p-inputgroup>
+            <p-inputgroup-addon>
+              <i class="pi pi-file-edit"></i>
+            </p-inputgroup-addon>
+            <textarea
+              pInputTextarea
+              formControlName="commitmentDirector"
+              rows="3"
+              placeholder="Compromiso para el Director"
+            ></textarea>
+          </p-inputgroup>
+        </div>
+      </p-card>
+
+      <!-- Botón de Enviar -->
+      <div class="form-actions">
+        <button pButton type="submit" label="Guardar" class="p-button-success" [disabled]="visitForm.invalid"></button>
+      </div>
+    </form>
+  </p-card>
+</div>

@@ -1,1 +1,268 @@
+/* Fondo con gradiente azul pastel */
+.bg-blue-gradient {
+  background-image: linear-gradient(to right, #bed1ee, #8baed9);
+  padding: 0.5rem 1rem; /* Reducir padding para disminuir la altura */
+}
 
+/* Logo con borde redondeado */
+.rounded-logo {
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  border: 2px solid #6f92bf;
+  margin-bottom: 1rem;
+  position: relative;
+  z-index: 10;
+}
+
+/* Contenedor de pestañas */
+.tabs-container {
+  display: flex;
+  align-items: center;
+  gap: 0.1rem;
+}
+
+/* Estilo de cada pestaña */
+.tab-item {
+  text-decoration: none;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 0.4rem 0.8rem;
+  background-color: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: transform 0.3s, background-color 0.3s;
+  cursor: pointer;
+  .icon-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    i {
+      font-size: 1.4rem;
+      color: #1f4b6e;
+    }
+
+    span {
+      font-size: 0.75rem;
+      margin-top: 0.3rem;
+      color: #1f4b6e;
+    }
+  }
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+    transform: scale(1.05);
+  }
+
+  &.active-tab {
+    background-color: #6f92bf;
+    border-color: #1f4b6e;
+  }
+}
+
+/* Estilos para los ítems del menú */
+
+.menu-container {
+  width: 10rem;
+  max-width: 10rem; /* Limitar el ancho máximo */
+  min-width: 10rem; /* Limitar el ancho mínimo */
+  overflow: hidden; /* Ocultar contenido que se desborde */
+  background: #ececec00;
+  height: calc(100vh - 6rem);
+  padding: -1rem;
+}
+
+.custom-menu-item {
+  margin-left: -10px;
+  bottom:0.6rem;
+  display: flex;
+  align-items: center;
+  justify-content: start;
+  width: 10rem;
+  color: #1f4b6e; /* Texto claro */
+  background: #bed1ee; /* Fondo azul oscuro con transparencia */
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s;
+  text-decoration: none;
+  flex-direction: column;
+
+  span {
+    margin-left: 0.1rem;
+    font-size: 0.9rem; /* Tamaño del texto */
+  }
+
+  &:hover {
+    background-color: #4e74a7; /* Fondo más oscuro al pasar el mouse */
+    color: #ffffff; /* Texto blanco */
+  }
+}
+
+.custom-menu-item span:first-child {
+  font-size: 1.3rem; /* Tamaño del ícono */
+  color: #1f4b6e; /* Color del ícono */
+}
+
+/* Ítem activo */
+.custom-menu-item.router-link-active {
+  background-color: #4e74a7; /* Fondo activo */
+  color: #ffffff; /* Texto blanco */
+}
+
+.user-info {
+  display: flex;
+  flex-direction: column;
+  margin-left: -2rem;
+  margin-top: -1rem;
+  padding: 0.5rem 0.8rem 0.5rem 2.5rem;
+  border-radius: 8px;
+  background-color: #e9f1f8;
+  box-shadow: 3px 3px 6px rgba(0, 0, 0, 0.1);
+  border-right: 3px solid #4a90e2;
+  transition: all 0.3s ease;
+  position: relative;
+  z-index: 1;
+
+  &::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 44px;
+    height: 44px;
+    background-color: #e9f1f8;
+    border-radius: 50%;
+    z-index: 2;
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #e9f1f8;
+    border-radius: 8px;
+    z-index: 1;
+  }
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.15);
+  }
+
+  .user-name {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 0.2rem;
+    letter-spacing: 0.3px;
+    text-shadow: 1px 1px 1px rgba(255, 255, 255, 0.8);
+    position: relative;
+    z-index: 3;
+  }
+
+  .user-role {
+    font-size: 0.75rem;
+    color: #4a90e2;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    background: -webkit-linear-gradient(45deg, #4a90e2, #357abd);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    padding: 2px 0;
+    position: relative;
+    z-index: 3;
+  }
+}
+
+/* Contenedor principal */
+.main-container {
+  display: flex;
+  width: 100%;
+  height: calc(100vh - 80px); /* Ajusta esto según la altura de tu toolbar */
+  position: relative;
+}
+
+/* Menú lateral */
+.lateral-buttons {
+  width: 60px;
+  background: #0c1b461e;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 10px;
+  z-index: 1000;
+  height: 100%;
+  flex-shrink: 0;
+
+  .lateral-button {
+    width: 45px;
+    height: 45px;
+    border-radius: 30%;
+    border: none;
+    background: #6f92bf;
+    color: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+
+    &:hover {
+      background: #4d8dff;
+      transform: translateX(5px);
+    }
+
+    i {
+      font-size: 1.2rem;
+    }
+  }
+}
+
+/* Contenido principal */
+.content-container {
+  flex-grow: 1;
+  padding: 20px;
+  transition: margin-left 0.3s ease;
+  width: 100%;
+  overflow-x: hidden;
+
+  &.with-menu {
+    margin-left: 0; /* El menú ya ocupa su propio espacio */
+  }
+}
+
+/* Ajustes para dispositivos móviles */
+@media screen and (max-width: 768px) {
+  /* Logo en una fila superior */
+  .rounded-logo {
+    display: block;
+    margin: 0 auto 1rem auto; /* Centrar el logo con espaciado inferior */
+  }
+
+  .tabs-container {
+    flex-direction: row; /* Botones en una fila horizontal */
+    justify-content: flex-start; /* Alinear los botones a la izquierda */
+    align-items: center; /* Centrar verticalmente los botones */
+    gap: 0rem; /* Espaciado compacto entre botones */
+    margin-left: -1rem; /* Desplazar los botones hacia la izquierda */
+  }
+
+  .icon-container {
+    i {
+      font-size: 1.2rem; /* Reducir tamaño del ícono */
+    }
+
+    span {
+      font-size: 0.7rem; /* Reducir tamaño del texto */
+    }
+  }
+}

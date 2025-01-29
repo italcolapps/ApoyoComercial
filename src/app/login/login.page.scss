@@ -1,0 +1,150 @@
+// Paleta de colores pastel azules
+$pastel-blue-light: #eaf3ff;
+$pastel-blue-medium: #bed1ee;
+$pastel-blue-dark: #2984c6;
+
+.login-container {
+  width: 100%;
+  min-height: 100vh;
+  background: $pastel-blue-light;
+  display: flex;
+  flex-direction: column;
+
+  @media screen and (min-width: 768px) {
+    flex-direction: row;
+  }
+}
+
+.left-col {
+  display: none;
+  @media screen and (min-width: 768px) {
+    display: block;
+    flex: 1;
+    background-image: url('../../assets/img/planta.png'); 
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
+}
+
+.right-col {
+  flex: 1;
+  background: $pastel-blue-light;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  box-sizing: border-box;
+
+  .login-form-wrapper {
+    background: #fff;
+    padding: 2rem;
+    border-radius: 10px;
+    width: 100%;
+    max-width: 360px;
+    box-shadow: 0 4px 20px #2984c662;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    .company-logo {
+      margin-bottom: 1.5rem; 
+      img {
+        max-width: 100px;
+        height: auto;
+        border-radius: 100px;
+        display: block;
+        margin: 0 auto;
+      }
+    }
+
+    h1 {
+      margin-bottom: 1rem;
+      font-size: 1.5rem;
+      text-align: center;
+      color: $pastel-blue-dark;
+    }
+
+    form {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+
+      .form-field {
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 1rem;
+
+        label {
+          margin-bottom: 0.5rem;
+          font-weight: bold;
+          color: $pastel-blue-dark;
+        }
+
+        input[pInputText],
+        p-password {
+          width: 100%;
+          padding: 0.5rem;
+          border-radius: 5px;
+          border: 1px solid $pastel-blue-medium;
+          &:focus {
+            border-color: $pastel-blue-dark;
+            outline: none;
+          }
+        }
+
+        .error-msg {
+          color: #d9534f;
+          font-size: 0.875rem;
+          margin-top: 0.5rem;
+        }
+      }
+
+      .login-button {
+        margin-top: 1rem;
+        background: $pastel-blue-dark !important;
+        border: none;
+        color: #fff !important;
+        width: 100%;
+        padding: 0.75rem;
+        border-radius: 5px;
+        font-weight: bold;
+        cursor: pointer;
+        text-align: center;
+
+        &:hover {
+          background: #135381 !important;
+        }
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .left-col {
+    display: none;
+  }
+
+  .right-col {
+    width: 100%;
+    max-width: 100%;
+    padding: 2rem;
+  }
+}
+
+.forgot-password-link {
+  display: block;
+  margin-top: 8px;
+  text-align: center;
+}
+
+.forgot-password-link a {
+  color: #007bff;
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+
+.forgot-password-link a:hover {
+  text-decoration: underline;
+}
