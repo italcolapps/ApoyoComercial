@@ -23,6 +23,10 @@ export class OportunidadesService {
     return this._http.get(`${this.urlApi}/${this.Oportunidad}/GetOportunidadByIdVisita/${idVisita}`);
   }
 
+  getOportunidadByIdSeguimientoPlanta(idSeguimiento: number) {
+    return this._http.get(`${this.urlApi}/${this.Oportunidad}/GetOportunidadByIdSeguimientoPlanta/${idSeguimiento}`);
+  }
+
   createOportunidad(data: any) {
     return this._http.post(`${this.urlApi}/${this.Oportunidad}`, data);
   }

@@ -2,14 +2,10 @@
     <p-toolbar 
         styleClass="bg-blue-gradient shadow-2" 
         [style]="{ 'background-image': 'linear-gradient(to right, #bed1ee, #8baed9)' }">
-        
-        <!-- Logo -->
+
+        <!-- Title -->
         <ng-template pTemplate="start">
-            <img src="assets/img/italcol.png" alt="Logo Left" class="rounded-logo" />
-            <div class="user-info">
-                <span class="user-name">{{ userData.Nombre }} {{ userData.Apellido }}</span>
-                <span class="user-role">{{ RolText }}</span>
-            </div>
+            <span style="font-weight: bold; font-size: 1.2em; color: #1a4b8c;">APP DIRECTORES DE LINEA</span>
         </ng-template>
   
         <!-- Botones -->
@@ -30,17 +26,18 @@
             </div>
         </ng-template>
     </p-toolbar>
-  
+
+
     <div class="main-container">
       <!-- Menú lateral -->
-      <div *ngIf="showSubMenu" class="lateral-buttons">
+      <!-- <div *ngIf="showSubMenu" class="lateral-buttons">
           <button *ngFor="let item of subMenuItems"
                   [routerLink]="item.route"
                   class="lateral-button"
                   [pTooltip]="item.label">
               <i [class]="item.icon"></i>
           </button>
-      </div>
+      </div> -->
 
       <!-- Contenido principal -->
       <div class="content-container" [class.with-menu]="showSubMenu">
@@ -48,3 +45,10 @@
       </div>
     </div>
   </div>
+  
+  <!-- Footer -->
+  <footer class="app-footer">
+    <div class="user-info">
+      <span class="user-name" style="color: #1a4b8c; font-weight: bold;">{{ userData.Nombre }} {{ userData.Apellido }}</span>
+    </div>
+  </footer>

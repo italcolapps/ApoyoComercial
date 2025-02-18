@@ -1,0 +1,355 @@
+<div class="header-container">
+  <!-- Título y Ruta -->
+  <div class="seguimiento-info">
+    <div class="info-container">
+      <div class="info-item">
+        <span class="info-label">Nombre:</span>
+        <span class="info-value">{{seguimientoSeleccionado.codigo}} - {{seguimientoSeleccionado.nombre}}</span>
+      </div>
+      <div class="info-item">
+        <span class="info-label">Plantas:</span>
+        <span class="info-value">
+          <span *ngFor="let planta of seguimientoSeleccionado.plantasAsociadas; let last = last">
+            {{planta.nombrePlanta}}{{!last ? ', ' : ''}}
+          </span>
+        </span>
+      </div>
+      <div class="info-item">
+        <span class="info-label">Fecha:</span>
+        <span class="info-value">{{seguimientoSeleccionado.fechaInicio | date:'dd/MM/yyyy'}} - {{seguimientoSeleccionado.fechaFin | date:'dd/MM/yyyy'}}</span>
+      </div>
+      <div class="info-item">
+        <span class="info-label">Estado:</span>
+        <span class="info-value">{{seguimientoSeleccionado.estadoSeguimientoPlanta}}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Encabezado Principal -->
+  <div class="header-content">
+    <div class="title-section">
+      <h1 class="page-title">Ventas</h1>
+    </div>
+
+        <!-- Botones y Selector -->
+        <div class="action-section">
+          <!-- <app-cliente-search style="margin-top: -5px;" (clienteSeleccionado)="onClienteChange($event)"></app-cliente-search> -->
+          <button class="btn add-btn" (click)="showModal()">
+            <i class="pi pi-chart-bar"></i>
+            Agregar
+          </button>
+        </div>
+    </div>
+  </div>
+
+              <!-- Tabla de Clientes -->
+<div class="table-container">
+  <p-table 
+    [value]="listaReportesAnalitica" 
+    [loading]="loading"
+    [paginator]="true" 
+    [rows]="15"
+    [showCurrentPageReport]="true"
+    [rowsPerPageOptions]="[10,25,50]"
+    styleClass="p-datatable-sm p-datatable-striped"
+    [loading]="loading"
+    [sortMode]="'multiple'"
+    currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} Reportes">
+
+
+    <!-- Header de la tabla -->
+    <ng-template pTemplate="header">
+      <tr>
+        <th colspan="26" class="table-header">
+          <ion-icon name="bar-chart"></ion-icon>
+          CONSULTA DE RESULTADOS VENTAS
+        </th>
+      </tr>
+      <tr>
+        <th rowspan="3">PLANTA</th>
+        <th colspan="12">ULTIMO MES CERRADO</th>
+        <th colspan="12">ACUMULADO AÑO</th>
+        <th colspan="2"></th>
+      </tr>
+      <tr>
+        <th colspan="4">DIRECTOS</th>
+        <th colspan="4">DISTRIBUCION</th>
+        <th colspan="4">TOTAL</th>
+        <th colspan="4">DIRECTOS</th>
+        <th colspan="4">DISTRIBUCION</th>
+        <th colspan="4">TOTAL</th>
+        <th colspan="2"></th>
+      </tr>
+      <tr>
+        <th>Ppto</th>
+        <th>Vta</th>
+        <th>Dif</th>
+        <th>%</th>
+        <th>Ppto</th>
+        <th>Vta</th>
+        <th>Dif</th>
+        <th>%</th>
+        <th>Ppto</th>
+        <th>Vta</th>
+        <th>Dif</th>
+        <th>%</th>
+        <th>Ppto</th>
+        <th>Vta</th>
+        <th>Dif</th>
+        <th>%</th>
+        <th>Ppto</th>
+        <th>Vta</th>
+        <th>Dif</th>
+        <th>%</th>
+        <th>Ppto</th>
+        <th>Vta</th>
+        <th>Dif</th>
+        <th>%</th>
+        <!-- <th>Vta Mes</th>
+        <th>Ppto Mes</th>
+        <th>Dif</th>
+        <th>%</th> -->
+        <th></th>
+      </tr>
+    </ng-template>
+
+    <!-- Cuerpo de la tabla -->
+    <ng-template pTemplate="body" let-reporte>
+      <tr>
+        <td>{{reporte.nombrePlanta}}</td>
+        <td>{{reporte.presupuestoDirectoMes}}</td>
+        <td>{{reporte.ventaDirectoMes}}</td>
+        <td>{{reporte.ventaDirectoMes - reporte.presupuestoDirectoMes}}</td>
+        <td>{{reporte.ventaDirectoMes / reporte.presupuestoDirectoMes | percent:'1.0-0'}}</td>
+        <td>{{reporte.presupuestoDistribucionMes}}</td>
+        <td>{{reporte.ventaDistribucionMes}}</td>
+        <td>{{reporte.ventaDistribucionMes - reporte.presupuestoDistribucionMes}}</td>
+        <td>{{reporte.ventaDistribucionMes / reporte.presupuestoDistribucionMes | percent:'1.0-0'}}</td>
+        <td>{{reporte.presupuestoDirectoMes + reporte.presupuestoDistribucionMes}}</td>
+        <td>{{reporte.ventaDirectoMes + reporte.ventaDistribucionMes}}</td>
+        <td>{{reporte.ventaDirectoMes + reporte.ventaDistribucionMes - (reporte.presupuestoDirectoMes + reporte.presupuestoDistribucionMes)}}</td>
+        <td>{{((reporte.ventaDirectoMes + reporte.ventaDistribucionMes) / (reporte.presupuestoDirectoMes + reporte.presupuestoDistribucionMes)) | percent:'1.0-0'}}</td>
+        <td>{{reporte.presupuestoDirectoAno}}</td>
+        <td>{{reporte.ventaDirectoAno}}</td>
+        <td>{{reporte.ventaDirectoAno - reporte.presupuestoDirectoAno}}</td>
+        <td>{{reporte.ventaDirectoAno / reporte.presupuestoDirectoAno | percent:'1.0-0'}}</td>
+        <td>{{reporte.prsupuestoDistribucionAno}}</td>
+        <td>{{reporte.ventaDistribucionAno}}</td>
+        <td>{{reporte.ventaDistribucionAno - reporte.prsupuestoDistribucionAno}}</td>
+        <td>{{reporte.ventaDistribucionAno / reporte.prsupuestoDistribucionAno | percent:'1.0-0'}}</td>
+        
+        <td>{{reporte.presupuestoDirectoAno + reporte.prsupuestoDistribucionAno}}</td>
+        <td>{{reporte.ventaDirectoAno + reporte.ventaDistribucionAno}}</td>
+        <td>{{reporte.ventaDirectoAno + reporte.ventaDistribucionAno - (reporte.presupuestoDirectoAno + reporte.prsupuestoDistribucionAno)}}</td>
+        <td>{{((reporte.ventaDirectoAno + reporte.ventaDistribucionAno) / (reporte.presupuestoDirectoAno + reporte.prsupuestoDistribucionAno)) | percent:'1.0-0'}}</td>
+
+        <td class="actions-cell">
+          <div class="action-buttons">
+            <button pButton 
+              type="button" 
+              icon="pi pi-pencil" 
+              pTooltip="Editar"
+              tooltipPosition="top"
+              class="p-button-rounded p-button-primary p-button-sm"
+              (click)="editarReporteAnalitica(reporte)">
+            </button>
+          </div>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>
+
+<p-dialog [(visible)]="displayModal" 
+          [modal]="true" 
+          [responsive]="true" 
+          [header]="(edit ? 'ActualizarVentas' : 'Registrar Reporte de Ventas')">
+  <ng-template pTemplate="header">
+    <div class="dialog-header">
+      <i class="pi pi-chart-bar"></i>
+      <span>{{edit ? 'Actualizar Ventas' : 'Registrar de Ventas'}}</span>
+    </div>
+  </ng-template>
+
+  <form [formGroup]="AnaliticaForm">
+
+    <div class="analytic-table">
+      <div class="fecha-registro-container" style="margin-bottom: 1rem;">
+        <ion-row class="form-row">
+          <ion-col size="12" size-md="4">
+            <p-calendar formControlName="fechaRegistro"
+            view="month"
+            dateFormat="mm/yy"
+            [showIcon]="true"
+            [showOnFocus]="false"
+            [readonlyInput]="true"
+            placeholder="Seleccione Mes/Año"
+            styleClass="narrow-calendar">
+            </p-calendar>
+          </ion-col>
+
+          <ion-col size="12" size-sm="6" size-lg="6">
+            <p-floatLabel>
+              <p-dropdown 
+                id="planta"
+                [options]="seguimientoPlantas"
+                optionLabel="nombrePlanta"
+                formControlName="idPlanta"
+                optionValue="idPlanta"
+                [showClear]="true"
+                placeholder="Seleccione la Planta">
+              </p-dropdown>
+            <label for="planta">Planta</label>
+            </p-floatLabel>
+          </ion-col>
+  
+        </ion-row>
+
+      </div>
+      <div class="table-container">
+        <!-- Tabla Último Mes Cerrado -->
+        <table class="mes-table" style="text-align: center;">
+          <thead>
+            <tr>
+              <th colspan="4" style="text-align: center; font-weight: bold;">ÚLTIMO MES CERRADO</th>
+            </tr>
+            <tr>
+              <th style="text-align: center;">CANAL</th>
+              <th style="text-align: center;">DIRECTOS</th>
+              <th style="text-align: center;">DISTRIBUCION</th>
+              <th style="text-align: center;">TOTAL</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="text-align: center;">PRESUPUESTO</td>
+              <td style="text-align: center;">
+                <input type="number" formControlName="presupuestoDirectoMes" class="input-highlight" style="text-align: center;">
+              </td>
+              <td style="text-align: center;">
+                <input type="number" formControlName="presupuestoDistribucionMes" class="input-highlight" style="text-align: center;">
+              </td>
+              <td style="text-align: center;">{{getTotal('presupuestoMes')}}</td>
+            </tr>
+            <tr>
+              <td style="text-align: center;">VENTAS</td>
+              <td style="text-align: center;">
+                <input type="number" formControlName="ventaDirectoMes" class="input-highlight" style="text-align: center;">
+              </td>
+              <td style="text-align: center;">
+                <input type="number" formControlName="ventaDistribucionMes" class="input-highlight" style="text-align: center;">
+              </td>
+              <td style="text-align: center;">{{getTotal('ventaMes')}}</td>
+            </tr>
+            <tr>
+              <td style="text-align: center;">TONELADAS FALTANTES</td>
+              <td style="text-align: center;">{{getToneladasFaltantes('directo', 'mes')}}</td>
+              <td style="text-align: center;">{{getToneladasFaltantes('distribucion', 'mes')}}</td>
+              <td style="text-align: center;">{{getToneladasFaltantes('total', 'mes')}}</td>
+            </tr>
+            <tr>
+              <td style="text-align: center;">% CUMPLIMIENTO</td>
+              <td style="text-align: center;">{{getCumplimiento('directo', 'mes')}}%</td>
+              <td style="text-align: center;">{{getCumplimiento('distribucion', 'mes')}}%</td>
+              <td style="text-align: center;">{{getCumplimiento('total', 'mes')}}%</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- Tabla Acumulado Año -->
+        <table class="ano-table" style="margin-top: 1rem; text-align: center;">
+          <thead>
+            <tr>
+              <th colspan="4" style="text-align: center; font-weight: bold;">ACUMULADO AÑO</th>
+            </tr>
+            <tr>
+              <th style="text-align: center;">CANAL</th>
+              <th style="text-align: center;">DIRECTOS</th>
+              <th style="text-align: center;">DISTRIBUCION</th>
+              <th style="text-align: center;">TOTAL</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="text-align: center;">PRESUPUESTO</td>
+              <td style="text-align: center;">
+                <input type="number" formControlName="presupuestoDirectoAno" class="input-highlight" style="text-align: center;">
+              </td>
+              <td style="text-align: center;">
+                <input type="number" formControlName="prsupuestoDistribucionAno" class="input-highlight" style="text-align: center;">
+              </td>
+              <td style="text-align: center;">{{getTotal('presupuestoAno')}}</td>
+            </tr>
+            <tr>
+              <td style="text-align: center;">VENTAS</td>
+              <td style="text-align: center;">
+                <input type="number" formControlName="ventaDirectoAno" class="input-highlight" style="text-align: center;">
+              </td>
+              <td style="text-align: center;">
+                <input type="number" formControlName="ventaDistribucionAno" class="input-highlight" style="text-align: center;">
+              </td>
+              <td style="text-align: center;">{{getTotal('ventaAno')}}</td>
+            </tr>
+            <tr>
+              <td style="text-align: center;">TONELADAS FALTANTES</td>
+              <td style="text-align: center;">{{getToneladasFaltantes('directo', 'ano')}}</td>
+              <td style="text-align: center;">{{getToneladasFaltantes('distribucion', 'ano')}}</td>
+              <td style="text-align: center;">{{getToneladasFaltantes('total', 'ano')}}</td>
+            </tr>
+            <tr>
+              <td style="text-align: center;">% CUMPLIMIENTO</td>
+              <td style="text-align: center;">{{getCumplimiento('directo', 'ano')}}%</td>
+              <td style="text-align: center;">{{getCumplimiento('distribucion', 'ano')}}%</td>
+              <td style="text-align: center;">{{getCumplimiento('total', 'ano')}}%</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    
+    <ion-row class="observacion-row">
+      <ion-col size="12">
+        <p-floatLabel class="observacion-field">
+          <textarea 
+            id="observacion" 
+            pInputTextarea 
+            formControlName="observacion" 
+            [rows]="4">
+          </textarea>
+          <label for="observacion">Observaciones</label>
+        </p-floatLabel>
+      </ion-col>
+    </ion-row>
+    
+    <ion-grid>
+      <ion-row class="button-row">
+        <ion-col>
+          <div class="button-container">
+            <button pButton 
+                    type="submit" 
+                    [label]="edit ? 'Actualizar' : 'Guardar'"
+                    class="p-button-primary action-button"
+                    [disabled]="!AnaliticaForm.valid"
+                    (click)="edit ? actualizarReporteAnalitica() : RegistrarReporteAnalitica()">
+            </button>
+            <button pButton 
+                    type="button" 
+                    label="Cancelar" 
+                    class="p-button-secondary action-button" 
+                    (click)="closeModal()">
+            </button>
+          </div>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </form>
+</p-dialog>
+
+
+    <!-- Confirm Dialog -->
+    <p-confirmDialog 
+      header="Confirmación" 
+      icon="pi pi-exclamation-triangle"
+      acceptLabel="Sí"
+      rejectLabel="No">
+    </p-confirmDialog>

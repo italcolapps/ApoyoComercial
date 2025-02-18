@@ -16,6 +16,7 @@
 }
 
 /* Contenedor de pestañas */
+
 .tabs-container {
   display: flex;
   align-items: center;
@@ -227,6 +228,74 @@
   }
 }
 
+/* Estilos para el menú lateral */
+.lateral-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  position: fixed;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  background: var(--surface-card);
+  padding: 1rem;
+  border-radius: 0 8px 8px 0;
+  box-shadow: 4px 0 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+  z-index: 1000;
+
+  &.collapsed {
+    transform: translateX(-100%) translateY(-50%);
+
+    .toggle-button {
+      position: absolute;
+      right: -40px;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+  }
+
+  .toggle-button {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--primary-color);
+    border: none;
+    color: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s;
+
+    &:hover {
+      background: var(--primary-600);
+    }
+  }
+
+  .lateral-button {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    background: transparent;
+    border: 1px solid var(--surface-border);
+    color: var(--text-color);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+
+    &:hover {
+      background: var(--surface-hover);
+    }
+
+    i {
+      font-size: 1.2rem;
+    }
+  }
+}
+
 /* Contenido principal */
 .content-container {
   flex-grow: 1;
@@ -263,6 +332,46 @@
 
     span {
       font-size: 0.7rem; /* Reducir tamaño del texto */
+    }
+  }
+}
+
+.custom-peso {
+  display: inline-block;
+  width: 1.2em;
+  height: 1.2em;
+  background-image: url('../../assets/icon/peso.svg');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  vertical-align: middle;
+}
+
+/* Estilos del footer */
+.app-footer {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  padding: 10px;
+  background-color: rgba(255, 255, 255, 0.9);
+  box-shadow: -2px -2px 5px rgba(0, 0, 0, 0.1);
+  border-top-left-radius: 8px;
+  z-index: 1000;
+
+  .user-info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 2px;
+
+    .user-name {
+      font-size: 0.9rem;
+      margin: 0;
+    }
+
+    .user-role {
+      font-size: 0.8rem;
+      margin: 0;
     }
   }
 }

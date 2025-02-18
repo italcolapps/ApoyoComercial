@@ -28,6 +28,7 @@ import { CryptoService } from './services/crypto.service';
 import { JwtModule } from '@auth0/angular-jwt';
 import { AuthInterceptorService } from './services/auth-interceptor.service';
 import { MessageService } from 'primeng/api';
+import { ListboxModule } from 'primeng/listbox';
 
 registerLocaleData(localeEs, 'es');
 
@@ -63,6 +64,7 @@ export function getToken():string{
     ButtonModule,
     CardModule,
     ToastModule,
+    ListboxModule,
     InputGroupAddonModule,
     SplitterModule,
     JwtModule.forRoot({

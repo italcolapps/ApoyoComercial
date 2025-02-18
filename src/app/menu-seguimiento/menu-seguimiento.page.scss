@@ -1,0 +1,538 @@
+// Variables del componente
+
+.seguimiento-info {
+    margin-bottom: 20px;
+    padding: 12px;
+    background-color: #f8f9fa;
+    border-radius: 6px;
+    border-left: 4px solid #2196F3;
+  
+    .info-container {
+      display: flex;
+      justify-content: flex-start;
+      gap: 24px;
+      flex-wrap: wrap;
+  
+      .info-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+  
+        .info-label {
+          font-weight: 600;
+          color: #555;
+        }
+  
+        .info-value {
+          color: #333;
+        }
+      }
+    }
+  }
+
+$primary-color: #4a90e2;
+$text-dark: #333;
+$text-muted: #666;
+$border-color: #dee2e6;
+$transition: all 0.3s ease;
+
+
+.detalle-seguimiento {
+    display: flex;
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+
+    &__title {
+        background: $primary-color;
+        padding: 1rem;
+        border-radius: 8px;
+        margin: -0.5rem -0.5rem 1rem -0.5rem;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    &__subtitle {
+        background: $primary-color;
+        margin: -1rem -1rem 1rem -1rem;
+        border-radius: 8px 8px 0 0;
+    }
+
+    &__container {
+        background: white;
+        border-radius: 8px;
+        transition: $transition;
+        height: calc(100vh - 2rem);
+        overflow-y: auto;
+        margin: 1rem;
+        padding: 1rem;
+    }
+
+    &__header {
+        color: $text-dark;
+        border-bottom: 2px solid $primary-color;
+        padding-bottom: 1rem;
+        margin-bottom: 1.5rem;
+        
+        .p-tag {
+            background: lighten($primary-color, 35%);
+            color: darken($primary-color, 15%);
+            border: 1px solid $primary-color;
+        }
+    }
+
+    &__panel {
+        border: 1px solid $border-color;
+        border-radius: 6px !important;
+        margin-bottom: 1.5rem;
+        transition: $transition;
+        
+        &:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            border-color: $primary-color;
+        }
+
+        ::ng-deep {
+            .detalle-seguimiento__panel {
+                .p-panel-header {
+                    background-color: #4a90e2 !important;
+                    color: white !important;
+                    padding: 0.75rem;
+                    font-weight: 600;
+                    
+                    .p-panel-header-icon {
+                        color: white !important;
+                    }
+                }
+                
+                .p-panel-content {
+                    padding: 1rem;
+                }
+            }
+        }
+    }
+
+    &__table {
+        .p-datatable {
+            &-header {
+                border: none;
+                background: transparent;
+                padding: 0 0 1rem 0;
+            }
+
+            th {
+                background: lighten($primary-color, 45%) !important;
+                color: $text-dark !important;
+                font-weight: 600;
+                border-color: $border-color !important;
+            }
+
+            td {
+                color: $text-muted;
+                border-color: $border-color !important;
+                vertical-align: top;
+
+                .grid {
+                    margin: 0;
+                    
+                    .col-12 {
+                        padding: 0;
+                        
+                        &:first-child {
+                            border-right: 1px solid $border-color;
+                        }
+                        
+                        span.font-medium {
+                            color: $text-dark;
+                            display: block;
+                            margin-bottom: 0.25rem;
+                            font-weight: bold;
+                        }
+                        
+                        div {
+                            color: $text-muted;
+                        }
+                    }
+                }
+            }
+
+            tr {
+                &.fecha-row > td {
+                    padding: 0;
+                }
+                
+                &:hover {
+                    td {
+                        background: lighten($primary-color, 48%) !important;
+                        color: darken($text-muted, 10%);
+                    }
+                }
+            }
+        }
+
+        &-responsive {
+            @media (max-width: 768px) {
+                .p-datatable {
+                    &-wrapper {
+                        overflow-x: auto;
+                    }
+                    
+                    th, td {
+                        white-space: nowrap;
+                        min-width: 120px;
+                    }
+                }
+            }
+        }
+    }
+
+    &__observaciones {
+        color: $text-muted;
+        line-height: 1.6;
+        max-height: 100px;
+        overflow-y: auto;
+        padding-right: 0.5rem;
+    }
+
+    .content-container {
+        flex: 1;
+        padding: 0;
+        overflow-y: auto;
+        height: 100%;
+    }
+
+    .main-container {
+        display: flex;
+        height: 100%;
+        gap: 1rem;
+    }
+
+    .grid {
+        margin: 0;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+
+    .col-12 {
+        padding: 0;
+        margin-bottom: 1rem;
+    }
+
+    .p-card {
+        height: 100%;
+        
+        ::ng-deep .p-card-body {
+            padding: 0rem;
+        }
+    }
+}
+
+:host ::ng-deep {
+    .detalle-seguimiento__panel {
+        .p-panel-header {
+            background-color: #8baed9 !important;
+            color: white !important;
+            
+            .p-panel-header-icon {
+                color: white !important;
+            }
+        }
+
+        .p-datatable {
+            .p-datatable-tbody > tr > td {
+                padding: 0.3rem;
+            }
+
+            td.font-medium {
+                padding-right: 1.5rem;
+                font-weight: 600;
+                min-width: 120px;
+            }
+        }
+    }
+}
+
+.lateral-buttons {
+    width: 50px;
+    transition: width 0.3s ease;
+    background: #8baed9;
+    border-radius: 10px;
+    padding: 0.2rem;
+    height: fit-content;
+    margin: 1rem 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    position: fixed;
+    left: -15px;
+    top: 60%;
+    transform: translateY(-50%);
+    box-shadow: 4px 0 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+    z-index: 1000;
+    
+    &.collapsed {
+        width: 0;
+        padding: 0;
+        margin: 0;
+        overflow: hidden;
+
+        .toggle-menu-button {
+            width: 25px;
+            height: 25px;
+            border-radius: 4px;
+            margin-bottom: 0;
+            transform: translateX(20px);
+
+            i {
+                font-size: 0.9rem;
+            }
+
+            &::after {
+                display: none;
+            }
+        }
+    }
+
+    .toggle-menu-button {
+        width: 40px;
+        height: 40px;
+        border-radius: 8px;
+        background: transparent;
+        border: none;
+        color: white;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+        margin-bottom: 0.5rem;
+        position: relative;
+
+        &::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 15%;
+            width: 70%;
+            height: 1px;
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        &:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        i {
+            font-size: 1.2rem;
+            color: white;
+        }
+    }
+
+    .lateral-button {
+        width: 40px;
+        height: 40px;
+        border-radius: 8px;
+        background: transparent;
+        border: none;
+        color: white;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s;
+        position: relative;
+
+        .custom-icon {
+            width: 20px;
+            height: 20px;
+            filter: brightness(0) invert(1);
+        }
+
+        &:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 15%;
+            width: 70%;
+            height: 1px;
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        &:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        i {
+            font-size: 1.2rem;
+            color: white;
+        }
+    }
+}
+
+
+/* Contenido principal */
+.content-container {
+    flex-grow: 1;
+    padding: 20px;
+    transition: margin-left 0.3s ease;
+    width: 100%;
+    overflow-x: hidden;
+
+    &.with-menu {
+        margin-left: 0; /* El menú ya ocupa su propio espacio */
+    }
+}
+
+/* Ajustes para dispositivos móviles */
+@media screen and (max-width: 768px) {
+    /* Logo en una fila superior */
+    .rounded-logo {
+        display: block;
+        margin: 0 auto 1rem auto; /* Centrar el logo con espaciado inferior */
+    }
+
+    .tabs-container {
+        flex-direction: row; /* Botones en una fila horizontal */
+        justify-content: flex-start; /* Alinear los botones a la izquierda */
+        align-items: center; /* Centrar verticalmente los botones */
+        gap: 0rem; /* Espaciado compacto entre botones */
+        margin-left: -1rem; /* Desplazar los botones hacia la izquierda */
+    }
+
+    .icon-container {
+        i {
+            font-size: 1.2rem; /* Reducir tamaño del ícono */
+        }
+
+        span {
+            font-size: 0.7rem; /* Reducir tamaño del texto */
+        }
+    }
+
+    .table-container {
+        padding: 1rem;
+        
+        ::ng-deep {
+          .p-datatable {
+            border: 1px solid #777879;
+            border-radius: 4px;
+      
+            .p-datatable-header {
+              padding: 0.5rem 1rem;
+              border: 1px solid #cfcfcf;
+            }
+            
+            .p-datatable-thead > tr > th {
+              padding: 0.5rem;
+              font-size: 0.9rem;
+              background-color: #d8d8d8 !important;
+              color: white !important;
+              white-space: nowrap;
+              text-align: center;
+              border: 1px solid #dee2e6;
+      
+              &.table-header {
+                font-size: 14px;
+                font-weight: 600;
+                letter-spacing: 0.5px;
+                padding: 1rem;
+                background-color: #dbdbdb !important;
+                border-bottom: 2px solid #fff;
+      
+                .header-icon {
+                  vertical-align: middle;
+                  margin-right: 8px;
+                  font-size: 1.3rem;
+                }
+              }
+      
+              .p-column-title,
+              .p-sortable-column-icon,
+              .p-column-filter {
+                color: white !important;
+              }
+      
+              .p-column-filter-menu-button {
+                color: white !important;
+              }
+            }
+            
+            .p-datatable-tbody > tr > td {
+              padding: 0.5rem;
+              font-size: 0.9rem;
+              text-align: center;
+              border: 1px solid #6f92bf;
+            }
+      
+            .estado-badge {
+              padding: 0.25rem 0.5rem;
+              border-radius: 4px;
+              font-size: 0.8rem;
+              font-weight: 500;
+              color: #000000;
+              
+              &.activo {
+                background-color: rgba(var(--ion-color-success-rgb), 0.2);
+              }
+              
+              &.inactivo {
+                background-color: rgba(var(--ion-color-danger-rgb), 0.2);
+              }
+            }
+      
+            .p-button.p-button-sm {
+              width: 2rem;
+              height: 2rem;
+              
+              .p-button-icon {
+                font-size: 0.8rem;
+              }
+            }
+          }
+      
+          // Estilos para el menú de filtros
+          .p-column-filter-overlay {
+            min-width: 200px !important;
+            width: auto !important;
+            max-width: 250px !important;
+      
+            .p-column-filter-row-items {
+              padding: 0.3rem;
+              
+              .p-column-filter-row-item {
+                padding: 0.4rem 0.8rem;
+                font-size: 0.9rem;
+              }
+            }
+      
+            .p-column-filter-constraint {
+              padding: 0.5rem;
+            }
+      
+            .p-column-filter-operator {
+              padding: 0.5rem;
+            }
+      
+            .p-column-filter-buttonbar {
+              padding: 0.5rem;
+            }
+          }
+      
+          .p-paginator {
+            border: 1px solid #dee2e6;
+            .p-paginator-current {
+              margin-left: auto;
+            }
+          }
+      
+          .p-tooltip {
+            font-size: 0.8rem;
+          }
+      
+          .text-center {
+            text-align: center;
+          }
+        }
+      }
+}

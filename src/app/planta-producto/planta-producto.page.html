@@ -1,19 +1,269 @@
 <div class="header-container">
-  <!-- Título y Ruta -->
-  <div class="breadcrumb">
-    <span class="breadcrumb-path">Administración</span>
-    <span class="breadcrumb-separator">></span>
-    <span class="breadcrumb-current">Seguimiento de Plantas</span>
+
+  <div class="seguimiento-info">
+    <div class="info-container">
+      <div class="info-item">
+        <span class="info-label">Nombre:</span>
+        <span class="info-value">{{seguimientoSeleccionado.codigo}} - {{seguimientoSeleccionado.nombre}}</span>
+      </div>
+      <div class="info-item">
+        <span class="info-label">Plantas:</span>
+        <span class="info-value">
+          <span *ngFor="let planta of seguimientoSeleccionado.plantasAsociadas; let last = last">
+            {{planta.nombrePlanta}}{{!last ? ', ' : ''}}
+          </span>
+        </span>
+      </div>
+      <div class="info-item">
+        <span class="info-label">Fecha:</span>
+        <span class="info-value">{{seguimientoSeleccionado.fechaInicio | date:'dd/MM/yyyy'}} - {{seguimientoSeleccionado.fechaFin | date:'dd/MM/yyyy'}}</span>
+      </div>
+      <div class="info-item">
+        <span class="info-label">Estado:</span>
+        <span class="info-value">{{seguimientoSeleccionado.estadoSeguimientoPlanta}}</span>
+      </div>
+    </div>
   </div>
 
-    <!-- Encabezado Principal -->
-    <div class="header-content">
-      <div class="title-section">
-        <h1 class="page-title">Seguimiento de Plantas</h1>
-        <div class="stats">
-          <p-badge value="No Clientes: " severity="info" styleClass="custom-badge"></p-badge>
-        </div>
-      </div>
 
-      
-  
+  <!-- Encabezado Principal -->
+  <div class="header-content">
+    <div class="title-section">
+      <h1 class="page-title">Revisión Planta - Producto </h1>
+    </div>
+
+        <!-- Botones y Selector -->
+      <div class="action-section">
+          <button class="btn add-btn" (click)="showModal()">
+            <i class="pi pi-user-plus"></i>
+            Agregar
+          </button>
+      </div>
+    </div>
+  </div>
+
+    <!-- Tabla de Clientes -->
+<div class="table-container">
+  <p-table 
+    [value]="listaRevisiones" 
+    [loading]="loading"
+    [paginator]="true" 
+    [rows]="10"
+    [showCurrentPageReport]="true"
+    [rowsPerPageOptions]="[10,25,50]"
+    styleClass="p-datatable-sm p-datatable-striped"
+    [loading]="loading"
+    [sortMode]="'multiple'"
+    currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} Seguimientos">
+
+    <!-- Header de la tabla -->
+    <ng-template pTemplate="header">
+      <tr>
+        <th colspan="8" class="table-header">
+          <ion-icon name="business"></ion-icon>
+          LISTADO DE REVISIONES PLANTA - PRODUCTO
+        </th>
+      </tr>
+      <tr>
+        <th style="width: 50px;">
+          Fecha
+        </th>
+        <th>
+          Planta
+        </th>
+        <th pSortableColumn="lineNombre">
+          Línea
+          <p-sortIcon field="lineNombre"></p-sortIcon>
+          <p-columnFilter type="text" field="lineNombre" display="menu"></p-columnFilter>
+        </th>
+        <th>
+          Producto
+        </th>
+        <th >
+          Área
+        </th>
+        <th>
+          Observación
+        </th>
+        <th>
+          Compromiso
+        </th>
+        <th></th>
+      </tr>
+    </ng-template>
+
+    <!-- Cuerpo de la tabla -->
+    <ng-template pTemplate="body" let-revision>
+      <tr>
+        <td>{{revision.fechaRegistro | date:'dd/MM/yyyy'}}</td>
+        <td>{{revision.nombrePlanta}}</td>
+        <td>{{revision.lineNombre}}</td>
+        <td>{{revision.producto}}</td>
+        <td>{{revision.area}}</td>
+        <td>{{revision.observacion | slice:0:50}}{{revision.observacion.length > 50 ? '...' : ''}}</td>
+        <td>{{revision.compromiso | slice:0:50}}{{revision.compromiso.length > 50 ? '...' : ''}}</td>
+        <td class="actions-cell">
+          <div class="action-buttons">
+            <button pButton 
+              type="button" 
+              icon="pi pi-pencil" 
+              pTooltip="Editar"
+              tooltipPosition="top"
+              class="p-button-rounded p-button-primary p-button-sm"
+              (click)="editarRevisionPlanta(revision)">
+            </button>
+          </div>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>
+
+<p-dialog [(visible)]="displayModal" 
+          [modal]="true" 
+          [responsive]="true" 
+          [header]="(edit ? 'Actualizar Revisión Planta - Producto' : 'Crear Revisión Planta - Producto') + selectedPlanta?.nombre">
+          <ng-template pTemplate="header">
+            <div class="dialog-header">
+              <i class="pi pi-building"></i>
+              <span>{{edit ? 'Actualizar Revisión Planta - Producto ' : 'Crear Revisión Planta - Producto'}}{{selectedPlanta?.nombre}}</span>
+            </div>
+          </ng-template>
+
+  <form [formGroup]="plantaProductoForm">
+    <ion-grid>
+      <!-- Fechas -->
+      <ion-row>
+        <!-- <ion-col size="12" size-sm="6" size-lg="6">
+          <p-floatLabel>
+            <p-calendar 
+              id="fechaRegistro" 
+              formControlName="fechaRegistro"
+              [showOnFocus]="false"
+              dateFormat="dd/mm/yy"
+              [disabled]="true"
+              [readonlyInput]="true">
+            </p-calendar>
+            <label for="fechaRegistro">Fecha</label>
+          </p-floatLabel>
+        </ion-col> -->
+
+        <ion-col size="12" size-sm="6" size-lg="6">
+          <p-floatLabel>
+            <p-dropdown 
+              id="planta"
+              [options]="seguimientoPlantas"
+              optionLabel="nombrePlanta"
+              formControlName="idPlanta"
+              optionValue="idPlanta"
+              [showClear]="true"
+              placeholder="Seleccione la Planta">
+            </p-dropdown>
+          <label for="planta">Planta</label>
+          </p-floatLabel>
+        </ion-col>
+
+        <ion-col size="12" size-sm="6" size-lg="6">
+            <p-floatLabel>
+              <p-dropdown 
+              id="linea"
+              [options]="seguimientoLineas"
+              optionLabel="nombreLinea"
+              formControlName="idLinea"
+              optionValue="idLinea"
+              [showClear]="true"
+              placeholder="Seleccione la Línea">
+              </p-dropdown>
+              <label for="linea">Línea</label>
+            </p-floatLabel>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+            <ion-col size="12" size-sm="6" size-lg="6">
+              <div class="field-container">
+                <p-floatLabel>
+                  <input pInputText 
+                         id="producto" 
+                         type="text" 
+                         formControlName="producto">
+                  <label for="producto">Producto</label>
+                </p-floatLabel>
+              </div>
+            </ion-col>
+
+            <ion-col size="12" size-sm="6" size-lg="6">
+              <div class="field-container">
+                <p-floatLabel>
+                  <input pInputText 
+                         id="area" 
+                         type="text" 
+                         formControlName="area">
+                  <label for="area">Área</label>
+                </p-floatLabel>
+              </div>
+            </ion-col>
+      </ion-row>
+
+
+      <!-- Observaciones -->
+      <ion-row>
+        <ion-col size="12" size-sm="6" size-lg="6">
+          <p-floatLabel>
+            <textarea 
+              id="observacion" 
+              pInputTextarea 
+              formControlName="observacion" 
+              [rows]="4">
+            </textarea>
+            <label for="observacion">Observaciones</label>
+          </p-floatLabel>
+        </ion-col>
+
+        <ion-col size="12" size-sm="6" size-lg="6">
+          <p-floatLabel>
+            <textarea 
+              id="compromiso" 
+              pInputTextarea 
+              formControlName="compromiso" 
+              [rows]="4">
+            </textarea>
+            <label for="compromiso">Compromiso</label>
+          </p-floatLabel>
+        </ion-col>
+      </ion-row>
+
+    <div class="dialog-footer">
+    <!-- Botones -->
+      <ion-row class="button-row">
+        <ion-col>
+          <div class="button-container">
+            <button pButton 
+                    type="submit" 
+                    [label]="edit ? 'Actualizar' : 'Guardar'"
+                    class="p-button-primary action-button"
+                    [disabled]="!plantaProductoForm.valid"
+                    (click)="edit ? actualizarRevisionPlanta() : RegistrarRevisionesPlanta()">
+            </button>
+            <button pButton 
+                    type="button" 
+                    label="Cancelar" 
+                    class="p-button-secondary action-button" 
+                    (click)="closeModal()">
+            </button>
+          </div>
+        </ion-col>
+      </ion-row>
+
+    </div>
+  </ion-grid>
+  </form>
+</p-dialog>
+
+<!-- Confirm Dialog -->
+<p-confirmDialog 
+  header="Confirmación" 
+  icon="pi pi-exclamation-triangle"
+  acceptLabel="Sí"
+  rejectLabel="No">
+</p-confirmDialog>

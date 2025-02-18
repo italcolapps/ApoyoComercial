@@ -1,0 +1,13 @@
+.p-float-label-always {
+    label {
+      transform: translateY(-1.5rem) scale(0.75);
+      transform-origin: top left;
+      color: var(--primary-color, #007bff); /* Ajusta el color según tus necesidades */
+      font-weight: bold;
+    }
+  
+    input {
+      padding-top: 1.5rem;
+      padding-bottom: 0.5rem;
+    }
+  }

@@ -653,7 +653,7 @@ ion-grid {
   }
 
   .p-dropdown {
-    width: 100%;
+    width: 80%;
   }
 
   .p-calendar {
@@ -681,7 +681,7 @@ ion-grid {
 
   .p-inputtextarea {
     resize: vertical;
-    min-height: 120px;  // Altura mínima para el textarea
+    min-height: 60px;  // Altura mínima para el textarea
   }
 
   // Ajustes adicionales para los inputs
@@ -830,7 +830,7 @@ input[readonly] {
 /* Estilos para el encabezado de la tabla */
 .table-header-container {
   display: grid;
-  grid-template-columns: 2rem 1fr 2rem;
+  grid-template-columns: 2rem 2fr 2rem;
   align-items: center;
   padding: 1rem;
   background-color: #4a90e2;
@@ -869,89 +869,98 @@ input[readonly] {
 
 /* Estilos para la tabla de evaluaciones */
 .evaluation-table {
-  .p-datatable {
-    border: 1px solid #4a90e2;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  margin: 0.3rem;
+  ::ng-deep .p-datatable {
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    
+    .p-datatable-wrapper {
+      border-radius: 8px;
+      overflow: hidden;
+    }
 
-    .evaluation-grid {
-      border-collapse: separate;
-      border-spacing: 0;
+    table {
+      border-collapse: collapse;
       width: 100%;
-
-      tr {
-        margin: 8px 0;
-      }
-
-      td, th {
-        border: 1px solid #4a90e2;
-        padding: 12px;
-      }
     }
 
     th {
       background-color: #4a90e2;
       color: white;
       font-weight: 600;
+      padding: 0.5rem;
       text-align: center;
-      
+      border: none;
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+
       &.aspecto-header {
         width: 40%;
+        text-align: center;
       }
-      
+
       &.respuesta-header {
-        width: 12%;
+        width: 10%;
       }
-      
+
       &.total-header {
-        width: 12%;
+        width: 15%;
+        background-color: #357abd;
       }
     }
 
     td {
+      padding: 0.2rem;
+      border: 1px solid #e0e0e0;
       vertical-align: middle;
-      text-align: center;
-      
+
       &.aspecto-cell {
-        text-align: left;
-        padding-left: 15px;
+        font-weight: 250;
+        color: #333;
       }
-      
+
       &.respuesta-cell {
         text-align: center;
+        
+        .p-radiobutton {
+          .p-radiobutton-box {
+            border-color: #4a90e2;
+            
+            &.p-highlight {
+              border-color: #4a90e2;
+              background: #4a90e2;
+            }
+          }
+        }
       }
-      
+
       &.total-cell {
+        font-weight: 600;
+        color: #4a90e2;
         text-align: center;
-        font-weight: 500;
       }
     }
 
     .totals-row {
-      td {
-        font-weight: bold;
-      }
+      background-color: #f8f9fa;
       
-      .aspecto-cell {
-        background-color: #4a90e2;
-        color: white;
+      td {
+        font-weight: 600;
+        
+        &.aspecto-cell {
+          color: #333;
+        }
+        
+        &.total-cell {
+          background-color: #edf5ff;
+          color: #357abd;
+        }
       }
     }
 
-    .p-radiobutton {
-      .p-radiobutton-box {
-        width: 18px;
-        height: 18px;
-        margin: 0 auto;
-        
-        &.p-highlight {
-          border-color: #4a90e2;
-          background-color: #4a90e2;
-        }
-
-        &:not(.p-disabled):hover {
-          border-color: #4a90e2;
-        }
-      }
+    tr:hover {
+      background-color: #f5f9ff;
     }
   }
 }
@@ -979,4 +988,34 @@ input[readonly] {
   margin-top: 1rem;
   padding-top: 1rem;
   border-top: 1px solid var(--ion-color-primary-tint);
+}
+
+.seguimiento-info {
+  margin-bottom: 20px;
+  padding: 12px;
+  background-color: #f8f9fa;
+  border-radius: 6px;
+  border-left: 4px solid #2196F3;
+
+  .info-container {
+    display: flex;
+    justify-content: flex-start;
+    gap: 24px;
+    flex-wrap: wrap;
+
+    .info-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+
+      .info-label {
+        font-weight: 600;
+        color: #555;
+      }
+
+      .info-value {
+        color: #333;
+      }
+    }
+  }
 }

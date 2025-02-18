@@ -1,46 +1,40 @@
 <div class="header-container">
-  <!-- Título y Ruta -->
-  <div class="breadcrumb">
-    <span class="breadcrumb-path">Seguimiento</span>
-    <span class="breadcrumb-separator">></span>
-    <span class="breadcrumb-current">Visita de Clientes</span>
+
+  <div class="seguimiento-info">
+    <div class="info-container">
+      <div class="info-item">
+        <span class="info-label">Nombre:</span>
+        <span class="info-value">{{seguimientoSeleccionado.codigo}} - {{seguimientoSeleccionado.nombre}}</span>
+      </div>
+      <div class="info-item">
+        <span class="info-label">Plantas:</span>
+        <span class="info-value">
+          <span *ngFor="let planta of seguimientoSeleccionado.plantasAsociadas; let last = last">
+            {{planta.nombrePlanta}}{{!last ? ', ' : ''}}
+          </span>
+        </span>
+      </div>
+      <div class="info-item">
+        <span class="info-label">Fecha:</span>
+        <span class="info-value">{{seguimientoSeleccionado.fechaInicio | date:'dd/MM/yyyy'}} - {{seguimientoSeleccionado.fechaFin | date:'dd/MM/yyyy'}}</span>
+      </div>
+      <div class="info-item">
+        <span class="info-label">Estado:</span>
+        <span class="info-value">{{seguimientoSeleccionado.estadoSeguimientoPlanta}}</span>
+      </div>
+    </div>
   </div>
+
 
   <!-- Encabezado Principal -->
   <div class="header-content">
+
     <div class="title-section">
       <h1 class="page-title">Visita de Clientes</h1>
-      <div class="stats">
-        <p-badge value="No Seguimientos: {{listaVisitaClientes.length}}" severity="info" styleClass="custom-badge"></p-badge>
-      </div>
     </div>
 
         <!-- Botones y Selector -->
         <div class="action-section">
-          <p-dropdown 
-            [options]="listaLineas" 
-            [(ngModel)]="selectedLinea" 
-            optionLabel="nombre"
-            [filter]="true"
-            filterBy="nombre" 
-            [showClear]="true"
-            placeholder="Filtrar por Línea"
-            styleClass="w-20rem"
-            (onChange)="onLineaChange($event)"
-            class="line-dropdown">
-          </p-dropdown>
-          <p-dropdown 
-          [options]="listaClientes" 
-          [(ngModel)]="selectedCliente" 
-          optionLabel="nombre"
-          [filter]="true"
-          filterBy="nombre" 
-          [showClear]="true"
-          placeholder="Filtrar por Cliente"
-          styleClass="w-20rem"
-          (onChange)="onClienteChange($event)"
-          class="line-dropdown">
-        </p-dropdown>
           <button class="btn add-btn" (click)="showModal()">
             <i class="pi pi-user-plus"></i>
             Agregar
@@ -67,49 +61,69 @@
     <!-- Header de la tabla -->
     <ng-template pTemplate="header">
       <tr>
-        <th colspan="7" class="table-header">
+        <th colspan="12" class="table-header">
           <ion-icon name="people"></ion-icon>
-          CONSULTA DE VISITAS DE CLIENTES
+          LISTADO DE VISITAS DE CLIENTES
         </th>
       </tr>
       <tr>
         <th pSortableColumn="fechaRegistro">
-          Registro
-          <p-sortIcon field="fechaRegistro"></p-sortIcon>
-          <p-columnFilter type="text" field="fechaRegistro" display="menu"></p-columnFilter>
+          F Registro
         </th>
-        <th pSortableColumn="fechaCompromiso">
-          Compromiso
-          <p-sortIcon field="fechaCompromiso"></p-sortIcon>
-          <p-columnFilter type="text" field="fechaCompromiso" display="menu"></p-columnFilter>
+        <th pSortableColumn="fechaRegistro">
+          F Visita
         </th>
-        <th pSortableColumn="frecuenciaText">
-          Frecuencia
-          <p-sortIcon field="frecuenciaText"></p-sortIcon>
-          <p-columnFilter type="text" field="frecuenciaText" display="menu"></p-columnFilter>
+        <th pSortableColumn="ClienteText">
+          Cliente
+          <p-sortIcon field="ClienteText"></p-sortIcon>
+          <p-columnFilter type="text" field="ClienteText" display="menu"></p-columnFilter>
+        </th>
+        <th pSortableColumn="LineaText">
+          Linea
         </th>
         <th pSortableColumn="toneladas">
           Toneladas
-          <p-sortIcon field="toneladas"></p-sortIcon>
-          <p-columnFilter type="text" field="toneladas" display="menu"></p-columnFilter>
         </th>
-        <th pSortableColumn="actividadRealizada">
-          Actividad Realizada
-          <p-sortIcon field="actividadRealizada"></p-sortIcon>
-          <p-columnFilter type="text" field="actividadRealizada" display="menu"></p-columnFilter>
+        <th>
+          Actividad
         </th>
-        <th>Acciones</th>
+        <th>
+          Comp Gte Zona
+        </th>
+        <th>
+          Comp Dir
+        </th>
+        <th>
+          Informacion
+        </th>
+        <th pSortableColumn="frecuenciaText">
+          Frecuencia
+        </th>
+        <th pSortableColumn="fechaCompromiso">
+          Compromiso
+        </th>
+        <th></th>
       </tr>
     </ng-template>
 
     <!-- Cuerpo de la tabla -->
-    <ng-template pTemplate="body" let-segPlanta>
+    <ng-template pTemplate="body" let-segCliente>
       <tr>
-        <td>{{segPlanta.fechaRegistro | date:'dd/MM/yyyy'}}</td>
-        <td>{{segPlanta.fechaCompromiso | date:'dd/MM/yyyy'}}</td>
-        <td>{{segPlanta.frecuenciaText}}</td>
-        <td>{{segPlanta.toneladas}}</td>
-        <td>{{segPlanta.actividadRealizada}}</td>
+        <td>{{segCliente.fechaRegistro | date:'dd/MM/yyyy'}}</td>
+        <td>{{segCliente.fechaVisita | date:'dd/MM/yyyy'}}</td>
+        <td>{{segCliente.nombreCliente}}</td>
+        <td>
+          <span *ngFor="let linea of segCliente.lineasCliente; let last = last">
+              {{linea}}{{!last ? ', ' : ''}}
+          </span>
+      </td>
+        <td>{{segCliente.toneladas}}</td>
+        <td>{{segCliente.actividadRealizada}}</td>
+        <td>{{segCliente.compromisoGerenteZona}}</td>
+        <td>{{segCliente.compromisoDirector}}</td>
+        <td>{{segCliente.calidadInformacion}}</td>
+        <td>{{segCliente.frecuenciaText}}</td>
+        <td>{{segCliente.fechaCompromiso | date:'dd/MM/yyyy'}}</td>
         <td class="actions-cell">
           <div class="action-buttons">
             <button pButton 
@@ -118,7 +132,7 @@
               pTooltip="Editar"
               tooltipPosition="top"
               class="p-button-rounded p-button-primary p-button-sm"
-              (click)="editarVisitaCliente(segPlanta)">
+              (click)="editarVisitaCliente(segCliente)">
             </button>
           </div>
         </td>
@@ -130,57 +144,25 @@
 <p-dialog [(visible)]="displayModal" 
           [modal]="true" 
           [responsive]="true" 
-          [header]="(edit ? 'Actualizar Visita de Cliente - ' : 'Crear Visita de Cliente') ">
+          [header]="(edit ? 'Actualizar Visita de Cliente' : 'Crear Visita de Cliente') ">
           <ng-template pTemplate="header">
             <div class="dialog-header">
               <i class="pi pi-building"></i>
-              <span>{{edit ? 'Actualizar Visita de Cliente - ' : 'Crear Visita de Cliente'}}</span>
+              <span>{{edit ? 'Actualizar Visita de Cliente' : 'Crear Visita de Cliente'}}</span>
             </div>
           </ng-template>
 
           <form [formGroup]="VisitaClientesForm">
             <ion-grid>
               <ion-row class="form-row">
-                <ion-col size="12" size-md="6">
-                  <span class="p-float-label">
-                    <input pInputText [value]="selectedCliente?.nombre" readonly>
-                    <label>Nombre Cliente</label>
-                  </span>
-                </ion-col>
-                <ion-col size="12" size-md="6">
-                  <span class="p-float-label">
-                    <input pInputText [value]="selectedCliente?.canallistaText" readonly>
-                    <label>Canal</label>
-                  </span>
-                </ion-col>
-              </ion-row>
 
-              <ion-row class="form-row">
                 <ion-col size="12" size-md="6">
                   <span class="p-float-label">
-                    <input pInputText [value]="selectedCliente?.tipoCliente" readonly>
-                    <label>Tipo Cliente</label>
-                  </span>
-                </ion-col>
-                <ion-col size="12" size-md="6">
-                  <span class="p-float-label">
-                    <input pInputText [value]="selectedCliente?.departamentoText + ' - ' + selectedCliente?.municipioText" readonly>
-                    <label>Ubicación</label>
-                  </span>
-                </ion-col>
-              </ion-row>
-
-              <ion-row class="form-row">
-                <ion-col size="12" size-md="6">
-                  <span class="p-float-label">
-                    <p-dropdown 
-                    formControlName="idSeguimientoPlantaLinea" 
-                    [options]="listaSegPlantas" 
-                    optionLabel="descripcionCompleta" 
-                    optionValue="id" 
-                    placeholder="Seleccione un Seguimiento">
-                    </p-dropdown>
-                    <label>Seguimiento de Planta</label>
+                    <p-calendar formControlName="fechaVisita" 
+                    [showIcon]="true"
+                    [showOnFocus]="false">
+                  </p-calendar>
+                    <label>Fecha Visita</label>
                   </span>
                 </ion-col>
 
@@ -191,45 +173,56 @@
                     [options]="listaGerenteZona" 
                     optionLabel="nombreCompleto" 
                     optionValue="id" 
+                    [style]="{'width':'210px'}"
                     placeholder="Seleccione un  Gerente Zona">
                     </p-dropdown>
                     <label>Gerente Zona</label>
                   </span>
                 </ion-col>
-              </ion-row>
-          
-              <ion-row class="form-row" style="margin-bottom: 10px;">
 
-                <ion-col size="12" size-md="6">
-                  <span class="p-float-label">
-                    <p-calendar formControlName="fechaCompromiso" 
-                    [showIcon]="true"
-                    [showOnFocus]="false">
-                  </p-calendar>
-                    <label>Fecha Compromiso</label>
-                  </span>
-                </ion-col>
-
-                <ion-col size="12" size-md="6">
-                  <span class="p-float-label">
-                    <p-dropdown 
-                    formControlName="frecuenciaLista" 
-                    [options]="listaFrecuencia" 
-                    optionLabel="nombre" optionValue="id" 
-                    placeholder="Seleccione frecuencia">
-                    </p-dropdown>
-                    <label>Frecuencia</label>
-                  </span>
-                </ion-col>
               </ion-row>
 
               <ion-row class="form-row">
+                <ion-col size="12" size-md="6" style="margin-top: -1rem;">
+                  <app-cliente-search (clienteSeleccionado)="onClienteChange($event)" formControlName="idCliente"></app-cliente-search>
+                </ion-col>
+
+                <ion-col size="12" size-md="6">
+                  <span class="p-float-label">
+                    <input pInputText [value]="selectedCliente?.tipoClienteText" readonly>
+                    <label>Tipo Cliente</label>
+                  </span>
+                </ion-col>
+
+              </ion-row>
+
+              <!-- <ion-row class="form-row">
+                <ion-col size="12" size-md="6">
+                  <span class="p-float-label">
+                    <input pInputText [value]="seguimientoSeleccionado?.nombre" readonly>
+                    <label>Seguimiento de Planta</label>
+                  </span>
+                </ion-col>
+
+              </ion-row> -->
+          
+              <ion-row class="form-row" style="margin-bottom: 10px;">
+                <ion-col size="12" size-md="6">
+                  <span class="p-float-label">
+                    <input pInputText [value]="getLineasNames()" readonly>
+                    <label>Lineas</label>
+                  </span>
+                </ion-col>
+
                 <ion-col size="12" size-md="6">
                   <span class="p-float-label">
                     <p-inputNumber formControlName="toneladas" mode="decimal"></p-inputNumber>
                     <label>Toneladas</label>
                   </span>
                 </ion-col>
+              </ion-row>
+
+              <ion-row class="form-row">
 
                 <ion-col size="12" size-md="6">
                   <span class="p-float-label">
@@ -238,28 +231,54 @@
                   </span>
                 </ion-col>
 
-              </ion-row>
-
-              <ion-row class="form-row">
                 <ion-col size="12" size-md="6">
                   <span class="p-float-label">
                     <textarea pInputTextarea formControlName="compromisoGerenteZona" rows="4"></textarea>
                     <label>Compromiso Gerente Zona</label>
                   </span>
-                </ion-col>
+                </ion-col>  
+              </ion-row>
+
+              <ion-row class="form-row">
+
                 <ion-col size="12" size-md="6">
                   <span class="p-float-label">
                     <textarea pInputTextarea formControlName="compromisoDirector" rows="4"></textarea>
                     <label>Compromiso Director</label>
                   </span>
                 </ion-col>
+
+
+                <ion-col size="12" size-md="6">
+                  <span class="p-float-label">
+                    <textarea pInputTextarea formControlName="calidadInformacion" rows="4"></textarea>
+                    <label>Calidad Información</label>
+                  </span>
+                </ion-col>
               </ion-row>
 
               <ion-row class="form-row">
                 <ion-col size="12" size-md="6">
                   <span class="p-float-label">
-                    <textarea pInputTextarea formControlName="calidadInformacion" rows="4"></textarea>
-                    <label>Calidad Información</label>
+                    <p-dropdown 
+                    formControlName="frecuenciaLista" 
+                    [options]="listaFrecuencia" 
+                    optionLabel="nombre" 
+                    optionValue="id" 
+                    [style]="{'width': '12rem'}"
+                    placeholder="Seleccione frecuencia">
+                    </p-dropdown>
+                    <label>Frecuencia</label>
+                  </span>
+                </ion-col>
+
+                <ion-col size="12" size-md="6">
+                  <span class="p-float-label">
+                    <p-calendar formControlName="fechaCompromiso" 
+                    [showIcon]="true"
+                    [showOnFocus]="false">
+                  </p-calendar>
+                    <label>Fecha Compromiso</label>
                   </span>
                 </ion-col>
               </ion-row>
@@ -272,7 +291,7 @@
                     type="submit" 
                     [label]="edit ? 'Actualizar' : 'Guardar'"
                     class="p-button-primary action-button"
-                    [disabled]="!VisitaClientesForm.valid"
+
                     (click)="edit ? actualizarVisitaCliente() : RegistrarVisitaCliente()">
             </button>
             <button pButton 
@@ -285,7 +304,7 @@
         </ion-col>
       </ion-row>
             </ion-grid>
-          </form>
+        </form>
 </p-dialog>
 
 <!-- Confirm Dialog -->

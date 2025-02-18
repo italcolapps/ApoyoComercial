@@ -10,6 +10,9 @@ import { Subscription } from 'rxjs';
 import { ClientesService } from '../services/clientes.service';
 import { SeguimientoPlantaService } from '../services/seguimiento-planta.service';
 import { GerenteZonaService } from '../services/gerente-zona.service';
+import { ClienteSelectionService } from '../services/cliente-selection.service';
+import { SeguimientoStateService } from '../services/seguimiento-state.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-visita-cliente',
@@ -18,20 +21,29 @@ import { GerenteZonaService } from '../services/gerente-zona.service';
 })
 export class VisitaClientePage implements OnInit, OnDestroy {
   displayModal: boolean = false;
-  selectedLinea: any = null;
+
   selectedCliente: any = null;
-  listaClientes: any[] = []; 
+  selectedClienteId: number | null = null;
+  selectedClienteNombre: string = '';
+
   listaVisitaClientes: any[] = []; 
   listaSegPlantas: any[] = [];
   listaGerenteZona: any[] = [];
   listaFrecuencia: any[] = []; 
   frecuenciaOptions: any[] = [];
   listaLineas: any[] = [];
+  listaPlantas: any[] = [];
+
+  selectedPlanta: any = null;
+  selectedSeguimientoPlanta: any = null;
 
   edit = false;
   idVisitaCliente = 0;
   loading = false;
 
+  seguimientoId: number | null = null;
+  seguimientoSeleccionado: any = null;
+  private subscription = new Subscription();
   subscriptions: Subscription[] = [];
   VisitaClientesForm: FormGroup
 
@@ -43,14 +55,68 @@ export class VisitaClientePage implements OnInit, OnDestroy {
     private _alert: AlertsService,
     private _auth: AuthService,
     private _confirmDialog: ConfirmDialogService,
-    private _clientesService: ClientesService,
     private _seguimientoPlantaService: SeguimientoPlantaService,
-    private _gerenteZonaService: GerenteZonaService
-  ) { }
+    private _gerenteZonaService: GerenteZonaService,
+    private clienteSelectionService: ClienteSelectionService,
+    private router: Router,
+    private seguimientoState: SeguimientoStateService
+  ) {
+    const navigation = this.router.getCurrentNavigation();
+    if (navigation?.extras.state) {
+      const state = navigation.extras.state as { 
+        seguimientoId: number;
+        seguimiento: any 
+      };
+      this.seguimientoId = state.seguimientoId;
+      this.seguimientoSeleccionado = state.seguimiento;
+      console.log(this.seguimientoId);
+      console.log(this.seguimientoSeleccionado);
+      
+      // Sincronizar con el servicio
+      if (state.seguimientoId) {
+        this.seguimientoState.setSeguimientoId(state.seguimientoId);
+      }
+      if (state.seguimiento) {
+        this.seguimientoState.setSeguimiento(state.seguimiento);
+      }
+    }
+   }
 
   ngOnInit() {
+    this.clienteSelectionService.clienteSeleccionado$.subscribe(cliente => {
+      if (cliente) {
+        this.selectedCliente = cliente;
+        this.selectedClienteId = cliente.id;
+        this.selectedClienteNombre = cliente.nombre;
+      }
+    });
+    this.subscription.add(
+      this.seguimientoState.selectedSeguimientoId$.subscribe(id => {
+        this.seguimientoId = id;
+        if (!id) {
+          this.router.navigate(['/tabs/seguimiento-planta']);
+        }
+      })
+    );
+
+    this.subscription.add(
+      this.seguimientoState.selectedSeguimiento$.subscribe(seguimiento => {
+        this.seguimientoSeleccionado = seguimiento;
+        if (!seguimiento && this.seguimientoId) {
+
+        }
+      })
+    );
+    
     this.loadInitialData();
     this.initForm();
+    this.loadVisitaClientes(this.seguimientoId);
+    
+    if (this.seguimientoId) {
+      const plantaIds = this.seguimientoSeleccionado.plantasAsociadas
+      .map((planta: any) => planta.idPlanta);
+    this.loadGerenteZona(plantaIds); 
+    }
   }
 
   ngOnDestroy() {
@@ -58,12 +124,16 @@ export class VisitaClientePage implements OnInit, OnDestroy {
   }
   
   private initForm() {
+
+    const fechaActual = new Date();
+    
     this.VisitaClientesForm = this._formBuilder.group({
       idCliente: [0, Validators.required],
-      frecuenciaLista: [0, Validators.required],
+      frecuenciaLista: [0],
       toneladas: [0, Validators.required],
       actividadRealizada: ['', Validators.required],
-      idSeguimientoPlantaLinea: [0, Validators.required],
+      idSeguimientoPlanta: [0, Validators.required],
+      fechaVisita: ['', Validators.required],
       fechaCompromiso: ['', Validators.required],
       idUsuarioRegistro: [0],
       idGerenteZona: [0, Validators.required],
@@ -73,29 +143,37 @@ export class VisitaClientePage implements OnInit, OnDestroy {
     });
   }
 
-  onLineaChange(event: any) {
-    if (event.value) {
-      this.selectedLinea = event.value;
-      this.loadClientesByLinea(event.value.id);
-      this.loadSeguimientosPlanta(event.value.id);
-      this.loadGerenteZona(event.value.id);
-    } else {
-      this.listaClientes = [];
-    }
-  }
+  onClienteChange(event: { id: number, nombre: string }) {
+    if (event && event.id) {
+      console.log(this.seguimientoSeleccionado)
+      this.selectedClienteId = event.id;
+      this.selectedClienteNombre = event.nombre;
 
-  onClienteChange(event: any) {
-    if (event.value) {
-      this.selectedCliente = event.value;
-      this.loadVisitaClientes(event.value.id);
+      this.VisitaClientesForm.patchValue({
+        idCliente: this.selectedCliente.id
+      });
     } else {
+      this.selectedClienteId = null;
+      this.selectedClienteNombre = '';
       this.listaVisitaClientes = [];
     }
   }
 
+  getLineasNames(): string {
+    if (!this.selectedCliente?.lineas) return '';
+    return this.selectedCliente.lineas
+      .map((linea: any) => linea.nombre)
+      .join(', ');
+  }
+
+
+
   private loadInitialData() {
     this.loadData(this._listasService.getListas(Listas.frecuenciaVisita), 'listaFrecuencia');
-    this.loadData(this._listasService.getListaLineas(), 'listaLineas');
+    this.loadData(this._listasService.getListaPlantas(), 'listaPlantas');
+    const plantaIds = this.seguimientoSeleccionado.plantasAsociadas
+    .map((planta: any) => planta.idPlanta);
+  this.loadGerenteZona(plantaIds); 
   }
 
   private loadData(observable: any, propertyName: string, detectChanges: boolean = false) {
@@ -123,32 +201,10 @@ export class VisitaClientePage implements OnInit, OnDestroy {
     this.subscriptions.push(subscription);
   }
 
-  
-  private loadClientesByLinea(idLinea: number) {
-    this.loading = true;
-    const subscription = this._clientesService.getClienteByIdLinea(idLinea).subscribe({
-      next: (data: any) => {
-        if (data.error) {
-          console.error(`Error: ${data.message} - code: ${data.codError} - ${data.result}`);
-        } else {
-          this.listaClientes = data.result;
-          console.log(this.listaClientes);
-          this._chRef.detectChanges();
-        }
-        this.loading = false;
-      },
-      error: (err) => {
-        console.error(`Error al cargar clientes: ${err}`);
-        this.loading = false;
-      }
-    });
-    this.subscriptions.push(subscription);
-  }
 
-
-  private loadVisitaClientes(idCliente: number) {
+  private loadVisitaClientes(idSeguimiento: number) {
     this.loading = true;
-    const subscription = this._seguimientoVisitaService.getVisitaClienteByIdCliente(idCliente).subscribe({
+    const subscription = this._seguimientoVisitaService.getVisitaClienteBySeguimientoPlanta(idSeguimiento).subscribe({
       next: (data: any) => {
         if (data.error) {
           console.error(`Error: ${data.message} - code: ${data.codError} - ${data.result}`);
@@ -167,62 +223,47 @@ export class VisitaClientePage implements OnInit, OnDestroy {
     this.subscriptions.push(subscription);
   }
 
-  private loadSeguimientosPlanta(idLinea: number) {
-    this.loading = true;
-    const subscription = this._seguimientoPlantaService.getSeguimientoPlantaByIdLinea(idLinea).subscribe({
-      next: (data: any) => {
-        if (data.error) {
-          console.error(`Error: ${data.message} - code: ${data.codError} - ${data.result}`);
-        } else {
-          this.listaSegPlantas = data.result.map((segPlanta: any) => ({
-            ...segPlanta,
-            descripcionCompleta: `${segPlanta.nombrePlanta} - ${segPlanta.observaciones}`
-          }));
-          console.log("Seg Plantas",this.listaSegPlantas);
-          this._chRef.detectChanges();
-        }
-        this.loading = false;
-      },
-      error: (err) => {
-        console.error(`Error al cargar Seguimientos de planta: ${err}`);
-        this.loading = false;
-      }
-    });
-    this.subscriptions.push(subscription);
-  }
 
-  private loadGerenteZona(idLinea: number) {
+  private async loadGerenteZona(idPlantas: number | number[]) {
     this.loading = true;
-    const subscription = this._gerenteZonaService.getGerenteZonaByIdLinea(idLinea).subscribe({
-      next: (data: any) => {
+    this.listaGerenteZona = [];
+    
+    // Convertir el input a array si es un solo número
+    const plantaIds = Array.isArray(idPlantas) ? idPlantas : [idPlantas];
+    
+    try {
+      // Crear un array de promesas para cada llamada a la API
+      const promises = plantaIds.map(idPlanta => 
+        this._gerenteZonaService.getGerenteZonaByIdPlanta(idPlanta).toPromise()
+      );
+      
+      // Esperar a que todas las promesas se resuelvan
+      const results = await Promise.all(promises);
+      
+      // Procesar los resultados
+      results.forEach((data: any) => {
         if (data.error) {
           console.error(`Error: ${data.message} - code: ${data.codError} - ${data.result}`);
         } else {
-          this.listaGerenteZona = data.result.map((gerente: any) => ({
+          const gerentesZona = data.result.map((gerente: any) => ({
             ...gerente,
             nombreCompleto: `${gerente.nombre} ${gerente.apellido}`
           }));
-          console.log("GZ",this.listaGerenteZona);
-          this._chRef.detectChanges();
+          // Añadir los gerentes al listado existente
+          this.listaGerenteZona = [...this.listaGerenteZona, ...gerentesZona];
         }
-        this.loading = false;
-      },
-      error: (err) => {
-        console.error(`Error al cargar Gerentes de zona: ${err}`);
-        this.loading = false;
-      }
-    });
-    this.subscriptions.push(subscription);
+      });
+      
+      console.log("GZ", this.listaGerenteZona);
+      this._chRef.detectChanges();
+    } catch (err) {
+      console.error('Error:', err);
+    } finally {
+      this.loading = false;
+    }
   }
 
   showModal() {
-    if (!this.selectedCliente) {
-      this._alert.presentToast("top", "Debe seleccionar un Cliente", "warning");
-      return;
-    }
-    this.VisitaClientesForm.patchValue({
-      idPlanta: this.selectedCliente.id
-    });
     this.displayModal = true;
   }
 
@@ -239,7 +280,8 @@ export class VisitaClientePage implements OnInit, OnDestroy {
           const data = this.VisitaClientesForm.value;
           data.idUsuarioRegistro = this._auth.getUser().Id;
           data.idCliente = this.selectedCliente.id;
-          // console.log(data);
+          data.idSeguimientoPlanta = this.seguimientoId
+          console.log(data);
           this._seguimientoVisitaService.createVisitaCliente(data).subscribe({
             next: (x: any) => {
               if (x.error) {
@@ -248,10 +290,8 @@ export class VisitaClientePage implements OnInit, OnDestroy {
                 this._alert.presentToast("top", "Visita de Cliente Creada con Éxito", "success");
                 this.VisitaClientesForm.reset();
                 this.closeModal();
+                this.loadVisitaClientes(this.seguimientoId);
                 this._chRef.detectChanges();
-                if (this.selectedCliente) {
-                  this.loadVisitaClientes(this.selectedCliente.id);
-                }
               }
             },
             error: (err) => {
@@ -269,6 +309,10 @@ export class VisitaClientePage implements OnInit, OnDestroy {
     const visitaSeleccionada = this.listaVisitaClientes.find(v => v.id === visita.id);
     
     if (visitaSeleccionada) {
+
+        const plantaIds = this.seguimientoSeleccionado.plantasAsociadas
+        .map((planta: any) => planta.idPlanta);
+        this.loadGerenteZona(plantaIds); 
         this.displayModal = true;
         
         this.VisitaClientesForm.patchValue({
@@ -278,25 +322,30 @@ export class VisitaClientePage implements OnInit, OnDestroy {
             actividadRealizada: visitaSeleccionada.actividadRealizada,
             idSeguimientoPlantaLinea: visitaSeleccionada.idSeguimientoPlantaLinea,
             fechaCompromiso: new Date(visitaSeleccionada.fechaCompromiso),
+            fechaVisita: new Date(visitaSeleccionada.fechaVisita),
             idGerenteZona: visitaSeleccionada.idGerenteZona,
             compromisoGerenteZona: visitaSeleccionada.compromisoGerenteZona,
             compromisoDirector: visitaSeleccionada.compromisoDirector,
             calidadInformacion: visitaSeleccionada.calidadInformacion
         });
 
-        this.loadSeguimientosPlanta(this.selectedLinea.id);
-        this.loadGerenteZona(this.selectedLinea.id);
+        const lineaIds = this.seguimientoSeleccionado.lineasAsociadas
+        .map((linea: any) => linea.idLinea);
+      
+      this.loadGerenteZona(lineaIds); 
     }
 }
 
   actualizarVisitaCliente() {
-    if (this.VisitaClientesForm.valid) {
-      this._confirmDialog.showSaveConfirm('Visita de Cliente').subscribe(confirmed => {
-        if (confirmed) {
+    // if (this.VisitaClientesForm.valid) {
+    //   this._confirmDialog.showSaveConfirm('Visita de Cliente').subscribe(confirmed => {
+    //     if (confirmed) {
+          debugger;
           const data = this.VisitaClientesForm.value;
           delete data.idUsuarioRegistro;
+          data.idSeguimientoPlanta = this.seguimientoId
           console.log(data);
-          this._seguimientoVisitaService.updateVisitaCliente(this.idVisitaCliente,data).subscribe({
+          this._seguimientoVisitaService.updateVisitaCliente(this.idVisitaCliente, data).subscribe({
             next: (x: any) => {
               if (x.error) {
                 this._alert.presentToast("top", x.message, "warning");
@@ -304,19 +353,17 @@ export class VisitaClientePage implements OnInit, OnDestroy {
                 this._alert.presentToast("top", "Visita de Cliente Actualizada con Éxito", "success");
                 this.VisitaClientesForm.reset();
                 this.closeModal();
+                this.loadVisitaClientes(this.seguimientoId);
                 this._chRef.detectChanges();
-                if (this.selectedCliente) {
-                  this.loadVisitaClientes(this.selectedCliente.id);
-                }
               }
             },
             error: (err) => {
               this._alert.presentToast("top", err, "warning");
             }
           });
-        }
-      });
-    }
+    //     }
+    //   });
+    // }
   }
 
 

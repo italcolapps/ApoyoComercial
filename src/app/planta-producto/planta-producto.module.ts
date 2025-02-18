@@ -12,11 +12,14 @@ import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
 import { InputTextModule } from 'primeng/inputtext';
 import { InputTextareaModule } from 'primeng/inputtextarea';
-import { CalendarModule } from 'primeng/calendar';
-import { MultiSelectModule } from 'primeng/multiselect';
-import { TooltipModule } from 'primeng/tooltip';
-import { FloatLabelModule } from 'primeng/floatlabel';
+import { DropdownModule } from 'primeng/dropdown';
+import { ToastModule } from 'primeng/toast';
+import { RippleModule } from 'primeng/ripple';
 import { BadgeModule } from 'primeng/badge';
+import { MessageService } from 'primeng/api';
+import { FloatLabelModule } from 'primeng/floatlabel';
+import { CalendarModule } from 'primeng/calendar';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
 
 @NgModule({
   imports: [
@@ -30,12 +33,16 @@ import { BadgeModule } from 'primeng/badge';
     DialogModule,
     InputTextModule,
     InputTextareaModule,
-    CalendarModule,
-    MultiSelectModule,
-    TooltipModule,
+    DropdownModule,
+    ToastModule,
+    RippleModule,
+    BadgeModule,
     FloatLabelModule,
-    BadgeModule
+    CalendarModule,
+    ConfirmDialogModule,
+
   ],
-  declarations: [PlantaProductoPage]
+  declarations: [PlantaProductoPage],
+  providers: [MessageService]
 })
 export class PlantaProductoPageModule {}

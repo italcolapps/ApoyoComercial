@@ -829,3 +829,70 @@ ion-col {
   border-radius: 4px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
+
+/* Estilos para el contenedor de búsqueda */
+.search-container {
+  padding-top: 2rem;
+  padding-bottom: 1rem;
+  background: #f3f9ff;
+  border-radius: 8px;
+  margin-top: -1.5rem;
+  box-shadow: 0 2px 4px rgba(173, 204, 240, 0.849);
+
+  .form-row {
+    align-items: center;
+    
+    .filter-col {
+      padding: 0 1rem;
+      
+      @media (max-width: 768px) {
+        margin-bottom: 1rem;
+      }
+    }
+  }
+
+  ::ng-deep {
+    .p-dropdown {
+      width: 100%;
+      min-height: 40px;
+      .p-dropdown-label {
+        padding: 0.5rem;
+      }
+    }
+
+    .p-float-label {
+      width: 100%;
+      input {
+        margin-top: 0.5rem;
+        width: 100%;
+        min-height: 40px;
+      }
+    }
+
+    .p-inputtext {
+      padding: 0.5rem;
+    }
+
+    .search-button {
+      width: 48px !important;
+      height: 48px !important;
+      border-radius: 50% !important;
+      background: #4a90e2 !important;
+      border-color: #4a90e2 !important;
+
+      .p-button-icon {
+        font-size: 1.5rem;
+      }
+
+      &:hover {
+        background: darken(#4a90e2, 10%) !important;
+        border-color: darken(#4a90e2, 10%) !important;
+      }
+
+      @media (max-width: 768px) {
+        width: 100% !important;
+        border-radius: 4px !important;
+      }
+    }
+  }
+}

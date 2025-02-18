@@ -22,8 +22,12 @@ export class ClientesService {
     return this._http.get(`${this.urlApi}/${this.Cliente}/${idCliente}`);
   }
 
-  getClienteByIdLinea(idLinea: number) {
-    return this._http.get(`${this.urlApi}/${this.Cliente}/GetClienteByIdLinea/${idLinea}`);
+  getClienteFiltrado(idUsuario: number, data: any) {
+    return this._http.post(`${this.urlApi}/${this.Cliente}/GetClienteFiltrado?idUsuario=${idUsuario}`, data);
+  }
+
+  getClienteByIdLinea(lineaIds: number[]) {
+    return this._http.post(`${this.urlApi}/${this.Cliente}/GetClienteByIdLinea`, lineaIds);
   }
 
   createCliente(data:any){

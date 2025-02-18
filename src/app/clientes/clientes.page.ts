@@ -10,6 +10,7 @@ import { ConfirmDialogService } from '../services/confirm-dialog.service';
 import { Listas } from '../interfaces/listas';
 import { ClientesService } from '../services/clientes.service';
 import { GerenteZonaService } from '../services/gerente-zona.service';
+import { ClienteFiltro } from '../interfaces/cliente';
 
 @Component({
   selector: 'app-clientes',
@@ -19,7 +20,8 @@ import { GerenteZonaService } from '../services/gerente-zona.service';
 export class ClientesPage implements OnInit, OnDestroy {
 
   displayModal = false;
-  selectedLinea: any = null;
+  selectedLinea: any[] = [];
+  selectedPlanta: any[] = [];
 
   listaTipoDocumento: any = [];
   listaTipoCliente: any = [];
@@ -27,6 +29,7 @@ export class ClientesPage implements OnInit, OnDestroy {
   listaClientes: any = [];
   listaGerenteZona: any[] = [];
   listaLineas: any = [];
+  listaPlantas: any = [];
   listaZonas: any = [];
   listaPais: any = [];
   listaDepartamento: any = [];
@@ -43,6 +46,12 @@ export class ClientesPage implements OnInit, OnDestroy {
 
   items: any[];
   activeItem: any;
+
+  filtroClienteForm:FormGroup = this.fb.group({
+    tipoClienteLista: [0],
+    nombre: [''],
+    idLinea: [0],
+  });
 
   constructor(
     private fb: FormBuilder,
@@ -86,8 +95,47 @@ export class ClientesPage implements OnInit, OnDestroy {
     this.activeItem = event;
   }
 
-  private initForm() {
+  private hayAlgunaCondicionDeFiltro(): boolean {
+    const filtros = this.filtroClienteForm.getRawValue(); 
+    return Object.keys(filtros).some(key => {
+      const valor = filtros[key];
+      return valor !== 0 && valor !== '' && valor !== null;
+    });
+  }
 
+  buscarClientes() {
+    if (!this.hayAlgunaCondicionDeFiltro()) {
+      this.mostrarAdvertenciaSinFiltros();
+      return;
+    }
+    const usuarioActual = this._auth.getUser().Id;
+    const formValues = this.filtroClienteForm.getRawValue();
+    const filtro: ClienteFiltro = {
+      tipoClienteLista: formValues.tipoClienteLista?.id || 0,
+      nombre: formValues.nombre,
+      idLinea: formValues.idLinea?.id || 0
+    };
+    console.log(filtro);
+    this._clientesService.getClienteFiltrado(usuarioActual, filtro).subscribe((data: any) => {
+      this.manejarRespuestaClientes(data);
+    });
+  }
+  
+  private mostrarAdvertenciaSinFiltros() {
+    console.warn('Debe utilizar al menos un criterio de búsqueda');
+    this._alert.presentToast("top", 'Debe utilizar al menos un criterio de búsqueda', "error");
+  }
+
+  private manejarRespuestaClientes(data: any) {
+    if (data.error) {
+      console.error(`Error:${data.message} - code: ${data.codError} - ${data.result}`);
+    } else {
+      this.listaClientes = data.result;
+      console.log('listaClientes con nombres de planta:', this.listaClientes);
+    }
+  }
+
+  private initForm() {
     this.ClienteForm = this.fb.group({
       idUsuarioRegistro: [0],
       tipoClienteLista: [0, Validators.required],
@@ -112,30 +160,35 @@ export class ClientesPage implements OnInit, OnDestroy {
       telefono: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
       idZona: [0, Validators.required],
-      idLinea: [0, Validators.required],
-      idUsuarioRegistro: [0]
+      idUsuarioRegistro: [0],
+      planta: [[], Validators.required],
     });
   }
 
   onLineaChange(event: any) {
-    if (event.value) {
-      this.selectedLinea = event.value;
-      if (this.activeItem.id === 'clientes') {
-        this.loadClientesByLinea(event.value.id);
-      } else if (this.activeItem.id === 'gerentesZona') {
-        this.loadGerenteZona(event.value.id);
-      }
+    if (event.value && event.value.length > 0) {
+      const lineaIds = event.value.map((linea: any) => linea.id);
+      this.loadGerenteZona(lineaIds);
     } else {
-      this.listaClientes = [];
       this.listaGerenteZona = [];
+      this._chRef.detectChanges();
     }
   }
+
+    onPlantaChange(event:any){
+      if (event.value) {
+        this.loadGerenteZona(event.value.id);
+      }else{
+        this.listaGerenteZona = [];
+      }
+    }
 
   private loadInitialData() {
     this.loadData(this._listasService.getListas(Listas.tipoDocumento), 'listaTipoDocumento');
     this.loadData(this._listasService.getListas(Listas.tipoCliente), 'listaTipoCliente');
     this.loadData(this._listasService.getListas(Listas.tipoCanal), 'listaTipoCanal');
     this.loadData(this._listasService.getListaLineas(), 'listaLineas');
+    this.loadData(this._listasService.getListaPlantas(), 'listaPlantas');
     this.loadData(this._listasService.getListaZonas(), 'listaZonas');
     this.getPais();
   }
@@ -211,9 +264,33 @@ export class ClientesPage implements OnInit, OnDestroy {
     this.subscriptions.push(subscription);
   }
 
-  private loadClientesByLinea(idLinea: number) {
+  private loadGerenteZona(idPlanta: number) {
     this.loading = true;
-    const subscription = this._clientesService.getClienteByIdLinea(idLinea).subscribe({
+    const subscription = this._gerenteZonaService.getGerenteZonaByIdPlanta(idPlanta).subscribe({
+      next: (data: any) => {
+        if (data.error) {
+          console.error(`Error: ${data.message} - code: ${data.codError} - ${data.result}`);
+        } else {
+          this.listaGerenteZona = data.result.map((gerente: any) => ({
+            ...gerente,
+            nombreCompleto: `${gerente.nombre} ${gerente.apellido}`
+          }));
+          console.log("GZ",this.listaGerenteZona);
+          this._chRef.detectChanges();
+        }
+        this.loading = false;
+      },
+      error: (err) => {
+        console.error('Error:', err);
+        this.loading = false;
+      }
+    });
+    this.subscriptions.push(subscription);
+  }
+
+  private loadClientesByLinea(lineaIds: number[]) {
+    this.loading = true;
+    const subscription = this._clientesService.getClienteByIdLinea(lineaIds).subscribe({
       next: (data: any) => {
         if (data.error) {
           console.error(`Error: ${data.message} - code: ${data.codError} - ${data.result}`);
@@ -232,31 +309,6 @@ export class ClientesPage implements OnInit, OnDestroy {
     this.subscriptions.push(subscription);
   }
 
-  
-  private loadGerenteZona(idLinea: number) {
-    this.loading = true;
-    const subscription = this._gerenteZonaService.getGerenteZonaByIdLinea(idLinea).subscribe({
-      next: (data: any) => {
-        if (data.error) {
-          console.error(`Error: ${data.message} - code: ${data.codError} - ${data.result}`);
-        } else {
-          this.listaGerenteZona = data.result.map((gerente: any) => ({
-            ...gerente,
-            nombreCompleto: `${gerente.nombre} ${gerente.apellido}`
-          }));
-          console.log("GZ",this.listaGerenteZona);
-          this._chRef.detectChanges();
-        }
-        this.loading = false;
-      },
-      error: (err) => {
-        console.error(`Error al cargar Gerentes de zona: ${err}`);
-        this.loading = false;
-      }
-    });
-    this.subscriptions.push(subscription);
-  }
-
   showModal() {
     this.displayModal = true;
   }
@@ -268,9 +320,8 @@ export class ClientesPage implements OnInit, OnDestroy {
   }
 
   RegistrarCliente() {
-    this.edit = false;
     if (this.ClienteForm.valid) {
-      this._confirmDialog.showSaveConfirm('cliente').subscribe(confirmed => {
+      this._confirmDialog.showSaveConfirm('Cliente').subscribe(confirmed => {
         if (confirmed) {
           const data = this.ClienteForm.value;
           data.idUsuarioRegistro = this._auth.getUser().Id;
@@ -284,14 +335,14 @@ export class ClientesPage implements OnInit, OnDestroy {
                 this.ClienteForm.reset();
                 this.closeModal();
                 this._chRef.detectChanges();
-                if (this.selectedLinea) {
-                  this.loadClientesByLinea(this.selectedLinea.id);
+                if (this.selectedLinea && this.selectedLinea.length > 0) {
+                  const lineaIds = this.selectedLinea.map((linea: any) => linea.id);
+                  this.loadClientesByLinea(lineaIds);
                 }
               }
             },
             error: (err) => {
-              console.error(`Error al registrar cliente: ${err}`);
-              this._alert.presentToast("top", "Error al crear el cliente", "error");
+              this._alert.presentToast("top", err, "warning");
             }
           });
         }
@@ -300,30 +351,30 @@ export class ClientesPage implements OnInit, OnDestroy {
   }
 
   RegistrarGerenteZona() {
-    this.edit = false;
     if (this.GerenteZonaForm.valid) {
       this._confirmDialog.showSaveConfirm('Gerente de Zona').subscribe(confirmed => {
         if (confirmed) {
           const data = this.GerenteZonaForm.value;
           data.idUsuarioRegistro = this._auth.getUser().Id;
-          
+          console.log(data);
           this._gerenteZonaService.createGerenteZona(data).subscribe({
             next: (x: any) => {
               if (x.error) {
-                this._alert.presentToast("top", x.message, "warning");
+                this._alert.presentToast("top", `Error: ${x.message} - code: ${x.codError}`, "error");
               } else {
-                this._alert.presentToast("top", "Gerente de Zona Creado con Éxito", "success");
+                this._alert.presentToast("top", "Gerente de Zona creado con éxito", "success");
+                const selectedPlantas = this.GerenteZonaForm.get('planta').value;
+                if (selectedPlantas && selectedPlantas.length > 0) {
+                  const lastPlantaId = selectedPlantas[selectedPlantas.length - 1];
+                  this.loadGerenteZona(lastPlantaId);
+                }
                 this.GerenteZonaForm.reset();
                 this.closeModal();
                 this._chRef.detectChanges();
-                if (this.selectedLinea) {
-                  this.loadGerenteZona(this.selectedLinea.id);
-                }
               }
             },
             error: (err) => {
-              console.error(`Error al registrar Gerente de Zona: ${err}`);
-              this._alert.presentToast("top", "Error al crear el Gerente de Zona", "error");
+              this._alert.presentToast("top", err, "warning");
             }
           });
         }
@@ -380,7 +431,7 @@ export class ClientesPage implements OnInit, OnDestroy {
     this.edit = true;
     this.idGerenteZona = gerenteZona.id;
     const gerenteZonaSeleccionado = this.listaGerenteZona.find(gz => gz.id === this.idGerenteZona);
-
+    console.log(gerenteZonaSeleccionado);
     if (gerenteZonaSeleccionado) {
       this.displayModal = true;
       this.GerenteZonaForm.patchValue({
@@ -390,7 +441,7 @@ export class ClientesPage implements OnInit, OnDestroy {
         apellido: gerenteZonaSeleccionado.apellido,
         telefono: gerenteZonaSeleccionado.telefono,
         email: gerenteZonaSeleccionado.email,
-        idLinea: this.selectedLinea.id,
+        planta: gerenteZonaSeleccionado.plantasAsociadas ? gerenteZonaSeleccionado.plantasAsociadas.map((p: any) => p.idPlanta) : [],
         idZona: gerenteZonaSeleccionado.idZona
       });
       this._chRef.detectChanges();
@@ -399,11 +450,11 @@ export class ClientesPage implements OnInit, OnDestroy {
 
   actualizarCliente() {
     if (this.ClienteForm.valid) {
-      this._confirmDialog.showUpdateConfirm('cliente').subscribe(confirmed => {
+      this._confirmDialog.showSaveConfirm('Cliente').subscribe(confirmed => {
         if (confirmed) {
           const data = this.ClienteForm.value;
-          data.idUsuarioRegistro = this._auth.getUser().id;
-          
+          delete data.idUsuarioRegistro;
+          data.idCliente = this.idCliente;
           this._clientesService.updateCliente(this.idCliente, data).subscribe({
             next: (x: any) => {
               if (x.error) {
@@ -413,14 +464,14 @@ export class ClientesPage implements OnInit, OnDestroy {
                 this.ClienteForm.reset();
                 this.closeModal();
                 this._chRef.detectChanges();
-                if (this.selectedLinea) {
-                  this.loadClientesByLinea(this.selectedLinea.id);
+                if (this.selectedLinea && this.selectedLinea.length > 0) {
+                  const lineaIds = this.selectedLinea.map((linea: any) => linea.id);
+                  this.loadClientesByLinea(lineaIds);
                 }
               }
             },
             error: (err) => {
-              console.error(`Error al actualizar cliente: ${err}`);
-              this._alert.presentToast("top", "Error al actualizar el cliente", "error");
+              this._alert.presentToast("top", err, "warning");
             }
           });
         }
@@ -430,11 +481,11 @@ export class ClientesPage implements OnInit, OnDestroy {
 
   actualizarGerenteZona() {
     if (this.GerenteZonaForm.valid) {
-      this._confirmDialog.showUpdateConfirm('Gerente de Zona').subscribe(confirmed => {
+      this._confirmDialog.showSaveConfirm('Gerente de Zona').subscribe(confirmed => {
         if (confirmed) {
           const data = this.GerenteZonaForm.value;
-          data.idUsuarioRegistro = this._auth.getUser().id;
-          
+          delete data.idUsuarioRegistro;
+          data.idGerenteZona = this.idGerenteZona;
           this._gerenteZonaService.updateGerenteZona(this.idGerenteZona, data).subscribe({
             next: (x: any) => {
               if (x.error) {
@@ -444,17 +495,14 @@ export class ClientesPage implements OnInit, OnDestroy {
                 this.GerenteZonaForm.reset();
                 this.closeModal();
                 this._chRef.detectChanges();
-                if (this.selectedLinea) {
-                  this.loadGerenteZona(this.selectedLinea.id);
-                }
+                this.loadGerenteZona(data.p);
               }
             },
             error: (err) => {
-              console.error(`Error al actualizar Gerente de Zona: ${err}`);
-              this._alert.presentToast("top", "Error al actualizar el Gerente de Zona", "error");
+              this._alert.presentToast("top", err, "warning");
             }
           });
-        }    
+        }
       });
     }
   } 

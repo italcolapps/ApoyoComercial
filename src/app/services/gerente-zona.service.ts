@@ -18,8 +18,8 @@ export class GerenteZonaService {
     return this._http.get(`${this.urlApi}/${this.GerenteZona}/`);
   }
 
-  getGerenteZonaByIdLinea(idLinea: number) {
-    return this._http.get(`${this.urlApi}/${this.GerenteZona}/GetGerenteZonaByIdLinea/${idLinea}`);
+  getGerenteZonaByIdPlanta(idPlanta: number) {
+    return this._http.get(`${this.urlApi}/${this.GerenteZona}/GetGerenteZonaByIdPlanta/${idPlanta}`);
   }
 
   getGerenteZonaByidZona(idZona: number) {

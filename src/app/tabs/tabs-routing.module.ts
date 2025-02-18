@@ -20,26 +20,18 @@ const routes: Routes = [
         loadChildren: () => import('../seguimiento-planta/seguimiento-planta.module').then( m => m.SeguimientoPlantaPageModule)
       },
       {
-        path: 'planta-producto',
-        loadChildren: () => import('../planta-producto/planta-producto.module').then( m => m.PlantaProductoPageModule)
+        path: 'menu-seguimiento',
+        loadChildren: () => import('../menu-seguimiento/menu-seguimiento.module').then( m => m.MenuSeguimientoPageModule)
       },
       {
         path: 'visita-cliente',
         loadChildren: () => import('../visita-cliente/visita-cliente.module').then( m => m.VisitaClientePageModule)
       },
-      {
-        path: 'oportunidades',
-        loadChildren: () => import('../oportunidades/oportunidades.module').then( m => m.OportunidadesPageModule)
-      },
-      {
-        path: 'evaluaciones',
-        loadChildren: () => import('../evaluaciones/evaluaciones.module').then( m => m.EvaluacionesPageModule)
-      }
     ]
   },
   {
     path: '',
-    redirectTo: '/tabs/visita-cliente',
+    redirectTo: '/tabs/seguimiento-planta',
     pathMatch: 'full'
   }
 ];

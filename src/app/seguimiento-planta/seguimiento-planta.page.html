@@ -1,130 +1,227 @@
 <div class="header-container">
-  <!-- Título y Ruta -->
-  <div class="breadcrumb">
-    <span class="breadcrumb-path">Seguimiento</span>
-    <span class="breadcrumb-separator">></span>
-    <span class="breadcrumb-current">Seguimiento de Planta</span>
-  </div>
 
   <!-- Encabezado Principal -->
   <div class="header-content">
     <div class="title-section">
-      <h1 class="page-title">Seguimiento de Planta</h1>
-      <div class="stats">
-        <p-badge value="No Seguimientos: {{listaSegPlantas.length}}" severity="info" styleClass="custom-badge"></p-badge>
-      </div>
+      <h1 class="page-title">Seguimiento Comercial</h1>
     </div>
 
-        <!-- Botones y Selector -->
-      <div class="action-section">
-          <p-dropdown 
-            [options]="listaPlantas" 
-            [(ngModel)]="selectedPlanta" 
-            optionLabel="nombre"
-            [showClear]="true"
-            [filter]="true"
-            filterBy="nombre"
-            placeholder="Filtrar por Planta"
-            (onChange)="onPlantaChange($event)"
-            class="line-dropdown">
-          </p-dropdown>
-          <button class="btn add-btn" (click)="showModal()">
-            <i class="pi pi-user-plus"></i>
-            Agregar
-          </button>
-      </div>
     </div>
   </div>
 
+  <div class="search-container">
+    <form [formGroup]="filtroSeguimientoPlantaForm" class="search-form">
+      <ion-grid>
+        <ion-row class="form-row">
+
+            <ion-col size="12" size-sm="6" size-lg="2" class="form-field">
+              <p-floatLabel class="date-field">
+                <p-calendar 
+                  id="fechaInicio" 
+                  formControlName="fechaInicio"
+                  [showIcon]="true"
+                  [showOnFocus]="false"
+                  dateFormat="dd/mm/yy"
+                  [style]="{'width': '100%'}"
+                  styleClass="custom-calendar">
+                </p-calendar>
+                <label for="fechaInicio" class="field-label">Fecha Inicio</label>
+              </p-floatLabel>
+            </ion-col>
+    
+            <ion-col size="12" size-sm="6" size-lg="2" class="form-field">
+              <p-floatLabel class="date-field">
+                <p-calendar 
+                  id="fechaFin" 
+                  formControlName="fechaFin"
+                  [showIcon]="true"
+                  [showOnFocus]="false"
+                  dateFormat="dd/mm/yy"
+                  [style]="{'width': '100%'}"
+                  styleClass="custom-calendar">
+                </p-calendar>
+                <label for="fechaFin" class="field-label">Fecha Fin</label>
+              </p-floatLabel>
+            </ion-col>
+
+            <ion-col size="12" size-sm="6" size-lg="2" class="form-field">
+              <p-floatLabel class="select-field">
+                <p-multiSelect 
+                  id="linea"
+                  [options]="listaLineas"
+                  formControlName="idLineas"
+                  optionLabel="nombre"
+                  optionValue="id"
+                  [showClear]="true"
+                  placeholder="Seleccione las líneas"
+                  display="chip"
+                  [style]="{'width': '100%'}"
+                  styleClass="custom-multiselect">
+                </p-multiSelect>
+                <label for="linea" class="field-label">Líneas</label>
+              </p-floatLabel>
+            </ion-col>
+
+            <ion-col size="12" size-sm="6" size-lg="2" class="form-field">
+              <p-floatLabel class="select-field">
+                <p-multiSelect 
+                  id="planta"
+                  [options]="listaPlantas"
+                  formControlName="idPlantas"
+                  optionLabel="nombre"
+                  optionValue="id"
+                  [showClear]="true"
+                  placeholder="Seleccione las plantas"
+                  display="chip"
+                  [style]="{'width': '100%'}"
+                  styleClass="custom-multiselect">
+                </p-multiSelect>
+                <label for="planta" class="field-label">Plantas</label>
+              </p-floatLabel>
+            </ion-col>
+     
+            <ion-col size="12" size-sm="6" size-lg="2" class="form-field">
+              <p-floatLabel class="select-field">
+                <p-dropdown
+                  id="idEstado"
+                  [options]="listaEstados"
+                  formControlName="idEstado"
+                  optionLabel="nombre"
+                  optionValue="id"
+                  [showClear]="true"
+                  [style]="{'width': '100%'}"
+                  styleClass="custom-dropdown"
+                  placeholder="Seleccione el estado">
+                </p-dropdown>
+                <label for="idEstado" class="field-label">Estado</label>
+              </p-floatLabel>
+            </ion-col>
+
+            <ion-col size="12" size-md="1" class="search-button-col">
+              <p-button 
+                icon="pi pi-search"
+                styleClass="search-button p-button-rounded"
+                pTooltip="Buscar"
+                tooltipPosition="top"
+                (click)="buscarSeguimientosPlanta()">
+              </p-button>
+            </ion-col>
+
+            <ion-col size="12" size-md="1" class="search-button-col">
+              <p-button 
+                icon="pi pi-plus"
+                styleClass="search-button p-button-rounded"
+                pTooltip="Agregar"
+                tooltipPosition="top"
+                (click)="showModal()">
+              </p-button>
+            </ion-col>
+
+        </ion-row>
+      </ion-grid>
+    </form>
+  </div>
+
   <!-- Tabla de Clientes -->
-<div class="table-container">
-  <p-table 
-    [value]="listaSegPlantas" 
-    [loading]="loading"
-    [paginator]="true" 
-    [rows]="10"
-    [showCurrentPageReport]="true"
-    [rowsPerPageOptions]="[10,25,50]"
-    styleClass="p-datatable-sm p-datatable-striped"
-    [loading]="loading"
-    [sortMode]="'multiple'"
-    currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} Seguimientos">
+  <div class="table-container">
+    <p-table 
+      [value]="listaSegPlantas" 
+      [loading]="loading"
+      [paginator]="true" 
+      [rows]="10"
+      [showCurrentPageReport]="true"
+      [rowsPerPageOptions]="[10,25,50]"
+      styleClass="p-datatable-sm p-datatable-striped"
+      [loading]="loading"
+      currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} Seguimientos">
 
-    <!-- Header de la tabla -->
-    <ng-template pTemplate="header">
-      <tr>
-        <th colspan="7" class="table-header">
-          <ion-icon name="business"></ion-icon>
-          LISTADO DE SEGUIMIENTOS PLANTA
-        </th>
-      </tr>
-      <tr>
-        <th pSortableColumn="fechaInicio">
-          Inicio
-          <p-sortIcon field="fechaInicio"></p-sortIcon>
-          <p-columnFilter type="text" field="fechaInicio" display="menu"></p-columnFilter>
-        </th>
-        <th pSortableColumn="fechaFin">
-          Fin
-          <p-sortIcon field="fechaFin"></p-sortIcon>
-          <p-columnFilter type="text" field="fechaFin" display="menu"></p-columnFilter>
-        </th>
-        <th pSortableColumn="nombrePlanta">
-          Planta
-          <p-sortIcon field="nombrePlanta"></p-sortIcon>
-          <p-columnFilter type="text" field="nombrePlanta" display="menu"></p-columnFilter>
-        </th>
-        <th pSortableColumn="observaciones">
-          Observaciones
-          <p-sortIcon field="observaciones"></p-sortIcon>
-          <p-columnFilter type="text" field="observaciones" display="menu"></p-columnFilter>
-        </th>
-        <th pSortableColumn="estadoSeguimientoPlanta">
-          Estado
-          <p-sortIcon field="estadoSeguimientoPlanta"></p-sortIcon>
-          <p-columnFilter type="text" field="estadoSeguimientoPlanta" display="menu"></p-columnFilter>
-        </th>
-        <th>Acciones</th>
-      </tr>
-    </ng-template>
+      <!-- Header de la tabla -->
+      <ng-template pTemplate="header">
+        <tr>
+          <th colspan="9" class="table-header">
+            <ion-icon name="business"></ion-icon>
+            LISTADO DE SEGUIMIENTOS PLANTA
+          </th>
+        </tr>
+        <tr>
+          <th pSortableColumn="Id">
+            Id
+          </th>
+          <th pSortableColumn="nombre">
+            Nombre
+          </th>
+          <th pSortableColumn="nombrePlanta">
+            Planta
+          </th>
+          <th pSortableColumn="lineaText">
+            Linea
+          </th>
+          <th pSortableColumn="fechaInicio">
+            Inicio
+          </th>
+          <th pSortableColumn="fechaFin">
+            Fin
+          </th>
+          <th pSortableColumn="estadoSeguimientoPlanta">
+            Estado
+          </th>
+          <th></th>
+          <th pSortableColumn="observaciones">
+            Observaciones
+          </th>
+        </tr>
+      </ng-template>
 
-    <!-- Cuerpo de la tabla -->
-    <ng-template pTemplate="body" let-segPlanta>
-      <tr>
-        <td>{{segPlanta.fechaInicio | date:'dd/MM/yyyy'}}</td>
-        <td>{{segPlanta.fechaFin | date:'dd/MM/yyyy'}}</td>
-        <td>{{segPlanta.nombrePlanta}}</td>
-        <td>{{segPlanta.observaciones}}</td>
-        <td>
-          <p-badge [value]="segPlanta.estadoSeguimientoPlanta" 
-                  [severity]="segPlanta.estadoSeguimientoPlanta === 'CERRADO' ? 'danger' : 'success'">
-          </p-badge>
-        </td>
-        <td class="actions-cell">
-          <div class="action-buttons">
-            <button pButton 
-              type="button" 
-              icon="pi pi-pencil" 
-              pTooltip="Editar"
-              tooltipPosition="top"
-              class="p-button-rounded p-button-primary p-button-sm"
-              (click)="editarSeguimientoPlanta(segPlanta)">
-            </button>
-          </div>
-        </td>
-      </tr>
-    </ng-template>
-  </p-table>
-</div>
+      <!-- Cuerpo de la tabla -->
+      <ng-template pTemplate="body" let-segPlanta>
+        <tr>
+          <td><a href="javascript:void(0)" (click)="navigateToMenuSeguimiento(segPlanta.id)">{{segPlanta.id}}</a></td>
+          <td>{{segPlanta.nombre}}</td>
+          <td>
+            <span *ngFor="let planta of segPlanta.plantas; let last = last">
+              {{planta.nombre}}{{!last ? ', ' : ''}}
+            </span>
+          </td>
+          <td>
+            <span *ngFor="let linea of segPlanta.lineas; let last = last">
+              {{linea.nombre}}{{!last ? ', ' : ''}}
+            </span>
+          </td>
+          <td>{{segPlanta.fechaInicio | date:'dd/MM/yyyy'}}</td>
+          <td>{{segPlanta.fechaFin | date:'dd/MM/yyyy'}}</td>
+          <td>
+            <p-badge [value]="segPlanta.estadoText" 
+                    [severity]="segPlanta.estadoText === 'CERRADO' ? 'danger' : 'success'">
+            </p-badge>
+          </td>
+          <td class="actions-cell">
+            <div class="action-buttons">
+              <p-button 
+                icon="pi pi-pencil"
+                styleClass="p-button-rounded p-button-primary p-button-sm p-button-icon-only"
+                [style]="{'width': '1.6rem', 'height': '1.6rem', 'border-radius': '8px'}"
+                pTooltip="Editar"
+                tooltipPosition="top"
+                (onClick)="editarSeguimientoPlanta(segPlanta)">
+              </p-button>
+            </div>
+          </td>
+          <td [pTooltip]="segPlanta.observaciones" tooltipPosition="top" [tooltipStyleClass]="'tooltip-custom'">
+            {{segPlanta.observaciones | slice:0:50}}{{segPlanta.observaciones.length > 50 ? '...' : ''}}
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
 
 <p-dialog [(visible)]="displayModal" 
           [modal]="true" 
           [responsive]="true" 
-          [header]="(edit ? 'Actualizar Seguimiento Planta - ' : 'Crear Seguimiento Planta - ') + selectedPlanta?.nombre">
+          [header]="(edit ? 'Actualizar Seguimiento Comercial' : 'Crear Seguimiento Comercial')">
           <ng-template pTemplate="header">
             <div class="dialog-header">
               <i class="pi pi-building"></i>
-              <span>{{edit ? 'Actualizar Seguimiento Planta - ' : 'Crear Seguimiento Planta - '}}{{selectedPlanta?.nombre}}</span>
+              <span>{{edit ? 'Actualizar Seguimiento Comercial' : 'Crear Seguimiento Comercial'}}</span>
             </div>
           </ng-template>
 
@@ -159,9 +256,21 @@
         </ion-col>
       </ion-row>
 
+      <ion-row style="margin-top: 1.7rem;">
+        <ion-col size="12" size-sm="12" size-lg="12">
+          <p-floatLabel>
+            <span class="p-float-label">
+              <input pInputText 
+              formControlName="nombre">
+              <label>Nombre Seguimiento</label>
+            </span>
+          </p-floatLabel>
+        </ion-col>
+      </ion-row>
+
             <!-- Líneas -->
-      <ion-row>
-        <ion-col size="12">
+      <ion-row style="margin-top: 1.7rem;">
+        <ion-col size="12" size-sm="6" size-lg="6">
           <p-floatLabel>
             <p-multiSelect 
                 id="linea"
@@ -177,11 +286,28 @@
               <label for="linea">Líneas</label>
             </p-floatLabel>
         </ion-col>
+
+        <ion-col size="12" size-sm="6" size-lg="6">
+          <p-floatLabel>
+            <p-multiSelect 
+                id="planta"
+                [options]="listaPlantas"
+                formControlName="planta"
+                optionLabel="nombre"
+                optionValue="id"
+                [showClear]="true"
+                placeholder="Seleccione las plantas"
+                display="chip"
+                class="compact-dropdown">
+            </p-multiSelect>
+              <label for="planta">Plantas</label>
+            </p-floatLabel>
+        </ion-col>
       </ion-row>
 
 
         <!-- Estado (solo visible en modo edición) -->
-          <ion-row *ngIf="edit">
+          <ion-row style="margin-top: 1.7rem;" *ngIf="edit">
             <ion-col size="12">
               <p-floatLabel>
                 <p-dropdown
@@ -200,7 +326,7 @@
 
 
       <!-- Observaciones -->
-      <ion-row>
+      <ion-row style="margin-top: 1.7rem;">
         <ion-col size="12">
           <p-floatLabel>
             <textarea 

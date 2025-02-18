@@ -1,11 +1,30 @@
 <div class="header-container">
+  
   <!-- Título y Ruta -->
-  <div class="breadcrumb">
-    <span class="breadcrumb-path">Seguimiento</span>
-    <span class="breadcrumb-separator">></span>
-    <span class="breadcrumb-current">Oportunidades</span>
+  <div class="seguimiento-info">
+    <div class="info-container">
+      <div class="info-item">
+        <span class="info-label">Nombre:</span>
+        <span class="info-value">{{seguimientoSeleccionado.codigo}} - {{seguimientoSeleccionado.nombre}}</span>
+      </div>
+      <div class="info-item">
+        <span class="info-label">Plantas:</span>
+        <span class="info-value">
+          <span *ngFor="let planta of seguimientoSeleccionado.plantasAsociadas; let last = last">
+            {{planta.nombrePlanta}}{{!last ? ', ' : ''}}
+          </span>
+        </span>
+      </div>
+      <div class="info-item">
+        <span class="info-label">Fecha:</span>
+        <span class="info-value">{{seguimientoSeleccionado.fechaInicio | date:'dd/MM/yyyy'}} - {{seguimientoSeleccionado.fechaFin | date:'dd/MM/yyyy'}}</span>
+      </div>
+      <div class="info-item">
+        <span class="info-label">Estado:</span>
+        <span class="info-value">{{seguimientoSeleccionado.estadoSeguimientoPlanta}}</span>
+      </div>
+    </div>
   </div>
-
   <!-- Encabezado Principal -->
   <div class="header-content">
     <div class="title-section">
@@ -14,42 +33,7 @@
 
         <!-- Botones y Selector -->
         <div class="action-section">
-          <p-dropdown 
-            [options]="listaLineas" 
-            [(ngModel)]="selectedLinea" 
-            optionLabel="nombre"
-            [filter]="true"
-            filterBy="nombre" 
-            [showClear]="true"
-            placeholder="Filtrar por Línea"
-            styleClass="w-20rem"
-            (onChange)="onLineaChange($event)"
-            class="line-dropdown">
-          </p-dropdown>
-          <p-dropdown 
-            [options]="listaClientes" 
-            [(ngModel)]="selectedCliente" 
-            optionLabel="nombre"
-            [filter]="true"
-            filterBy="nombre" 
-            [showClear]="true"
-            placeholder="Filtrar por Cliente"
-            styleClass="w-20rem"
-            (onChange)="onClienteChange($event)"
-            class="line-dropdown">
-          </p-dropdown>
-          <p-dropdown 
-            [options]="listaVisitaClientes" 
-            [(ngModel)]="selectedVisita" 
-            optionLabel="actividadRealizada"
-            [filter]="true"
-            filterBy="actividadRealizada" 
-            [showClear]="true"
-            placeholder="Filtrar por Visita"
-            styleClass="w-20rem"
-            (onChange)="onVisitaChange($event)"
-            class="line-dropdown">
-        </p-dropdown>
+          <!-- <app-cliente-search style="margin-top: -5px;" (clienteSeleccionado)="onClienteChange($event)"></app-cliente-search> -->
           <button class="btn add-btn" (click)="showModal()">
             <i class="pi pi-briefcase"></i>
             Agregar
@@ -59,74 +43,144 @@
     </div>
   </div>
 
-  <!-- Tabla de Oportunidades -->
-  <div class="table-container" *ngIf="selectedVisita && listaOportunidades.length > 0">
-    <p-table [value]="[1]" styleClass="p-datatable-sm vertical-table">
-      <ng-template pTemplate="header">
-        <div class="table-header-container">
-          <div class="header-title">
-            <i class="pi pi-briefcase"></i>
-            <span>Consulta de Oportunidades Comerciales</span>
+              <!-- Tabla de Clientes -->
+<div class="table-container">
+  <p-table 
+    [value]="listaOportunidades" 
+    [loading]="loading"
+    [paginator]="true" 
+    [rows]="10"
+    [showCurrentPageReport]="true"
+    [rowsPerPageOptions]="[10,25,50]"
+    styleClass="p-datatable-sm p-datatable-striped"
+    [loading]="loading"
+    [sortMode]="'multiple'"
+    currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} Oportunidades">
+
+    <!-- Header de la tabla -->
+    <ng-template pTemplate="header">
+      <tr>
+        <th colspan="10" class="table-header">
+          <ion-icon name="people"></ion-icon>
+          LISTA DE OPORTUNIDADES COMERCIALES
+        </th>
+      </tr>
+      <tr>
+        <th pSortableColumn="fechaRegistro">
+          Fecha
+        </th>
+        <th pSortableColumn="ClienteText">
+          Planta
+          <p-sortIcon field="ClienteText"></p-sortIcon>
+          <p-columnFilter type="text" field="ClienteText" display="menu"></p-columnFilter>
+        </th>
+        <th pSortableColumn="LineaText">
+          Canal
+        </th>
+        <th pSortableColumn="fechaCompromiso">
+          Ubicacion
+        </th>
+        <th pSortableColumn="frecuenciaText">
+          Cliente
+          <p-sortIcon field="ClienteText"></p-sortIcon>
+          <p-columnFilter type="text" field="ClienteText" display="menu"></p-columnFilter>
+        </th>
+        <th >
+          Contacto
+        </th>
+        <th >
+          Toneladas
+        </th>
+        <th >
+          Gerente de Zona
+        </th>
+        <th>
+          Compromiso
+        </th>
+        <th></th>
+      </tr>
+    </ng-template>
+
+    <!-- Cuerpo de la tabla -->
+    <ng-template pTemplate="body" let-oportunidad>
+      <tr>
+        <td>{{(oportunidad.fecha) | date:'dd/MM/yyyy'}}</td>
+        <td>{{oportunidad.nombrePlanta}}</td>
+        <td>{{oportunidad.nombreCanalCliente}}</td>
+        <td>{{oportunidad.nombreDepartamentoCCliente}} - {{oportunidad.nombreMunicipioCliente}}</td>
+        <td>{{oportunidad.nombreCliente}}</td>
+        <td>{{oportunidad.contacto}}</td>
+        <td>{{oportunidad.tonelada}}</td>
+        <td>{{oportunidad.nombreGerenteZona}} {{oportunidad.apellidoGerenteZona}}</td>
+        <td>{{oportunidad.compromisoGerenteZona}}</td>
+
+        <td class="actions-cell">
+          <div class="action-buttons">
+            <button pButton 
+              type="button" 
+              icon="pi pi-pencil" 
+              pTooltip="Editar"
+              tooltipPosition="top"
+              class="p-button-rounded p-button-primary p-button-sm"
+              (click)="editarOportunidad(oportunidad)">
+            </button>
           </div>
-          <button pButton 
-                  icon="pi pi-pencil" 
-                  class="p-button-rounded p-button-primary p-button-sm"
-                  pTooltip="Editar Oportunidad"
-                  tooltipPosition="top"
-                  (click)="editarOportunidad(listaOportunidades[0])">
-          </button>
-        </div>
-      </ng-template>
-      <ng-template pTemplate="body">
-        <!-- Datos de la Visita -->
-        <tr>
-          <th>Actividad Realizada</th>
-          <td>{{selectedVisita.actividadRealizada}}</td>
-        </tr>
-        <tr>
-          <th>Calidad de Información</th>
-          <td>{{selectedVisita.calidadInformacion}}</td>
-        </tr>
-        <tr>
-          <th>Compromiso Director</th>
-          <td>{{selectedVisita.compromisoDirector}}</td>
-        </tr>
-        <tr>
-          <th>Compromiso Gerente Zona</th>
-          <td>{{selectedVisita.compromisoGerenteZona}}</td>
-        </tr>
-        <tr>
-          <th>Fecha Oportunidad</th>
-          <td>{{listaOportunidades[0].fecha | date:'dd/MM/yyyy HH:mm'}}</td>
-        </tr>
-        <tr>
-          <th>Descripción Oportunidad</th>
-          <td>{{listaOportunidades[0].descripcion}}</td>
-        </tr>
-      </ng-template>
-    </p-table>
-  </div>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>
 
   <p-dialog [(visible)]="displayModal" 
              [modal]="true" 
              [responsive]="true" 
-             [header]="(edit ? 'Actualizar Oportunidad Comercial - ' : 'Crear Oportunidad Comercial') ">
+             [header]="(edit ? 'Actualizar Oportunidad Comercial' : 'Registrar Oportunidad Comercial') ">
           <ng-template pTemplate="header">
             <div class="dialog-header">
               <i class="pi pi-briefcase"></i>
-              <span>{{edit ? 'Actualizar Oportunidad Comercial - ' : 'Crear Oportunidad Comercial'}}</span>
+              <span>{{edit ? 'Actualizar Oportunidad Comercial' : 'Registrar Oportunidad Comercial'}}</span>
             </div>
           </ng-template>
 
           <form [formGroup]="OportunidadForm">
             <ion-grid>
-              <ion-row class="form-row">
-                <ion-col size="12" size-md="6">
-                  <span class="p-float-label">
-                    <input pInputText [value]="selectedCliente?.nombre" readonly>
-                    <label>Nombre Cliente</label>
-                  </span>
+              <ion-row>        
+                <ion-col size="12" size-sm="6" size-lg="6">
+                  <p-floatLabel>
+                    <p-dropdown 
+                      id="planta"
+                      [options]="seguimientoPlantas"
+                      optionLabel="nombrePlanta"
+                      formControlName="idPlanta"
+                      optionValue="idPlanta"
+                      [showClear]="true"
+                      placeholder="Seleccione la Planta"
+                      (onChange)="onPlantaChange($event)">
+                    </p-dropdown>
+                  <label for="planta">Planta</label>
+                  </p-floatLabel>
                 </ion-col>
+        
+                <ion-col size="12" size-sm="6" size-lg="6">
+                    <p-floatLabel>
+                      <p-dropdown 
+                      id="linea"
+                      [options]="seguimientoLineas"
+                      optionLabel="nombreLinea"
+                      formControlName="idLinea"
+                      optionValue="idLinea"
+                      [showClear]="true"
+                      placeholder="Seleccione la Línea">
+                      </p-dropdown>
+                      <label for="linea">Línea</label>
+                    </p-floatLabel>
+                </ion-col>
+              </ion-row>
+              <ion-row class="form-row">
+                <ion-col size="12" size-md="6" style="margin-top: -1rem;">
+                  <app-cliente-search (clienteSeleccionado)="onClienteChange($event)" formControlName="idCliente"></app-cliente-search>
+                </ion-col>
+
                 <ion-col size="12" size-md="6">
                   <span class="p-float-label">
                     <input pInputText [value]="selectedCliente?.canallistaText" readonly>
@@ -136,16 +190,18 @@
               </ion-row>
 
               <ion-row class="form-row">
+                
                 <ion-col size="12" size-md="6">
                   <span class="p-float-label">
-                    <input pInputText [value]="selectedCliente?.tipoCliente" readonly>
-                    <label>Tipo Cliente</label>
+                    <p-inputNumber formControlName="tonelada" mode="decimal"></p-inputNumber>
+                    <label>Toneladas</label>
                   </span>
                 </ion-col>
+                
                 <ion-col size="12" size-md="6">
                   <span class="p-float-label">
-                    <input pInputText [value]="selectedCliente?.departamentoText + ' - ' + selectedCliente?.municipioText" readonly>
-                    <label>Ubicación</label>
+                    <textarea pInputTextarea formControlName="contacto" rows="4" maxlength="100"></textarea>
+                    <label>Contacto</label>
                   </span>
                 </ion-col>
               </ion-row>
@@ -153,54 +209,51 @@
               <ion-row class="form-row">
                 <ion-col size="12" size-md="6">
                   <span class="p-float-label">
-                    <input pInputText [value]="selectedVisita?.toneladas" readonly>
-                    <label>Toneladas</label>
+                    <p-dropdown 
+                    [options]="listaGerenteZona" 
+                    optionLabel="nombreCompleto" 
+                    optionValue="id"
+                    formControlName="idGerenteZona"
+                    placeholder="Seleccione un  Gerente Zona">
+                    </p-dropdown>
+                    <label>Gerente Zona</label>
                   </span>
                 </ion-col>
 
                 <ion-col size="12" size-md="6">
                   <span class="p-float-label">
-                    <p-calendar formControlName="fecha" 
-                    [showIcon]="true"
-                    [showOnFocus]="false">
-                  </p-calendar>
-                    <label>Fecha Compromiso</label>
+                    <textarea pInputTextarea formControlName="compromisoGerenteZona" rows="4" maxlength="200"></textarea>
+                    <label>Compromiso Gerente Zona</label>
                   </span>
+                </ion-col>  
+
+              </ion-row>
+
+              <!-- Botones -->
+              <ion-row class="button-row">
+                <ion-col>
+                  <div class="button-container">
+                    <button pButton 
+                            type="submit" 
+                            [label]="edit ? 'Actualizar' : 'Guardar'"
+                            class="p-button-primary action-button"
+                            [disabled]="!OportunidadForm.valid"
+                            (click)="edit ? actualizarOportunidad() : RegistrarOportunidad()">
+                    </button>
+                    <button pButton 
+                            type="button" 
+                            label="Cancelar" 
+                            class="p-button-secondary action-button" 
+                            (click)="closeModal()">
+                    </button>
+                  </div>
                 </ion-col>
               </ion-row>
 
-              <ion-row class="form-row" style="margin-bottom: 10px;">
+          
+ 
+            </ion-grid>
 
-                <ion-col size="12">
-                  <span class="p-float-label">
-                    <textarea pInputTextarea formControlName="descripcion" rows="4"></textarea>
-                    <label>Descripcion</label>
-                  </span>
-                </ion-col>
-              </ion-row>
-
-
-                    <!-- Botones -->
-      <ion-row class="button-row">
-        <ion-col>
-          <div class="button-container">
-            <button pButton 
-                    type="submit" 
-                    [label]="edit ? 'Actualizar' : 'Guardar'"
-                    class="p-button-primary action-button"
-                    [disabled]="!OportunidadForm.valid"
-                    (click)="edit ? actualizarOportunidad() : RegistrarOportunidad()">
-            </button>
-            <button pButton 
-                    type="button" 
-                    label="Cancelar" 
-                    class="p-button-secondary action-button" 
-                    (click)="closeModal()">
-            </button>
-          </div>
-        </ion-col>
-      </ion-row>
-    </ion-grid>
           </form>
 </p-dialog>
 

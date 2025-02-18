@@ -18,6 +18,10 @@ export class VisitaClientesService {
     return this._http.get(`${this.urlApi}/${this.VisitaCliente}/`);
   }
 
+  getVisitaClienteBySeguimientoPlanta(idSeguimiento: number) {
+    return this._http.get(`${this.urlApi}/${this.VisitaCliente}/GetVisitaClienteBySeguimientoPlanta/${idSeguimiento}`);
+  }
+
   getVisitaClienteByIdCliente(idCliente: number) {
     return this._http.get(`${this.urlApi}/${this.VisitaCliente}/GetVisitaClienteByIdCliente/${idCliente}`);
   }

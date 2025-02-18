@@ -28,7 +28,15 @@ export class EvaluacionService {
     return this._http.get(`${this.urlApi}/${this.Evaluacion}/GetEvaluacionByIdGerenteZona/${idGerenteZona}`);
   }
 
-  createEvaluacion(data: any) {
+  getGerentesNoEvaluadosByIdSeguimiento(idSeguimiento: number) {
+    return this._http.get(`${this.urlApi}/${this.Evaluacion}/GetGerentesNoEvaluadosByIdSeguimientoPlanta/${idSeguimiento}`);
+  }
+
+  getEvaluacionByIdSeguimientoPlanta(idSeguimiento: number) {
+    return this._http.get(`${this.urlApi}/${this.Evaluacion}/GetEvaluacionByIdSeguimientoPlanta/${idSeguimiento}`);
+  }
+
+  createEvaluacionCompleta(data: any) {
     return this._http.post(`${this.urlApi}/${this.Evaluacion}/`, data);
   }
 
@@ -45,7 +53,7 @@ export class EvaluacionService {
   }
 
   getRespuestasByEvaluacion(idEvaluacion: number) {
-    return this._http.get(`${this.urlApi}/${this.Respuesta}/GetRespuestasByIdEvaluacion/${idEvaluacion}`);
+    return this._http.get(`${this.urlApi}/${this.Respuesta}/GetRespuestaByIdEvaluacion/${idEvaluacion}`);
   }
 
   getRespuestasByEvaluacionAndAspecto(idEvaluacion: number, idAspecto: number) {

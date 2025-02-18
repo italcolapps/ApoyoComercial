@@ -783,3 +783,34 @@
   .p-inputnumber {
     margin-bottom: 0.5rem;
   }
+
+  /* Estilos para la sección de seguimiento */
+  .seguimiento-info {
+    margin-bottom: 20px;
+    padding: 12px;
+    background-color: #f8f9fa;
+    border-radius: 6px;
+    border-left: 4px solid #2196F3;
+
+    .info-container {
+      display: flex;
+      justify-content: flex-start;
+      gap: 24px;
+      flex-wrap: wrap;
+
+      .info-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+
+        .info-label {
+          font-weight: 600;
+          color: #555;
+        }
+
+        .info-value {
+          color: #333;
+        }
+      }
+    }
+  }

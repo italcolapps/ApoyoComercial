@@ -1,0 +1,22 @@
+<div class="p-fluid" style="margin-top: 15px;">
+<p-floatLabel>
+  <input 
+    id="nombre"
+    type="text"
+    pInputText
+    placeholder="Ingrese el nombre del cliente" 
+    [(ngModel)]="nombre"
+    (input)="buscarCliente(nombre)" />
+  <label for="nombre">
+    Cliente
+  </label>
+</p-floatLabel>
+
+<p-listbox 
+  *ngIf="mostrarListbox"
+  [options]="clientesFiltrados"
+  [(ngModel)]="selectedCliente" 
+  optionLabel="nombre"
+  (onChange)="onClienteSelect($event)">
+</p-listbox>
+</div>

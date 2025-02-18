@@ -1,40 +1,37 @@
 <div class="header-container">
-  <!-- Título y Ruta -->
-  <div class="breadcrumb">
-    <span class="breadcrumb-path">Seguimiento</span>
-    <span class="breadcrumb-separator">></span>
-    <span class="breadcrumb-current">Evaluacion Gerentes de Zona</span>
+
+  <div class="seguimiento-info">
+    <div class="info-container">
+      <div class="info-item">
+        <span class="info-label">Nombre:</span>
+        <span class="info-value">{{seguimientoSeleccionado.codigo}} - {{seguimientoSeleccionado.nombre}}</span>
+      </div>
+      <div class="info-item">
+        <span class="info-label">Plantas:</span>
+        <span class="info-value">
+          <span *ngFor="let planta of seguimientoSeleccionado.plantasAsociadas; let last = last">
+            {{planta.nombrePlanta}}{{!last ? ', ' : ''}}
+          </span>
+        </span>
+      </div>
+      <div class="info-item">
+        <span class="info-label">Fecha:</span>
+        <span class="info-value">{{seguimientoSeleccionado.fechaInicio | date:'dd/MM/yyyy'}} - {{seguimientoSeleccionado.fechaFin | date:'dd/MM/yyyy'}}</span>
+      </div>
+      <div class="info-item">
+        <span class="info-label">Estado:</span>
+        <span class="info-value">{{seguimientoSeleccionado.estadoSeguimientoPlanta}}</span>
+      </div>
+    </div>
   </div>
 
   <!-- Encabezado Principal -->
   <div class="header-content">
     <div class="title-section">
-      <h1 class="page-title">Evaluacion Gerentes de Zona</h1>
+      <h1 class="page-title">Evaluación Gerentes de Zona</h1>
     </div>
 
-        <!-- Botones y Selector -->
         <div class="action-section">
-          <p-dropdown 
-          [options]="listaLineas" 
-          [(ngModel)]="selectedLinea" 
-          optionLabel="nombre"
-          [showClear]="true"
-          placeholder="Filtrar por Línea"
-          (onChange)="onLineaChange($event)"
-          class="line-dropdown">
-        </p-dropdown>
-        <p-dropdown 
-        [options]="listaGerenteZona" 
-        [(ngModel)]="selectedGZ" 
-        optionLabel="nombreCompleto"
-        [filter]="true"
-        filterBy="nombre" 
-        [showClear]="true"
-        placeholder="Gerente de Zona"
-        styleClass="w-20rem"
-        (onChange)="onGerenteZonaChange($event)"
-        class="line-dropdown">
-        </p-dropdown>
         <button class="btn add-btn" (click)="showModal()">
           <i class="pi pi-user-plus"></i>
           Agregar
@@ -60,31 +57,52 @@
       <!-- Header de la tabla -->
       <ng-template pTemplate="header">
         <tr>
-          <th colspan="6" class="table-header">
+          <th colspan="15" class="table-header">
             <ion-icon name="people-outline" class="header-icon"></ion-icon>
             LISTADO DE EVALUACIONES
           </th>
         </tr>
         <tr>
           <th pSortableColumn="fechaRegistro">
-            Fecha de Registro
-            <p-sortIcon field="fechaRegistro"></p-sortIcon>
-            <p-columnFilter type="text" field="fechaRegistro" display="menu"></p-columnFilter>
+            Fecha
           </th>
           <th pSortableColumn="gerenteZonaNombre">
             Gerente Zona
             <p-sortIcon field="gerenteZonaNombre"></p-sortIcon>
             <p-columnFilter type="text" field="gerenteZonaNombre" display="menu"></p-columnFilter>
           </th>
-          <th pSortableColumn="nombreZona">
+          <th>
             Zona
-            <p-sortIcon field="nombreZona"></p-sortIcon>
-            <p-columnFilter type="text" field="nombreZona" display="menu"></p-columnFilter>
           </th>
-          <th pSortableColumn="observaciones">
+          <th>
+            <span pTooltip="Comercial Pto / Prospectación" tooltipPosition="top">1</span>
+          </th>
+          <th>
+            <span pTooltip="Act Mercadeo / Promoción" tooltipPosition="top">2</span>
+          </th>
+          <th>
+            <span pTooltip="Conocimiento Merc / Comp" tooltipPosition="top">3</span>
+          </th>
+          <th>
+            <span pTooltip="Servicio Técnico" tooltipPosition="top">4</span>
+          </th>
+          <th>
+            <span pTooltip="Uso Herramientas Italcol" tooltipPosition="top">5</span>
+          </th>
+          <th>
+            <span pTooltip="Nivel Formación" tooltipPosition="top">6</span>
+          </th>
+          <th>
+            <span pTooltip="Nivel Relacionamiento Cliente" tooltipPosition="top">7</span>
+          </th>
+          <th>
+            <span pTooltip="Actitud General" tooltipPosition="top">8</span>
+          </th>
+          <th>
+            Nota
+          </th>
+          <th pSortableColumn="observaciones" style="width: 200px;">
             Observaciones
-            <p-sortIcon field="observaciones"></p-sortIcon>
-            <p-columnFilter type="text" field="observaciones" display="menu"></p-columnFilter>
           </th>
 
           <th>Acciones</th>
@@ -96,8 +114,17 @@
         <tr>
           <td>{{evaluacion.fechaRegistro | date:'dd/MM/yyyy'}}</td>
           <td>{{evaluacion.gerenteZonaNombre}}</td>
-          <td>{{selectedGZ.nombreZona}}</td>
-          <td>{{evaluacion.observaciones}}</td>
+          <td>{{evaluacion.nombreZona}}</td>
+          <td>{{getAbreviacion(evaluacion.respuestas?.[0]?.respuestaListaNombre)}}</td>
+          <td>{{getAbreviacion(evaluacion.respuestas?.[1]?.respuestaListaNombre)}}</td>
+          <td>{{getAbreviacion(evaluacion.respuestas?.[2]?.respuestaListaNombre)}}</td>
+          <td>{{getAbreviacion(evaluacion.respuestas?.[3]?.respuestaListaNombre)}}</td>
+          <td>{{getAbreviacion(evaluacion.respuestas?.[4]?.respuestaListaNombre)}}</td>
+          <td>{{getAbreviacion(evaluacion.respuestas?.[5]?.respuestaListaNombre)}}</td>
+          <td>{{getAbreviacion(evaluacion.respuestas?.[6]?.respuestaListaNombre)}}</td>
+          <td>{{getAbreviacion(evaluacion.respuestas?.[7]?.respuestaListaNombre)}}</td>
+          <td>{{getEvaluacionPercentage(evaluacion.respuestas)}}%</td>
+          <td>{{evaluacion.observaciones | slice:0:50}}{{evaluacion.observaciones.length > 50 ? '...' : ''}}</td>
           <td class="actions-cell">
             <button pButton 
                     type="button" 
@@ -106,18 +133,8 @@
                     tooltipPosition="top"
                     class="p-button-rounded p-button-primary p-button-sm"
                     style="margin-right: 0.5rem;"
-                    (click)="editarEvaluacion(evaluacion)">
-            </button>
-            <button pButton 
-            type="button" 
-            icon="pi pi-star-fill" 
-            pTooltip="Evaluar"
-            tooltipPosition="top"
-            class="p-button-rounded p-button-primary p-button-sm"
-            (click)="abrirEvaluacion(evaluacion)"
-            >
-            </button>
-            
+                    (click)="abrirEvaluacion(evaluacion)">
+            </button>            
           </td>
         </tr>
       </ng-template>
@@ -128,41 +145,84 @@
   <p-dialog [(visible)]="displayModal" 
              [modal]="true" 
              [responsive]="true" 
-             [header]="(edit ? 'Actualizar Evaluación' : 'Crear Evaluación') ">
+             [header]="(edit ? 'Actualizar Evaluación' : 'Registrar Evaluación')"
+             [style]="{width: '90%', maxWidth: '900px'}">
              <ng-template pTemplate="header">
               <div class="dialog-header">
                 <i class="pi pi-list-check"></i>
-                <span>{{edit ? 'Actualizar Evaluación' : 'Crear Evaluación'}}</span>
+                <span>{{edit ? 'Actualizar Evaluación' : 'Registrar Evaluación'}}</span>
               </div>
             </ng-template>
 
             <form [formGroup]="EvaluacionForm">
               <ion-grid>
                 <ion-row class="form-row">
-                  <ion-col size="12" size-md="6">
+                  <ion-col size="12" size-md="6" style="margin-bottom: 1rem;">
                     <span class="p-float-label">
-                      <input pInputText [value]="selectedGZ?.nombreCompleto" readonly>
-                      <label>Gerente de Zona</label>
+                      <p-dropdown 
+                      formControlName="idGerenteZonaTabla" 
+                      [options]="listaGerenteZona" 
+                      optionLabel="nombreCompleto" 
+                      optionValue="id"
+                      placeholder="Seleccione un Gerente Zona"
+                      [style]="{'width':'90%'}">
+                      </p-dropdown>
+                      <label>Gerente Zona</label>
                     </span>
                   </ion-col>
-                  <ion-col size="12" size-md="6">
-                    <span class="p-float-label">
-                      <input pInputText [value]="selectedGZ?.nombreZona" readonly>
-                      <label>Zona</label>
-                    </span>
-                  </ion-col>
-                  <ion-col size="12" style="margin-top: 15px;">
+                  <!-- <ion-col size="12" size-md="6">
                     <span class="p-float-label">
                       <p-calendar formControlName="fechaRegistro" 
-                      [showIcon]="true"
-                      [showOnFocus]="false">
+                      [showOnFocus]="false"
+                      [disabled]="true"
+                      [readonlyInput]="true">
                     </p-calendar>
                       <label>Fecha Registro</label>
                     </span>
-                  </ion-col>
+                  </ion-col> -->
+                </ion-row>
+
+                <ion-row class="form-row">
+                  <div class="evaluation-table">
+                    <p-table [value]="evaluacionesData" styleClass="p-datatable evaluation-grid">
+                      <ng-template pTemplate="header">
+                        <tr>
+                          <th class="aspecto-header" style="width: 300px;">ASPECTO</th>
+                          <th *ngFor="let resp of listaRespuestas" class="respuesta-header">{{resp.nombre}}</th>
+                          <th class="total-header">TOTAL</th>
+                        </tr>
+                      </ng-template>
+                      <ng-template pTemplate="body" let-aspecto>
+                        <tr>
+                          <td class="aspecto-cell">{{aspecto.nombre}}</td>
+                          <td *ngFor="let resp of listaRespuestas" class="respuesta-cell">
+                            <p-radioButton 
+                              [name]="'respuesta_' + aspecto.id"
+                              [value]="resp.id"
+                              [(ngModel)]="aspecto.respuesta"
+                              [ngModelOptions]="{standalone: true}">
+                            </p-radioButton>
+                          </td>
+                          <td class="total-cell">{{aspecto.respuesta ? getPercentageForResponse(aspecto.respuesta) : '0,0%'}}</td>
+                        </tr>
+                      </ng-template>
+                      <ng-template pTemplate="footer">
+                        <tr class="totals-row">
+                          <td class="aspecto-cell">TOTAL</td>
+                          <td *ngFor="let resp of listaRespuestas" class="respuesta-cell">
+                            {{getTotalForResponse(resp.id)}}
+                          </td>
+                          <td class="total-cell">{{getTotalPercentage()}}%</td>
+                        </tr>
+                      </ng-template>
+                    </p-table>
+                  </div>
+                </ion-row>
+
+                <ion-row class="form-row">
                   <ion-col size="12" style="margin-top: 15px;">
                     <span class="p-float-label">
-                      <textarea pInputTextarea formControlName="observaciones" rows="4"></textarea>
+                      <textarea pInputTextarea formControlName="observaciones" rows="1" maxlength="200"></textarea>
                       <label>Observaciones</label>
                     </span>
                   </ion-col>
@@ -190,80 +250,6 @@
               </ion-row>
               </ion-grid>
             </form>
-    </p-dialog>
-
-    <!-- Modal de Evaluación -->
-    <p-dialog [(visible)]="displayEvaluacionModal" 
-              [modal]="true" 
-              [responsive]="true"
-              [style]="{width: '90vw'}"
-              header="Evaluación del Gerente de Zona">
-
-     <ion-row class="form-row">
-       <ion-col size="12" size-md="6">
-         <span class="p-float-label">
-           <input pInputText [value]="selectedGZ?.nombreCompleto" readonly>
-           <label>Gerente de Zona</label>
-         </span>
-       </ion-col>
-       <ion-col size="12" size-md="6">
-         <span class="p-float-label">
-           <input pInputText [value]="selectedGZ?.nombreZona" readonly>
-           <label>Zona</label>
-         </span>
-       </ion-col>
-     </ion-row>
-
-      <div class="evaluation-table">
-        <p-table [value]="evaluacionesData" styleClass="p-datatable evaluation-grid">
-          <ng-template pTemplate="header">
-            <tr>
-              <th class="aspecto-header">ASPECTO</th>
-              <th *ngFor="let resp of listaRespuestas" class="respuesta-header">{{resp.nombre}}</th>
-              <th class="total-header">TOTAL</th>
-            </tr>
-          </ng-template>
-          <ng-template pTemplate="body" let-aspecto>
-            <tr>
-              <td class="aspecto-cell">{{aspecto.nombre}}</td>
-              <td *ngFor="let resp of listaRespuestas" class="respuesta-cell">
-                <p-radioButton 
-                  [name]="'respuesta_' + aspecto.id"
-                  [value]="resp.id"
-                  [(ngModel)]="aspecto.respuesta">
-                </p-radioButton>
-              </td>
-              <td class="total-cell">{{aspecto.respuesta ? getPercentageForResponse(aspecto.respuesta) : '0,0%'}}</td>
-            </tr>
-          </ng-template>
-          <ng-template pTemplate="footer">
-            <tr class="totals-row">
-              <td class="aspecto-cell">TOTAL</td>
-              <td *ngFor="let resp of listaRespuestas" class="respuesta-cell">
-                {{getTotalForResponse(resp.id)}}
-              </td>
-              <td class="total-cell">{{getTotalPercentage()}}%</td>
-            </tr>
-          </ng-template>
-        </p-table>
-      </div>
-
-      <ng-template pTemplate="footer">
-        <div class="dialog-footer">
-          <button pButton 
-                  type="button" 
-                  label="Guardar" 
-                  class="p-button-primary action-button"
-                  (click)="guardarEvaluacion()">
-          </button>
-          <button pButton 
-                  type="button" 
-                  label="Cancelar" 
-                  class="p-button-secondary action-button" 
-                  (click)="closeEvaluacionModal()">
-          </button>
-        </div>
-      </ng-template>
     </p-dialog>
 
     <!-- Confirm Dialog -->

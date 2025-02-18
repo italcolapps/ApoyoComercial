@@ -6,13 +6,35 @@
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   margin-bottom: 20px;
 
-  .breadcrumb {
-    margin-bottom: 16px;
-    font-size: 14px;
+  /* Estilos para la sección de seguimiento */
+  .seguimiento-info {
+    margin-bottom: 20px;
+    padding: 12px;
+    background-color: #f8f9fa;
+    border-radius: 6px;
+    border-left: 4px solid #2196F3;
 
-    .breadcrumb-path { color: #666; }
-    .breadcrumb-separator { margin: 0 8px; color: #999; }
-    .breadcrumb-current { color: #333; font-weight: 500; }
+    .info-container {
+      display: flex;
+      justify-content: flex-start;
+      gap: 24px;
+      flex-wrap: wrap;
+
+      .info-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+
+        .info-label {
+          font-weight: 600;
+          color: #555;
+        }
+
+        .info-value {
+          color: #333;
+        }
+      }
+    }
   }
 
   .header-content {
@@ -866,4 +888,72 @@ input[readonly] {
       font-size: 1rem;
     }
   }
+
+  .analytic-table {
+  margin-bottom: 2rem; // Espacio entre la tabla y el campo de observaciones
+  
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 1rem;
+    
+    th, td {
+      padding: 0.8rem; // Aumenta el padding para separar más las filas
+      text-align: center;
+      border: 1px solid #ddd;
+    }
+
+    th {
+      background-color: #4a90e2;
+      color: white;
+      font-weight: bold;
+    }
+
+    tr {
+      &:nth-child(even) {
+        background-color: #f8f9fa;
+      }
+    }
+
+    .input-highlight {
+      width: 100%;
+      padding: 0.5rem;
+      border: 1px solid #ced4da;
+      border-radius: 4px;
+      text-align: center;
+      background-color: #fff3f3; // Color rosado suave para los campos de entrada
+      
+      &:focus {
+        outline: none;
+        border-color: #4a90e2;
+        box-shadow: 0 0 0 0.2rem rgba(74, 144, 226, 0.25);
+      }
+    }
+  }
+}
+
+// Estilo para el campo de observaciones
+ion-row {
+  margin-top: 2rem; // Espacio adicional arriba del campo de observaciones
+  
+  p-floatLabel {
+    width: 100%;
+    
+    textarea {
+      width: 100%;
+      margin-top: 1rem;
+    }
+  }
+}
+
+// Ajustes adicionales para mejorar la apariencia
+:host ::ng-deep {
+  .p-inputtextarea {
+    width: 100%;
+  }
+  
+  .p-float-label {
+    margin-top: 1rem;
+  }
+}
 }

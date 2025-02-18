@@ -1,0 +1,180 @@
+<div class="header-container">
+  <!-- Título y Ruta -->
+  <div class="breadcrumb">
+    <span class="breadcrumb-path">Reportes</span>
+    <span class="breadcrumb-separator">></span>
+    <span class="breadcrumb-current">Reporte de Actividades</span>
+  </div>
+
+  <!-- Encabezado Principal -->
+  <div class="header-content">
+    <div class="title-section">
+      <h1 class="page-title">Reporte de Actividades - Directores de Linea</h1>
+    </div>
+
+        <!-- Botones y Selector -->
+      <div class="action-section">
+        <form [formGroup]="reporteForm">
+          <app-cliente-search 
+          style="margin-top: -5px;" 
+          (clienteSeleccionado)="onClienteChange($event)"
+          formControlName="idCliente">
+        </app-cliente-search>
+        </form>
+      </div>
+    </div>
+</div>
+
+<div class="datos-base-section" *ngIf="reporteData">
+  <ion-card class="modern-card">
+    <ion-card-header class="card-header">
+      <ion-card-title>
+        <ion-text class="section-title">1. DATOS BASE</ion-text>
+      </ion-card-title>
+    </ion-card-header>
+
+    <ion-card-content class="card-content">
+      <ion-grid class="data-grid">
+        <ion-row>
+          <!-- Columnas repetidas para mantener estructura responsive -->
+          <ion-col size="12" size-md="6" class="data-column">
+            <div class="info-group">
+              <ion-label class="info-label">Fecha Recorrido</ion-label>
+              <ion-text class="info-value highlight">{{reporteData.fecharecorrido | date:'dd/MM/yyyy HH:mm'}}</ion-text>
+            </div>
+          </ion-col>
+          
+          <ion-col size="12" size-md="6" class="data-column">
+            <div class="info-group">
+              <ion-label class="info-label">Regional</ion-label>
+              <ion-text class="info-value">{{reporteData.regional}}</ion-text>
+            </div>
+          </ion-col>
+
+          <ion-col size="12" size-md="6" class="data-column">
+            <div class="info-group">
+              <ion-label class="info-label">Planta</ion-label>
+              <ion-text class="info-value">{{reporteData.planta}}</ion-text>
+            </div>
+          </ion-col>
+
+          <ion-col size="12" size-md="6" class="data-column">
+            <div class="info-group">
+              <ion-label class="info-label">Línea</ion-label>
+              <ion-text class="info-value">{{reporteData.linea}}</ion-text>
+            </div>
+          </ion-col>
+
+          <ion-col size="12" class="data-column">
+            <div class="info-group">
+              <ion-label class="info-label">Director Línea</ion-label>
+              <ion-text class="info-value emphasis">{{reporteData.directorlinea}}</ion-text>
+            </div>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-card-content>
+  </ion-card>
+</div>
+
+<div class="datos-base-section" *ngIf="reporteData">
+  <ion-card class="modern-card">
+    <ion-card-header class="card-header">
+      <ion-card-title>
+        <ion-text class="section-title">2. REPORTE VISITA Y TRABAJO REALIZADO EN CLIENTES</ion-text>
+      </ion-card-title>
+    </ion-card-header>
+
+    <ion-card-content class="card-content">
+      <ion-grid class="data-grid">
+        <ion-row>
+          <ion-col size="6" size-sm="4" size-lg="4" class="data-column">
+            <div class="info-group">
+              <ion-label class="info-label">Día de Visita</ion-label>
+              <ion-text class="info-value highlight">{{reporteData.fechaDia}}</ion-text>
+            </div>
+          </ion-col>
+
+          <ion-col ssize="6" size-sm="4" size-lg="4"class="data-column">
+            <div class="info-group">
+              <ion-label class="info-label">Canal</ion-label>
+              <ion-text class="info-value">{{reporteData.canal}}</ion-text>
+            </div>
+          </ion-col>
+
+          <ion-col size="6" size-sm="4" size-lg="4" class="data-column">
+            <div class="info-group">
+              <ion-label class="info-label">Cliente</ion-label>
+              <ion-text class="info-value highlight">{{reporteData.cliente}}</ion-text>
+            </div>
+          </ion-col>
+
+          <ion-col size="12" class="data-column">
+            <div class="info-group">
+              <ion-label class="info-label">Ubicación</ion-label>
+              <ion-text class="info-value emphasis">{{reporteData.ubicacion}}</ion-text>
+            </div>
+          </ion-col>
+
+
+          <ion-col size="6" size-sm="4" size-lg="4" class="data-column">
+            <div class="info-group">
+              <ion-label class="info-label">Tipo Cliente</ion-label>
+              <ion-text class="info-value">{{reporteData.tipocliente}}</ion-text>
+            </div>
+          </ion-col>
+
+          <ion-col size="6" size-sm="4" size-lg="4" class="data-column">
+            <div class="info-group">
+              <ion-label class="info-label">Línea Cliente</ion-label>
+              <ion-text class="info-value">{{reporteData.lineacliente}}</ion-text>
+            </div>
+          </ion-col>
+
+          <ion-col size="6" size-sm="4" size-lg="4" class="data-column">
+            <div class="info-group">
+              <ion-label class="info-label">Toneladas</ion-label>
+              <ion-text class="info-value highlight">{{reporteData.toneladas}}</ion-text>
+            </div>
+          </ion-col>
+
+          <ion-col size="12" size-md="6" class="data-column">
+            <div class="info-group">
+              <ion-label class="info-label">Actividades Realizadas</ion-label>
+              <ion-text class="info-value">{{reporteData.actividadesrealizadas}}</ion-text>
+            </div>
+          </ion-col>
+
+          <ion-col size="12" size-md="6" class="data-column">
+            <div class="info-group">
+              <ion-label class="info-label">Compromiso Gerente Zona</ion-label>
+              <ion-text class="info-value">{{reporteData.compromisogerentezona}}</ion-text>
+            </div>
+          </ion-col>
+
+          <ion-col size="12" size-md="6" class="data-column">
+            <div class="info-group">
+              <ion-label class="info-label">Compromiso Director</ion-label>
+              <ion-text class="info-value">{{reporteData.compromisodirector}}</ion-text>
+            </div>
+          </ion-col>
+
+          <ion-col size="12" size-md="6" class="data-column">
+            <div class="info-group">
+              <ion-label class="info-label">Frecuencia</ion-label>
+              <ion-text class="info-value">{{reporteData.frecuencia}}</ion-text>
+            </div>
+          </ion-col>
+
+          <ion-col size="12" size-md="6" class="data-column">
+            <div class="info-group">
+              <ion-label class="info-label">Calidad Informacion</ion-label>
+              <ion-text class="info-value">{{reporteData.calidadinformacion}}</ion-text>
+            </div>
+          </ion-col>
+
+        </ion-row>
+      </ion-grid>
+    </ion-card-content>
+  </ion-card>
+</div>

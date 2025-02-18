@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
@@ -26,6 +26,7 @@ import { TooltipModule } from 'primeng/tooltip';
 import { TriStateCheckboxModule } from 'primeng/tristatecheckbox';
 import { InputTextareaModule } from 'primeng/inputtextarea';
 import { CalendarModule } from 'primeng/calendar';
+import { SharedModule } from '../components/shared.module';
 
 @NgModule({
   imports: [
@@ -50,8 +51,10 @@ import { CalendarModule } from 'primeng/calendar';
     TooltipModule,
     TriStateCheckboxModule,
     InputTextareaModule,
-    CalendarModule
+    CalendarModule,
+    SharedModule
   ],
-  declarations: [VisitaClientePage]
+  declarations: [VisitaClientePage],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class VisitaClientePageModule {}

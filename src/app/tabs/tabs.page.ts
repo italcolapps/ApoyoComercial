@@ -1,8 +1,9 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { NavigationEnd, Router } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { Router, NavigationEnd } from '@angular/router';
+import { SeguimientoStateService } from '../services/seguimiento-state.service';
 import { filter } from 'rxjs/operators';
 import { AuthService } from '../services/auth.service';
-import { AlertsService } from '../services/alerts.service'; // Asegúrate de importar AlertsService si no lo has hecho
+import { AlertsService } from '../services/alerts.service';
 
 @Component({
   selector: 'app-tabs',
@@ -10,13 +11,16 @@ import { AlertsService } from '../services/alerts.service'; // Asegúrate de imp
   styleUrls: ['./tabs.page.scss']
 })
 export class TabsPage implements OnInit {
+  menuCollapsed = false;
+  showLateralMenu = false;
+  seguimientoId: string | null = null;
   userData: any = {};
   RolText: string = '';
 
   tabs = [
-    { label: 'Seguimiento', route: '', icon: 'pi pi-calendar-clock', isSubMenuTrigger: true },
+    { label: 'Seguimiento', route: 'seguimiento-planta', icon: 'pi pi-calendar-clock', isSubMenuTrigger: false },
     { label: 'Clientes',    route: 'clientes',   icon: 'pi pi-users', isSubMenuTrigger: false },
-    { label: 'Reportes',    route: 'reportes',   icon: 'pi pi-chart-line', isSubMenuTrigger: false },
+    { label: 'Reportes',    route: '',   icon: 'pi pi-chart-line', isSubMenuTrigger: false },
     { label: 'Usuarios',    route: 'usuarios',   icon: 'pi pi-user', isSubMenuTrigger: false },
     { label: 'Salir',       action: 'signOut',   icon: 'pi pi-power-off', isSubMenuTrigger: false }
   ];
@@ -26,18 +30,41 @@ export class TabsPage implements OnInit {
     { label: 'Visita Clientes',  route: 'visita-cliente',      icon: 'pi pi-users' },
     { label: 'Oportunidades',    route: 'oportunidades',       icon: 'pi pi-briefcase' },
     { label: 'Evaluación',       route: 'evaluaciones',       icon: 'pi pi-star' },
-    { label: 'Planta-Prod',      route: 'planta-producto',     icon: 'pi pi-check-square' }
+    { label: 'Planta-Prod',      route: 'planta-producto',     icon: 'pi pi-check-square' },
+    { label: 'Ventas',      route: 'analitica',     icon: 'custom-peso' },
+    { label: 'Informe',      route: 'reporte-actividades',     icon: 'pi pi-file-check' }
   ];
-  
+
+  menuItems = [
+    { label: 'Visita Clientes',  route: 'visita-cliente',      icon: 'pi pi-users' },
+    { label: 'Oportunidades',    route: 'oportunidades',       icon: 'pi pi-briefcase' },
+    { label: 'Evaluación',       route: 'evaluaciones',        icon: 'pi pi-star' },
+    { label: 'Planta-Prod',      route: 'planta-producto',     icon: 'pi pi-check-square' },
+    { label: 'Ventas',           route: 'analitica',           icon: 'custom-peso' },
+    { label: 'Informe',          route: 'reporte-actividades', icon: 'pi pi-file-check' }
+  ];
 
   showSubMenu = false;
 
   constructor(
     private router: Router,
     private _auth: AuthService,
-    private _chRef: ChangeDetectorRef,
-    private _utilidadService: AlertsService // Inyecta el servicio de alertas si no lo has hecho
-  ) {
+    private seguimientoState: SeguimientoStateService,
+    private _utilidadService: AlertsService
+  ) {}
+
+  ngOnInit() {
+    this.userData = this._auth.getUser();
+    this.RolText = this._auth.getUser().Rol === 1 ? 'ADMINISTRADOR' : 'DIRECTOR DE LINEA';
+
+
+    // Mostrar/ocultar menú lateral según la ruta
+    this.router.events.pipe(
+      filter(event => event instanceof NavigationEnd)
+    ).subscribe((event: any) => {
+      this.showLateralMenu = event.url.includes('/menu-seguimiento');
+    });
+
     // Suscribirse a los eventos de navegación
     this.router.events
       .pipe(filter((event): event is NavigationEnd => event instanceof NavigationEnd))
@@ -53,11 +80,6 @@ export class TabsPage implements OnInit {
           this.showSubMenu = false;
         }
       });
-  }
-
-  ngOnInit() {
-    this.userData = this._auth.getUser();
-    this.RolText = this._auth.getUser().Rol === 1 ? 'ADMINISTRADOR' : 'DIRECTOR DE LINEA';
   }
 
   trackByRoute(index: number, tab: any) {

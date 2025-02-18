@@ -1,156 +1,506 @@
 /* Contenedor Principal */
+
+  /* Estilos para la sección de seguimiento */
+  .seguimiento-info {
+    margin-bottom: 20px;
+    padding: 12px;
+    background-color: #f8f9fa;
+    border-radius: 6px;
+    border-left: 4px solid #2196F3;
+
+    .info-container {
+      display: flex;
+      justify-content: flex-start;
+      gap: 24px;
+      flex-wrap: wrap;
+
+      .info-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+
+        .info-label {
+          font-weight: 600;
+          color: #555;
+        }
+
+        .info-value {
+          color: #333;
+        }
+      }
+    }
+  }
+  
 .header-container {
   padding: 16px;
   background-color: #ffffff;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   margin-bottom: 20px;
+
+  .breadcrumb {
+    margin-bottom: 16px;
+    font-size: 14px;
+
+    .breadcrumb-path { color: #666; }
+    .breadcrumb-separator { margin: 0 8px; color: #999; }
+    .breadcrumb-current { color: #333; font-weight: 500; }
+  }
+
+  .header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
 }
 
-/* Tabla */
-.table-container {
-  background: #fff;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  padding: 1rem;
-  margin: 1rem;
+/* Breadcrumb (ruta) */
+.breadcrumb {
+  font-size: 0.9rem;
+  color: #888;
+  margin-bottom: 1rem;
 
-  .table-header {
-    background: #f8f9fa;
-    padding: 1rem;
-    font-size: 1.2rem;
+  .breadcrumb-path {
+    font-weight: 600;
+    color: #555;
+  }
+
+  .breadcrumb-separator {
+    margin: 0 0.5rem;
+    color: #4e4d4d;
+  }
+
+  .breadcrumb-current {
+    font-weight: bold;
+    color: #333;
+  }
+}
+
+/* Encabezado Principal */
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Título y Estadísticas */
+.title-section {
+  display: flex;
+  flex-direction: column;
+
+  .page-title {
+    font-size: 1.8rem;
     font-weight: 600;
     color: #333;
+    margin-bottom: 0.5rem;
+  }
+
+  .stats {
     display: flex;
-    align-items: center;
-    
-    .header-icon {
-      margin-right: 0.5rem;
-      font-size: 1.4rem;
-      color: #4a90e2;
+    gap: 1.5rem;
+
+    .stat-item {
+      font-size: 0.9rem;
+      color: #666;
+      display: flex;
+      align-items: center;
+
+      .stat-icon {
+        font-size: 1.2rem;
+        color: #4a90e2;
+        margin-right: 0.5rem;
+      }
+    }
+
+    .line-dropdown {
+      min-width: 200px;
+
+      ::ng-deep {
+        .p-dropdown {
+          height: 2.2rem;
+
+          .p-dropdown-label {
+            padding-top: 0.3rem;
+            padding-bottom: 0.3rem;
+            font-size: 0.9rem;
+          }
+        }
+      }
     }
   }
 }
 
-/* Estilos PrimeNG personalizados */
-::ng-deep {
-  .p-datatable {
-    .p-datatable-header {
-      background: #f8f9fa;
-      border: none;
-      padding: 1rem;
-    }
+/* Botones y Selector */
+.action-section {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  margin: 1rem 0;
 
-    .p-datatable-thead > tr > th {
-      background: #f8f9fa;
-      border: none;
-      padding: 0.75rem 1rem;
-      font-weight: 600;
-      color: #333;
-    }
+  .line-dropdown {
+    min-width: 200px;
 
-    .p-datatable-tbody > tr {
-      &:nth-child(even) {
-        background: #f8f9fa;
-      }
+    ::ng-deep {
+      .p-dropdown {
+        height: 2.2rem;
 
-      > td {
-        padding: 0.75rem 1rem;
-        border: none;
-        border-bottom: 1px solid #f2f2f2;
-      }
+        .p-dropdown-label {
+          padding: 0.3rem 2.5rem 0.3rem 0.5rem;
+          font-size: 0.9rem;
+        }
 
-      &:hover {
-        background: #f0f7ff !important;
+        .p-dropdown-clear-icon {
+          right: 2.5rem;
+        }
+
+        .p-dropdown-trigger {
+          width: 2.2rem;
+          padding: 0 0.3rem;
+        }
       }
     }
   }
 
+  .add-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 4px;
+    background-color: #4a90e2;
+    color: white;
+    cursor: pointer;
+    font-size: 0.9rem;
+    height: 2.2rem;
+
+    i {
+      font-size: 1rem;
+    }
+
+    &:hover {
+      background-color: var(--ion-color-primary-shade);
+    }
+  }
+}
+
+  /* Estilos para la tabla de usuarios */
+  .table-container {
+    padding: 1rem;
+    
+    ::ng-deep {
+      .p-datatable {
+        border: 1px solid #777879;
+        border-radius: 4px;
+  
+        .p-datatable-header {
+          padding: 0.5rem 1rem;
+          border: 1px solid #cfcfcf;
+        }
+        
+        .p-datatable-thead > tr > th {
+          padding: 0.5rem;
+          font-size: 0.9rem;
+          background-color: #4a90e2 !important;
+          color: white !important;
+          white-space: nowrap;
+          text-align: center;
+          border: 1px solid #dee2e6;
+  
+          &.table-header {
+            font-size: 14px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            padding: 1rem;
+            background-color: #4a90e2 !important;
+            border-bottom: 2px solid #fff;
+  
+            .header-icon {
+              vertical-align: middle;
+              margin-right: 8px;
+              font-size: 1.3rem;
+            }
+          }
+  
+          .p-column-title,
+          .p-sortable-column-icon,
+          .p-column-filter {
+            color: white !important;
+          }
+  
+          .p-column-filter-menu-button {
+            color: white !important;
+          }
+        }
+        
+        .p-datatable-tbody > tr > td {
+          padding: 0.5rem;
+          font-size: 0.9rem;
+          text-align: center;
+          border: 1px solid #6f92bf;
+        }
+  
+        .estado-badge {
+          padding: 0.25rem 0.5rem;
+          border-radius: 4px;
+          font-size: 0.8rem;
+          font-weight: 500;
+          color: #000000;
+          
+          &.activo {
+            background-color: rgba(var(--ion-color-success-rgb), 0.2);
+          }
+          
+          &.inactivo {
+            background-color: rgba(var(--ion-color-danger-rgb), 0.2);
+          }
+        }
+  
+        .p-button.p-button-sm {
+          width: 2rem;
+          height: 2rem;
+          
+          .p-button-icon {
+            font-size: 0.8rem;
+          }
+        }
+      }
+  
+      // Estilos para el menú de filtros
+      .p-column-filter-overlay {
+        min-width: 200px !important;
+        width: auto !important;
+        max-width: 250px !important;
+  
+        .p-column-filter-row-items {
+          padding: 0.3rem;
+          
+          .p-column-filter-row-item {
+            padding: 0.4rem 0.8rem;
+            font-size: 0.9rem;
+          }
+        }
+  
+        .p-column-filter-constraint {
+          padding: 0.5rem;
+        }
+  
+        .p-column-filter-operator {
+          padding: 0.5rem;
+        }
+  
+        .p-column-filter-buttonbar {
+          padding: 0.5rem;
+        }
+      }
+  
+      .p-paginator {
+        border: 1px solid #dee2e6;
+        .p-paginator-current {
+          margin-left: auto;
+        }
+      }
+  
+      .p-tooltip {
+        font-size: 0.8rem;
+      }
+  
+      .text-center {
+        text-align: center;
+      }
+    }
+  }
+  
+
+/* Diálogo y contenedor principal */
+:host ::ng-deep {
   .p-dialog {
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    border: 1px solid #dee2e6;
+
     .p-dialog-header {
-      background: #f8f9fa;
-      padding: 1rem;
-      
-      .p-dialog-title {
-        font-size: 1.2rem;
-        font-weight: 600;
-        color: #333;
+      background: #4a90e2;
+      border-radius: 8px 8px 0 0;
+      padding: 1rem 1.5rem;
+
+      .dialog-header {
+        i {
+          color: #fff;
+          font-size: 1.4rem;
+          margin-right: 0.75rem;
+        }
+        
+        span {
+          color: #fff;
+          font-size: 1.2rem;
+          font-weight: 600;
+        }
       }
     }
 
     .p-dialog-content {
-      padding: 1.5rem;
+      padding: 1.5rem !important;
+      background: #f8f9fa;
     }
   }
+}
 
-  .p-calendar, .p-inputtextarea, .p-multiselect {
-    width: 100%;
-    
-    .p-inputtext {
-      padding: 0.5rem;
-      font-size: 0.9rem;
+/* Campos del formulario */
+:host ::ng-deep {
+  .p-float-label {
+    margin-bottom: 1rem;
+
+    label {
+      font-size: 0.85rem !important;
+      color: #4a90e2 !important;
+      font-weight: 600 !important;
     }
 
-    &.p-float-label {
-      label {
-        font-size: 0.9rem;
+    .p-calendar,
+    .p-multiselect,
+    .p-dropdown,
+    .p-inputtextarea {
+      width: 100% !important;
+      border-radius: 4px;
+      border: 1px solid #dee2e6;
+      transition: all 0.3s ease;
+
+      &:hover:not(.p-disabled) {
+        border-color: #4a90e2;
+      }
+
+      &:focus,
+      &:focus-visible {
+        box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2);
+        border-color: #4a90e2;
+        outline: none;
       }
     }
+
+    .p-inputtextarea {
+      min-height: 120px;
+      resize: vertical;
+      padding: 0.75rem;
+    }
   }
 
-  .p-button {
-    &.p-button-sm {
-      padding: 0.4rem;
-      font-size: 0.875rem;
+  /* MultiSelect personalizado */
+  .p-multiselect {
+    &.p-multiselect-chip .p-multiselect-token {
+      background: #4a90e2;
+      color: #fff;
+      border-radius: 12px;
+      padding: 0.25rem 0.75rem;
+      margin: 0.15rem;
+    }
+    
+    .p-multiselect-label {
+      padding: 0.5rem;
+    }
+  }
+
+  /* Calendario */
+  .p-calendar {
+    .p-inputtext {
+      padding: 0.5rem;
+    }
+    
+    .p-datepicker-trigger {
+      background: transparent;
+      color: #4a90e2;
+      width: 2.5rem;
+      
+      &:hover {
+        background: rgba(74, 144, 226, 0.1);
+      }
     }
   }
 }
 
 /* Botones de acción */
-.actions-cell {
+.button-container {
   display: flex;
-  gap: 0.5rem;
-  justify-content: center;
+  gap: 1rem;
+  margin-top: 1.5rem;
+  justify-content: flex-end;
 
   .p-button {
-    margin: 0 0.2rem;
-  }
-}
+    min-width: 120px;
+    padding: 0.75rem 1.25rem;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
 
-/* Formulario */
-ion-grid {
-  padding: 0;
+    &.p-button-primary {
+      background: #4a90e2;
+      border-color: #357abd;
 
-  ion-row {
-    margin: 0 -0.5rem;
+      &:hover {
+        background: darken(#4a90e2, 8%);
+        border-color: darken(#357abd, 8%);
+      }
+    }
 
-    ion-col {
-      padding: 0.5rem;
+    &.p-button-secondary {
+      background: #f8f9fa;
+      color: #4a90e2;
+      border: 1px solid #dee2e6;
+
+      &:hover {
+        background: #e9ecef;
+      }
     }
   }
 }
 
 /* Responsive */
-@media screen and (max-width: 768px) {
-  .table-container {
-    margin: 0.5rem;
-    padding: 0.5rem;
-  }
-
-  ion-grid {
-    ion-row {
-      ion-col {
-        padding: 0.25rem;
+@media (max-width: 768px) {
+  :host ::ng-deep {
+    .p-dialog {
+      width: 95% !important;
+      margin: 0.5rem;
+      
+      .p-dialog-content {
+        padding: 1rem !important;
       }
+    }
+
+    .p-float-label {
+      margin-bottom: 0.75rem;
     }
   }
 
-  ::ng-deep {
-    .p-datatable {
-      .p-datatable-thead > tr > th,
-      .p-datatable-tbody > tr > td {
-        padding: 0.5rem;
-      }
+  .button-container {
+    flex-direction: column;
+    
+    .p-button {
+      width: 100%;
+    }
+  }
+}
+
+/* Espaciado entre campos */
+ion-grid {
+  ion-row:not(:last-child) {
+    margin-bottom: 1.5rem;
+  }
+
+  ion-col {
+    padding: 0.5rem;
+  }
+}
+
+/* Estado en modo edición */
+:host ::ng-deep {
+  .p-dropdown {
+    .p-dropdown-label {
+      padding: 0.5rem;
+    }
+    
+    .p-dropdown-trigger {
+      width: 2.5rem;
     }
   }
 }

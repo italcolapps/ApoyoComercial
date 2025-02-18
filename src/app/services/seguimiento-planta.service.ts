@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { EnvService } from './env.service';
 import { HttpClient } from '@angular/common/http';
+import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -22,6 +23,10 @@ export class SeguimientoPlantaService {
     return this._http.get(`${this.urlApi}/${this.SeguimientoPlanta}/GetSeguimientoPlantaLinea`);
   }
 
+  getSeguimientoPlanta() {
+    return this._http.get(`${this.urlApi}/${this.SeguimientoPlanta}/GetSeguimientoPlanta`);
+  }
+
   getSeguimientoById(idSeguimiento: number) {
     return this._http.get(`${this.urlApi}/${this.SeguimientoPlanta}/${idSeguimiento}`);
   }
@@ -34,15 +39,19 @@ export class SeguimientoPlantaService {
     return this._http.get(`${this.urlApi}/${this.SeguimientoPlanta}/GetSeguimientoPlantaByIdPlanta/${idPlanta}`);
   }
 
-  createSeguimientoPlanta(data:any){
-    return this._http.post(`${this.urlApi}/${this.SeguimientoPlanta}/`,data);
+  getSeguimientoPlantaFiltrado(idUsuario: number, data: any) {
+    return this._http.post(`${this.urlApi}/${this.SeguimientoPlanta}/GetSeguimientoPlantaFiltrado?idUsuario=${idUsuario}`, data);
   }
 
-  updateSeguimientoPlanta(idSeguimiento: number, data:any){
-    return this._http.put(`${this.urlApi}/${this.SeguimientoPlanta}/ActualizarSeguimientoPlanta/${idSeguimiento}`,data);
+  createSeguimientoPlanta(data: any) {
+    return this._http.post(`${this.urlApi}/${this.SeguimientoPlanta}/`, data);
   }
 
-  deleteSeguimientoPlanta(idSeguimiento: number){
+  updateSeguimientoPlanta(idSeguimiento: number, data: any) {
+    return this._http.put(`${this.urlApi}/${this.SeguimientoPlanta}/ActualizarSeguimientoPlanta/${idSeguimiento}`, data);
+  }
+
+  deleteSeguimientoPlanta(idSeguimiento: number) {
     return this._http.delete(`${this.urlApi}/${this.SeguimientoPlanta}/${idSeguimiento}`);
   }
 
