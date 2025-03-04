@@ -12,10 +12,13 @@
       <button *ngFor="let item of menuItems"
               (click)="navigateTo(item.route)"
               class="lateral-button"
-              [pTooltip]="item.label"
+              [pTooltip]="item.tooltip"
               tooltipPosition="right">
         <img *ngIf="item.icon === 'peso-icon'" src="assets/icon/peso.svg" class="custom-icon">
-        <i *ngIf="item.icon !== 'peso-icon'" [class]="item.icon"></i>
+        <img *ngIf="item.icon === 'test-icon'" src="assets/icon/test.svg" class="custom-icon">
+        <img *ngIf="item.icon === 'factory-icon'" src="assets/icon/factory.svg" class="custom-icon">
+        <img *ngIf="item.icon === 'marketing-icon'" src="assets/icon/marketing.svg" class="custom-icon">
+        <i *ngIf="item.icon !== 'peso-icon' && item.icon !== 'test-icon' && item.icon !== 'factory-icon' && item.icon !== 'marketing-icon'" [class]="item.icon"></i>
       </button>
     </div>
   </div>
@@ -59,287 +62,489 @@
         </div>
       </div>
     </div>
-                <!-- Tabla de Clientes -->
-                <div class="table-container" style="margin-top: 30px;">
-                  <p-table 
-                    [value]="listaVisitaClientes" 
-                    [rows]="10"
-                    [scrollable]="true"
-                    scrollHeight="400px"
-                    [scrollDirection]="'both'"
-                    styleClass="p-datatable-sm p-datatable-striped">
-                    <!-- Header de la tabla -->
-                    <ng-template pTemplate="header">
-                      <tr>
-                        <th colspan="12" class="table-header">
-                          <ion-icon name="people"></ion-icon>
-                          LISTADO DE VISITAS DE CLIENTES
-                        </th>
-                      </tr>
-                      <tr>
-                        <th pSortableColumn="fechaRegistro">
-                          F Registro
-                        </th>
-                        <th pSortableColumn="fechaRegistro">
-                          F Visita
-                        </th>
-                        <th pSortableColumn="ClienteText">
-                          Cliente
-                          <p-sortIcon field="ClienteText"></p-sortIcon>
-                          <p-columnFilter type="text" field="ClienteText" display="menu"></p-columnFilter>
-                        </th>
-                        <th pSortableColumn="LineaText">
-                          Linea
-                        </th>
-                        <th pSortableColumn="toneladas">
-                          Toneladas
-                        </th>
-                        <th>
-                          Actividad
-                        </th>
-                        <th>
-                          Comp Gte Zona
-                        </th>
-                        <th>
-                          Comp Dir
-                        </th>
-                        <th>
-                          Informacion
-                        </th>
-                        <th pSortableColumn="frecuenciaText">
-                          Frecuencia
-                        </th>
-                        <th pSortableColumn="fechaCompromiso">
-                          Compromiso
-                        </th>
-                      </tr>
-                    </ng-template>
-                
-                    <!-- Cuerpo de la tabla -->
-                    <ng-template pTemplate="body" let-segCliente>
-                      <tr>
-                        <td>{{segCliente.fechaRegistro | date:'dd/MM/yyyy'}}</td>
-                        <td>{{segCliente.fechaRegistro | date:'dd/MM/yyyy'}}</td>
-                        <td>{{segCliente.nombreCliente}}</td>
-                        <td>
-                          <span *ngFor="let linea of segCliente.lineasCliente; let last = last">
-                              {{linea}}{{!last ? ', ' : ''}}
-                          </span>
-                      </td>
-                        <td>{{segCliente.toneladas}}</td>
-                        <td>{{segCliente.actividadRealizada}}</td>
-                        <td>{{segCliente.compromisoGerenteZona}}</td>
-                        <td>{{segCliente.compromisoDirector}}</td>
-                        <td>{{segCliente.calidadInformacion}}</td>
-                        <td>{{segCliente.frecuenciaText}}</td>
-                        <td>{{segCliente.fechaCompromiso | date:'dd/MM/yyyy'}}</td>
-                      </tr>
-                    </ng-template>
-                  </p-table>
-                </div>
 
-              <!-- Tabla de Oportunidades -->
-              <div class="table-container" style="margin-top: 30px;">
-                <p-table 
-                  [value]="listaOportunidades" 
-                  [rows]="10"
-                  styleClass="p-datatable-sm p-datatable-striped">
-              
-                  <!-- Header de la tabla -->
-                  <ng-template pTemplate="header">
-                    <tr>
-                      <th colspan="10" class="table-header">
-                        <ion-icon name="people"></ion-icon>
-                        LISTA DE OPORTUNIDADES COMERCIALES
-                      </th>
-                    </tr>
-                    <tr>
-                      <th pSortableColumn="fechaRegistro">
-                        Fecha
-                      </th>
-                      <th pSortableColumn="ClienteText">
-                        Planta
-                        <p-sortIcon field="ClienteText"></p-sortIcon>
-                        <p-columnFilter type="text" field="ClienteText" display="menu"></p-columnFilter>
-                      </th>
-                      <th pSortableColumn="LineaText">
-                        Canal
-                      </th>
-                      <th pSortableColumn="fechaCompromiso">
-                        Ubicacion
-                      </th>
-                      <th pSortableColumn="frecuenciaText">
-                        Cliente
-                        <p-sortIcon field="ClienteText"></p-sortIcon>
-                        <p-columnFilter type="text" field="ClienteText" display="menu"></p-columnFilter>
-                      </th>
-                      <th >
-                        Contacto
-                      </th>
-                      <th >
-                        Toneladas
-                      </th>
-                      <th >
-                        Gerente de Zona
-                      </th>
-                      <th>
-                        Compromiso
-                      </th>
-                    </tr>
-                  </ng-template>
-              
-                  <!-- Cuerpo de la tabla -->
-                  <ng-template pTemplate="body" let-oportunidad>
-                    <tr>
-                      <td>{{(oportunidad.fecha) | date:'dd/MM/yyyy'}}</td>
-                      <td>{{oportunidad.nombrePlanta}}</td>
-                      <td></td>
-                      <td></td>
-                      <td>{{oportunidad.nombreCliente}}</td>
-                      <td>{{oportunidad.contacto}}</td>
-                      <td>{{oportunidad.tonelada}}</td>
-                      <td>{{oportunidad.nombreGerenteZona}}</td>
-                      <td>{{oportunidad.compromisoGerenteZona}}</td>
-                    </tr>
-                  </ng-template>
-                </p-table>
-              </div>
 
-<div class="table-container" style="margin-top: 30px;">
-  <p-table 
-    [value]="listaEvaluaciones"  
-    [rows]="10"
-    styleClass="p-datatable-sm p-datatable-striped"
-    [sortMode]="'multiple'">
-    <!-- Header de la tabla -->
-    <ng-template pTemplate="header">
-      <tr>
-        <th colspan="15" class="table-header">
-          <ion-icon name="people-outline" class="header-icon"></ion-icon>
-          LISTADO DE EVALUACIONES
-        </th>
-      </tr>
-      <tr>
-        <th pSortableColumn="fechaRegistro">
-          Fecha
-        </th>
-        <th pSortableColumn="gerenteZonaNombre">
-          Gerente Zona
-          <p-sortIcon field="gerenteZonaNombre"></p-sortIcon>
-          <p-columnFilter type="text" field="gerenteZonaNombre" display="menu"></p-columnFilter>
-        </th>
-        <th>
-          Zona
-        </th>
-        <th>
-          <span pTooltip="Comercial Pto / Prospectación" tooltipPosition="top">1</span>
-        </th>
-        <th>
-          <span pTooltip="Act Mercadeo / Promoción" tooltipPosition="top">2</span>
-        </th>
-        <th>
-          <span pTooltip="Conocimiento Merc / Comp" tooltipPosition="top">3</span>
-        </th>
-        <th>
-          <span pTooltip="Servicio Técnico" tooltipPosition="top">4</span>
-        </th>
-        <th>
-          <span pTooltip="Uso Herramientas Italcol" tooltipPosition="top">5</span>
-        </th>
-        <th>
-          <span pTooltip="Nivel Formación" tooltipPosition="top">6</span>
-        </th>
-        <th>
-          <span pTooltip="Nivel Relacionamiento Cliente" tooltipPosition="top">7</span>
-        </th>
-        <th>
-          <span pTooltip="Actitud General" tooltipPosition="top">8</span>
-        </th>
-        <th>
-          Nota
-        </th>
-        <th pSortableColumn="observaciones" style="width: 200px;">
-          Observaciones
-        </th>
-      </tr>
-    </ng-template>
+      <!-- Tabla de Visitas de Clientes -->
+      <div class="table-container" style="margin-top: 5px;">
+                        <p-table 
+                          [value]="listaVisitaClientes" 
+                          [scrollable]="true"
+                          scrollHeight="400px"
+                          [scrollDirection]="'both'"
+                          styleClass="p-datatable-sm p-datatable-striped">
+                          <!-- Header de la tabla -->
+                          <ng-template pTemplate="header">
+                            <tr>
+                              <th colspan="12" class="table-header">
+                                <i class="pi pi-users"></i>
+                                VISITAS CLIENTES
+                              </th>
+                            </tr>
+                            <tr>
+                              <th pSortableColumn="fechaRegistro">
+                                F Registro
+                              </th>
+                              <th pSortableColumn="fechaRegistro">
+                                F Visita
+                              </th>
+                              <th pSortableColumn="ClienteText">
+                                Cliente
+                                <p-sortIcon field="ClienteText"></p-sortIcon>
+                                <p-columnFilter type="text" field="ClienteText" display="menu"></p-columnFilter>
+                              </th>
+                              <th pSortableColumn="LineaText">
+                                Linea
+                              </th>
+                              <th pSortableColumn="toneladas">
+                                Toneladas
+                              </th>
+                              <th>
+                                Actividad
+                              </th>
+                              <th>
+                                Comp Gte Zona
+                              </th>
+                              <th>
+                                Comp Dir
+                              </th>
+                              <th>
+                                Inf Ensayo
+                              </th>
+                              <th pSortableColumn="frecuenciaText">
+                                Frec Ensayo
+                              </th>
+                              <th pSortableColumn="fechaCompromiso">
+                                Compromiso
+                              </th>
+                            </tr>
+                          </ng-template>
+                      
+                          <!-- Cuerpo de la tabla -->
+                          <ng-template pTemplate="body" let-segCliente>
+                            <tr>
+                              <td>{{segCliente.fechaRegistro | date:'dd/MM/yyyy'}}</td>
+                              <td>{{segCliente.fechaRegistro | date:'dd/MM/yyyy'}}</td>
+                              <td>{{segCliente.nombreCliente}}</td>
+                              <td>
+                                <span *ngFor="let linea of segCliente.lineasCliente; let last = last">
+                                    {{linea}}{{!last ? ', ' : ''}}
+                                </span>
+                            </td>
+                              <td>{{segCliente.toneladas}}</td>
+                              <td>{{segCliente.actividadRealizada}}</td>
+                              <td>{{segCliente.compromisoGerenteZona}}</td>
+                              <td>{{segCliente.compromisoDirector}}</td>
+                              <td>{{segCliente.calidadInformacion}}</td>
+                              <td>{{segCliente.frecuenciaText}}</td>
+                              <td>{{segCliente.fechaCompromiso | date:'dd/MM/yyyy'}}</td>
+                            </tr>
+                          </ng-template>
+                        </p-table>
+      </div>
 
-    <!-- Cuerpo de la tabla -->
-    <ng-template pTemplate="body" let-evaluacion>
-      <tr>
-        <td>{{evaluacion.fechaRegistro | date:'dd/MM/yyyy'}}</td>
-        <td>{{evaluacion.gerenteZonaNombre}}</td>
-        <td>{{evaluacion.nombreZona}}</td>
-        <td>{{getAbreviacion(evaluacion.respuestas?.[0]?.respuestaListaNombre)}}</td>
-        <td>{{getAbreviacion(evaluacion.respuestas?.[1]?.respuestaListaNombre)}}</td>
-        <td>{{getAbreviacion(evaluacion.respuestas?.[2]?.respuestaListaNombre)}}</td>
-        <td>{{getAbreviacion(evaluacion.respuestas?.[3]?.respuestaListaNombre)}}</td>
-        <td>{{getAbreviacion(evaluacion.respuestas?.[4]?.respuestaListaNombre)}}</td>
-        <td>{{getAbreviacion(evaluacion.respuestas?.[5]?.respuestaListaNombre)}}</td>
-        <td>{{getAbreviacion(evaluacion.respuestas?.[6]?.respuestaListaNombre)}}</td>
-        <td>{{getAbreviacion(evaluacion.respuestas?.[7]?.respuestaListaNombre)}}</td>
-        <td>{{getEvaluacionPercentage(evaluacion.respuestas)}}%</td>
-        <td>{{evaluacion.observaciones | slice:0:50}}{{evaluacion.observaciones.length > 50 ? '...' : ''}}</td>
-      </tr>
-    </ng-template>
-  </p-table>
-</div>
+      <!-- Tabla de Oportunidades -->
+      <div class="table-container" style="margin-top: 5px;">
+                      <p-table 
+                        [value]="listaOportunidades" 
+                        styleClass="p-datatable-sm p-datatable-striped">
+                    
+                        <!-- Header de la tabla -->
+                        <ng-template pTemplate="header">
+                          <tr>
+                            <th colspan="10" class="table-header">
+                              <i class="pi pi-briefcase"></i>
+                              OPORTUNIDADES COMERCIALES
+                            </th>
+                          </tr>
+                          <tr>
+                            <th pSortableColumn="fechaRegistro">
+                              Fecha
+                            </th>
+                            <th pSortableColumn="ClienteText">
+                              Planta
+                              <p-sortIcon field="ClienteText"></p-sortIcon>
+                              <p-columnFilter type="text" field="ClienteText" display="menu"></p-columnFilter>
+                            </th>
+                            <th pSortableColumn="LineaText">
+                              Canal
+                            </th>
+                            <th pSortableColumn="fechaCompromiso">
+                              Ubicacion
+                            </th>
+                            <th pSortableColumn="frecuenciaText">
+                              Cliente
+                              <p-sortIcon field="ClienteText"></p-sortIcon>
+                              <p-columnFilter type="text" field="ClienteText" display="menu"></p-columnFilter>
+                            </th>
+                            <th >
+                              Contacto
+                            </th>
+                            <th >
+                              Toneladas
+                            </th>
+                            <th >
+                              Gerente de Zona
+                            </th>
+                            <th>
+                              Compromiso
+                            </th>
+                          </tr>
+                        </ng-template>
+                    
+                        <!-- Cuerpo de la tabla -->
+                        <ng-template pTemplate="body" let-oportunidad>
+                          <tr>
+                            <td>{{(oportunidad.fecha) | date:'dd/MM/yyyy'}}</td>
+                            <td>{{oportunidad.nombrePlanta}}</td>
+                            <td>{{oportunidad.nombreCanalCliente}}</td>
+                            <td>{{oportunidad.nombreDepartamentoCCliente}} - {{oportunidad.nombreMunicipioCliente}}</td>                    
+                            <td>{{oportunidad.nombreCliente}}</td>
+                            <td>{{oportunidad.contacto}}</td>
+                            <td>{{oportunidad.tonelada}}</td>
+                            <td>{{oportunidad.nombreGerenteZona}}</td>
+                            <td>{{oportunidad.compromisoGerenteZona}}</td>
+                          </tr>
+                        </ng-template>
+                      </p-table>
+      </div>
 
-<div class="table-container" style="margin-top: 30px;">
-  <p-table 
-    [value]="listaRevisiones" 
-    styleClass="p-datatable-sm p-datatable-striped"
-    [sortMode]="'multiple'">
+      <!-- Tabla de Oportunidades -->
+      <div class="table-container" style="margin-top: 5px;">
+        <p-table 
+          [value]="listaEvaluaciones"  
+          [rows]="10"
+          styleClass="p-datatable-sm p-datatable-striped"
+          [sortMode]="'multiple'">
+          <!-- Header de la tabla -->
+          <ng-template pTemplate="header">
+            <tr>
+              <th colspan="15" class="table-header">
+                <i class="pi pi-file-edit"></i>
+                EVALUACIONES GERENTES DE ZONA
+              </th>
+            </tr>
+            <tr>
+              <th pSortableColumn="fechaRegistro">
+                Fecha
+              </th>
+              <th pSortableColumn="gerenteZonaNombre">
+                Gerente Zona
+                <p-sortIcon field="gerenteZonaNombre"></p-sortIcon>
+                <p-columnFilter type="text" field="gerenteZonaNombre" display="menu"></p-columnFilter>
+              </th>
+              <th>
+                Zona
+              </th>
+              <th>
+                <span pTooltip="Comercial Pto / Prospectación" tooltipPosition="top">1</span>
+              </th>
+              <th>
+                <span pTooltip="Act Mercadeo / Promoción" tooltipPosition="top">2</span>
+              </th>
+              <th>
+                <span pTooltip="Conocimiento Merc / Comp" tooltipPosition="top">3</span>
+              </th>
+              <th>
+                <span pTooltip="Servicio Técnico" tooltipPosition="top">4</span>
+              </th>
+              <th>
+                <span pTooltip="Uso Herramientas Italcol" tooltipPosition="top">5</span>
+              </th>
+              <th>
+                <span pTooltip="Nivel Formación" tooltipPosition="top">6</span>
+              </th>
+              <th>
+                <span pTooltip="Nivel Relacionamiento Cliente" tooltipPosition="top">7</span>
+              </th>
+              <th>
+                <span pTooltip="Actitud General" tooltipPosition="top">8</span>
+              </th>
+              <th>
+                Nota
+              </th>
+              <th pSortableColumn="observaciones" style="width: 150px;">
+                Observaciones
+              </th>
+            </tr>
+          </ng-template>
 
-    <!-- Header de la tabla -->
-    <ng-template pTemplate="header">
-      <tr>
-        <th colspan="8" class="table-header">
-          <ion-icon name="business"></ion-icon>
-          LISTADO DE REVISIONES PLANTA - PRODUCTO
-        </th>
-      </tr>
-      <tr>
-        <th style="width: 50px;">
-          Fecha
-        </th>
-        <th>
-          Planta
-        </th>
-        <th pSortableColumn="lineNombre">
-          Línea
-          <p-sortIcon field="lineNombre"></p-sortIcon>
-          <p-columnFilter type="text" field="lineNombre" display="menu"></p-columnFilter>
-        </th>
-        <th>
-          Producto
-        </th>
-        <th >
-          Área
-        </th>
-        <th>
-          Observación
-        </th>
-        <th>
-          Compromiso
-        </th>
-      </tr>
-    </ng-template>
+          <!-- Cuerpo de la tabla -->
+          <ng-template pTemplate="body" let-evaluacion>
+            <tr>
+              <td>{{evaluacion.fechaRegistro | date:'dd/MM/yyyy'}}</td>
+              <td>{{evaluacion.gerenteZonaNombre}}</td>
+              <td>{{evaluacion.nombreZona}}</td>
+              <td [pTooltip]="getTooltipText(evaluacion.respuestas?.[0]?.respuestaListaNombre)" tooltipStyleClass="small-tooltip">{{getAbreviacion(evaluacion.respuestas?.[0]?.respuestaListaNombre)}}</td>
+              <td [pTooltip]="getTooltipText(evaluacion.respuestas?.[1]?.respuestaListaNombre)" tooltipStyleClass="small-tooltip">{{getAbreviacion(evaluacion.respuestas?.[1]?.respuestaListaNombre)}}</td>
+              <td [pTooltip]="getTooltipText(evaluacion.respuestas?.[2]?.respuestaListaNombre)" tooltipStyleClass="small-tooltip">{{getAbreviacion(evaluacion.respuestas?.[2]?.respuestaListaNombre)}}</td>
+              <td [pTooltip]="getTooltipText(evaluacion.respuestas?.[3]?.respuestaListaNombre)" tooltipStyleClass="small-tooltip">{{getAbreviacion(evaluacion.respuestas?.[3]?.respuestaListaNombre)}}</td>
+              <td [pTooltip]="getTooltipText(evaluacion.respuestas?.[4]?.respuestaListaNombre)" tooltipStyleClass="small-tooltip">{{getAbreviacion(evaluacion.respuestas?.[4]?.respuestaListaNombre)}}</td>
+              <td [pTooltip]="getTooltipText(evaluacion.respuestas?.[5]?.respuestaListaNombre)" tooltipStyleClass="small-tooltip">{{getAbreviacion(evaluacion.respuestas?.[5]?.respuestaListaNombre)}}</td>
+              <td [pTooltip]="getTooltipText(evaluacion.respuestas?.[6]?.respuestaListaNombre)" tooltipStyleClass="small-tooltip">{{getAbreviacion(evaluacion.respuestas?.[6]?.respuestaListaNombre)}}</td>
+              <td [pTooltip]="getTooltipText(evaluacion.respuestas?.[7]?.respuestaListaNombre)" tooltipStyleClass="small-tooltip">{{getAbreviacion(evaluacion.respuestas?.[7]?.respuestaListaNombre)}}</td>
+              <td>{{getEvaluacionPercentage(evaluacion.respuestas)}}%</td>
+              <td>{{evaluacion.observaciones | slice:0:50}}{{evaluacion.observaciones.length > 50 ? '...' : ''}}</td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </div>
 
-    <!-- Cuerpo de la tabla -->
-    <ng-template pTemplate="body" let-revision>
-      <tr>
-        <td>{{revision.fechaRegistro | date:'dd/MM/yyyy'}}</td>
-        <td>{{revision.nombrePlanta}}</td>
-        <td>{{revision.lineNombre}}</td>
-        <td>{{revision.producto}}</td>
-        <td>{{revision.area}}</td>
-        <td>{{revision.observacion | slice:0:50}}{{revision.observacion.length > 50 ? '...' : ''}}</td>
-        <td>{{revision.compromiso | slice:0:50}}{{revision.compromiso.length > 50 ? '...' : ''}}</td>
-      </tr>
-    </ng-template>
-  </p-table>
-</div>
+      <div class="table-container" style="margin-top: 5px;">
+        <p-table 
+          [value]="listaRevisiones" 
+          styleClass="p-datatable-sm p-datatable-striped"
+          [sortMode]="'multiple'">
+
+          <!-- Header de la tabla -->
+          <ng-template pTemplate="header">
+            <tr>
+              <th colspan="8" class="table-header">
+                <i class="pi pi-building"></i>
+                REVISIONES PLANTA - PRODUCTO
+              </th>
+            </tr>
+            <tr>
+              <th style="width: 50px;">
+                Fecha
+              </th>
+              <th>
+                Planta
+              </th>
+              <th pSortableColumn="lineNombre">
+                Línea
+                <p-sortIcon field="lineNombre"></p-sortIcon>
+                <p-columnFilter type="text" field="lineNombre" display="menu"></p-columnFilter>
+              </th>
+              <th>
+                Producto
+              </th>
+              <th >
+                Área
+              </th>
+              <th>
+                Observación
+              </th>
+              <th>
+                Compromiso
+              </th>
+            </tr>
+          </ng-template>
+
+          <!-- Cuerpo de la tabla -->
+          <ng-template pTemplate="body" let-revision>
+            <tr>
+              <td>{{revision.fechaRegistro | date:'dd/MM/yyyy'}}</td>
+              <td>{{revision.nombrePlanta}}</td>
+              <td>{{revision.lineNombre}}</td>
+              <td>{{revision.producto}}</td>
+              <td>{{revision.area}}</td>
+              <td>{{revision.observacion | slice:0:50}}{{revision.observacion.length > 50 ? '...' : ''}}</td>
+              <td>{{revision.compromiso | slice:0:50}}{{revision.compromiso.length > 50 ? '...' : ''}}</td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </div>
+
+      <div class="table-container" style="margin-top: 5px;">
+        <p-table 
+          [value]="listaReportesAnalitica"  
+          [rows]="15"
+          styleClass="p-datatable-sm p-datatable-striped">
+      
+          <!-- Header de la tabla -->
+          <ng-template pTemplate="header">
+            <tr>
+              <th colspan="26" class="table-header">
+                <img src="assets/icon/blue-weight.svg" class="custom-icon">
+                RESULTADOS VENTAS
+              </th>
+            </tr>
+            <tr>
+              <th rowspan="3">PLANTA</th>
+              <th rowspan="3">LINEA</th>
+              <th rowspan="3">PERIODO</th>
+              <th colspan="12">ULTIMO MES CERRADO</th>
+              <th colspan="12">ACUMULADO AÑO</th>
+            </tr>
+            <tr>
+              <th colspan="4">DIRECTOS</th>
+              <th colspan="4">DISTRIBUCION</th>
+              <th colspan="4">TOTAL</th>
+              <th colspan="4">DIRECTOS</th>
+              <th colspan="4">DISTRIBUCION</th>
+              <th colspan="4">TOTAL</th>
+            </tr>
+            <tr>
+              <th>Ppto</th>
+              <th>Vta</th>
+              <th>Dif</th>
+              <th>%</th>
+              <th>Ppto</th>
+              <th>Vta</th>
+              <th>Dif</th>
+              <th>%</th>
+              <th>Ppto</th>
+              <th>Vta</th>
+              <th>Dif</th>
+              <th>%</th>
+              <th>Ppto</th>
+              <th>Vta</th>
+              <th>Dif</th>
+              <th>%</th>
+              <th>Ppto</th>
+              <th>Vta</th>
+              <th>Dif</th>
+              <th>%</th>
+              <th>Ppto</th>
+              <th>Vta</th>
+              <th>Dif</th>
+              <th>%</th>
+            </tr>
+          </ng-template>
+      
+          <!-- Cuerpo de la tabla -->
+          <ng-template pTemplate="body" let-reporte>
+            <tr>
+              <td>{{reporte.nombrePlanta}}</td>
+              <td>{{reporte.nombreLinea}}</td>
+              <td>{{reporte.periodo | date:'MM/yy'}}</td>
+              <td>{{reporte.presupuestoDirectoMes}}</td>
+              <td>{{reporte.ventaDirectoMes}}</td>
+              <td>{{reporte.ventaDirectoMes - reporte.presupuestoDirectoMes}}</td>
+              <td>{{reporte.ventaDirectoMes / reporte.presupuestoDirectoMes | percent:'1.0-0'}}</td>
+              <td>{{reporte.presupuestoDistribucionMes}}</td>
+              <td>{{reporte.ventaDistribucionMes}}</td>
+              <td>{{reporte.ventaDistribucionMes - reporte.presupuestoDistribucionMes}}</td>
+              <td>{{reporte.ventaDistribucionMes / reporte.presupuestoDistribucionMes | percent:'1.0-0'}}</td>
+              <td>{{reporte.presupuestoDirectoMes + reporte.presupuestoDistribucionMes}}</td>
+              <td>{{reporte.ventaDirectoMes + reporte.ventaDistribucionMes}}</td>
+              <td>{{reporte.ventaDirectoMes + reporte.ventaDistribucionMes - (reporte.presupuestoDirectoMes + reporte.presupuestoDistribucionMes)}}</td>
+              <td>{{((reporte.ventaDirectoMes + reporte.ventaDistribucionMes) / (reporte.presupuestoDirectoMes + reporte.presupuestoDistribucionMes)) | percent:'1.0-0'}}</td>
+              <td>{{reporte.presupuestoDirectoAno}}</td>
+              <td>{{reporte.ventaDirectoAno}}</td>
+              <td>{{reporte.ventaDirectoAno - reporte.presupuestoDirectoAno}}</td>
+              <td>{{reporte.ventaDirectoAno / reporte.presupuestoDirectoAno | percent:'1.0-0'}}</td>
+              <td>{{reporte.prsupuestoDistribucionAno}}</td>
+              <td>{{reporte.ventaDistribucionAno}}</td>
+              <td>{{reporte.ventaDistribucionAno - reporte.prsupuestoDistribucionAno}}</td>
+              <td>{{reporte.ventaDistribucionAno / reporte.prsupuestoDistribucionAno | percent:'1.0-0'}}</td>    
+              <td>{{reporte.presupuestoDirectoAno + reporte.prsupuestoDistribucionAno}}</td>
+              <td>{{reporte.ventaDirectoAno + reporte.ventaDistribucionAno}}</td>
+              <td>{{reporte.ventaDirectoAno + reporte.ventaDistribucionAno - (reporte.presupuestoDirectoAno + reporte.prsupuestoDistribucionAno)}}</td>
+              <td>{{((reporte.ventaDirectoAno + reporte.ventaDistribucionAno) / (reporte.presupuestoDirectoAno + reporte.prsupuestoDistribucionAno)) | percent:'1.0-0'}}</td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </div>
+
+      <div class="table-container">
+        <p-table 
+          [value]="listaEvaluacionMercadeo" 
+          [showCurrentPageReport]="true"
+          styleClass="p-datatable-sm p-datatable-striped">
+      
+          <!-- Header de la tabla -->
+          <ng-template pTemplate="header">
+            <tr>
+              <th colspan="15" class="table-header">
+                <ion-icon name="people-outline" class="header-icon"></ion-icon>
+                EVALUACIONES DE MERCADEO
+              </th>
+            </tr>
+            <tr>
+              <th pSortableColumn="fechaRegistro">
+                Fecha
+              </th>
+              <th>
+                <span>Planta</span>
+              </th>
+              <th>
+                Pilar
+              </th>
+              <th>
+                <span>Ej. Alta</span>
+              </th>
+              <th>
+                <span>Ej. Media</span>
+              </th>
+              <th>
+                <span>Ej. Baja</span>
+              </th>
+              <th pSortableColumn="observaciones" style="width: 200px;">
+                Observaciones
+              </th>
+            </tr>
+          </ng-template>
+      
+          <!-- Cuerpo de la tabla -->
+          <ng-template pTemplate="body" let-evaluacion>
+            <tr>
+              <td rowspan="5">{{evaluacion.fechaRegistro | date:'dd/MM/yyyy'}}</td>
+              <td rowspan="5">{{evaluacion.plantaId}}</td>
+              <td>COMPETITIVA</td>
+              <td>
+                <span *ngIf="evaluacion.respuestas[0]?.respuestaListaNombre === 'ALTA'">X</span>
+              </td>
+              <td>
+                <span *ngIf="evaluacion.respuestas[0]?.respuestaListaNombre === 'MEDIA'">X</span>
+              </td>
+              <td>
+                <span *ngIf="evaluacion.respuestas[0]?.respuestaListaNombre === 'BAJA'">X</span>
+              </td>
+              <td rowspan="5">{{evaluacion.observaciones}}</td>
+            </tr>
+            <tr>
+              <td>SERVICIO</td>
+              <td>
+                <span *ngIf="evaluacion.respuestas[1]?.respuestaListaNombre === 'ALTA'">X</span>
+              </td>
+              <td>
+                <span *ngIf="evaluacion.respuestas[1]?.respuestaListaNombre === 'MEDIA'">X</span>
+              </td>
+              <td>
+                <span *ngIf="evaluacion.respuestas[1]?.respuestaListaNombre === 'BAJA'">X</span>
+              </td>
+            </tr>
+            <tr>
+              <td>INNOVACION</td>
+              <td>
+                <span *ngIf="evaluacion.respuestas[2]?.respuestaListaNombre === 'ALTA'">X</span>
+              </td>
+              <td>
+                <span *ngIf="evaluacion.respuestas[2]?.respuestaListaNombre === 'MEDIA'">X</span>
+              </td>
+              <td>
+                <span *ngIf="evaluacion.respuestas[2]?.respuestaListaNombre === 'BAJA'">X</span>
+              </td>
+            </tr>
+            <tr>
+              <td>ALIADO</td>
+              <td>
+                <span *ngIf="evaluacion.respuestas[3]?.respuestaListaNombre === 'ALTA'">X</span>
+              </td>
+              <td>
+                <span *ngIf="evaluacion.respuestas[3]?.respuestaListaNombre === 'MEDIA'">X</span>
+              </td>
+              <td>
+                <span *ngIf="evaluacion.respuestas[3]?.respuestaListaNombre === 'BAJA'">X</span>
+              </td>
+            </tr>
+            <tr>
+              <td>SOSTENIBILIDAD</td>
+              <td>
+                <span *ngIf="evaluacion.respuestas[4]?.respuestaListaNombre === 'ALTA'">X</span>
+              </td>
+              <td>
+                <span *ngIf="evaluacion.respuestas[4]?.respuestaListaNombre === 'MEDIA'">X</span>
+              </td>
+              <td>
+                <span *ngIf="evaluacion.respuestas[4]?.respuestaListaNombre === 'BAJA'">X</span>
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </div>
+      
 
   </div>
 

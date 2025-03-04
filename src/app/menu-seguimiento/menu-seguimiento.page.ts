@@ -7,6 +7,13 @@ import { VisitaClientesService } from '../services/visita-clientes.service';
 import { EvaluacionService } from '../services/evaluacion.service';
 import { PlantaProductoService } from '../services/planta-producto.service';
 import { OportunidadesService } from '../services/oportunidades.service';
+import { AnaliticaService } from '../services/analitica.service';
+
+interface MenuItem {
+  tooltip: string;
+  route: string;
+  icon: string;
+}
 
 @Component({
   selector: 'app-menu-seguimiento',
@@ -18,12 +25,13 @@ export class MenuSeguimientoPage implements OnInit, OnDestroy {
   seguimientoPlanta: any = null;
   seguimientoSeleccionado: any = null;
   private subscription: Subscription = new Subscription();
-  menuItems = [
-    { label: 'Visita Clientes',  route: 'visita-cliente',      icon: 'pi pi-users' },
-    { label: 'Oportunidades',    route: 'oportunidades',       icon: 'pi pi-briefcase' },
-    { label: 'Evaluación',       route: 'evaluaciones',        icon: 'pi pi-star' },
-    { label: 'Planta-Prod',      route: 'planta-producto',     icon: 'pi pi-check-square' },
-    { label: 'Ventas',           route: 'analitica',           icon: 'peso-icon' },
+  menuItems: MenuItem[] = [
+    { tooltip: 'Visita Clientes',    route: 'visita-cliente',      icon: 'pi pi-users' },
+    { tooltip: 'Oportunidades',      route: 'oportunidades',       icon: 'pi pi-briefcase' },
+    { tooltip: 'Evaluación GDZ',     route: 'evaluaciones',        icon: 'test-icon' },
+    { tooltip: 'Planta-Prod',        route: 'planta-producto',     icon: 'factory-icon' },
+    { tooltip: 'Ventas',             route: 'analitica',           icon: 'peso-icon' },
+    { tooltip: 'Plan de Mercadeo',   route: 'plan-mercadeo',       icon: 'marketing-icon' },
   ];
 
   menuCollapsed = false;
@@ -31,7 +39,10 @@ export class MenuSeguimientoPage implements OnInit, OnDestroy {
   listaVisitaClientes: any = [];
   listaEvaluaciones: any[] = [];
   listaRevisiones: any[] = [];
-  listaOportunidades: any[] = []; 
+  listaOportunidades: any[] = [];
+  listaReportesAnalitica: any[] = [];
+  
+  listaEvaluacionMercadeo: any[] = []; 
 
   toggleMenu() {
     this.menuCollapsed = !this.menuCollapsed;
@@ -45,6 +56,7 @@ export class MenuSeguimientoPage implements OnInit, OnDestroy {
     private _plantaProductoService: PlantaProductoService,
     private _oportunidadesService: OportunidadesService,
     private _seguimientoVisitaService: VisitaClientesService,
+    private analiticaService: AnaliticaService,
     private _chRef: ChangeDetectorRef
   ) {
     this.subscription.add(
@@ -86,13 +98,15 @@ export class MenuSeguimientoPage implements OnInit, OnDestroy {
       this.getSeguimientoPlanta();
     }
   }
-
+  
   ngAfterViewInit() {
     if (this.seguimientoId) {
       this.loadVisitaClientes(this.seguimientoId);
       this.loadOportunidades(this.seguimientoId);
       this.loadEvaluaciones(this.seguimientoId);
       this.loadRevisionesPlanta(this.seguimientoId);
+      this.loadReportesAnalitica(this.seguimientoId);
+      this.loadEvaluacionesMercadeo(this.seguimientoId);
     }
   }
 
@@ -224,8 +238,8 @@ export class MenuSeguimientoPage implements OnInit, OnDestroy {
         return 'SP';
       case 'CUMPLE':
         return 'C';
-      case 'CASI CUMPLE':
-        return 'CC';
+      case 'CUMPLE PARCIAL':
+        return 'CP';
       case 'NO CUMPLE':
         return 'NC';
       default:
@@ -258,6 +272,21 @@ export class MenuSeguimientoPage implements OnInit, OnDestroy {
     return percentage.toFixed(1).replace('.', ',');
   }
 
+  getTooltipText(respuesta: string): string {
+    switch (respuesta) {
+      case 'SOBRE PASA':
+        return 'SOBRE PASA';
+      case 'CUMPLE':
+        return 'CUMPLE';
+      case 'CUMPLE PARCIAL':
+        return 'CUMPLE PARCIAL';
+      case 'NO CUMPLE':
+        return 'NO CUMPLE';
+      default:
+        return '';
+    }
+  }
+
   private loadRevisionesPlanta(idSeguimiento: number) {
     const subscription = this._plantaProductoService.getRevisionByIdSeguimientoPlanta(idSeguimiento).subscribe({
       next: (data: any) => {
@@ -275,4 +304,41 @@ export class MenuSeguimientoPage implements OnInit, OnDestroy {
     });
     // this.subscriptions.push(subscription);
   }
+
+  private loadReportesAnalitica(idSeguimiento: number) {
+    const subscription = this.analiticaService.getReporteAnaliticaByIdSeguimientoPlanta(idSeguimiento).subscribe({
+      next: (data: any) => {
+        if (data.error) { 
+          console.error(`Error: ${data.message} - code: ${data.codError} - ${data.result}`);
+        } else {
+          this.listaReportesAnalitica = data.result;
+          console.log(this.listaReportesAnalitica);  
+          this._chRef.detectChanges();
+        }
+      },
+      error: (err) => {
+        console.error(`Error al cargar reportes: ${err}`);
+      }
+    });
+  }
+
+  loadEvaluacionesMercadeo(idSeguimiento: number) {
+    const subscription = this._evaluacionesService.getEvaluacionMercadeoByIdSeguimientoPlanta(idSeguimiento).subscribe({
+      next: (data: any) => {
+        if (data.error) {
+          console.error(`Error: ${data.message} - code: ${data.codError} - ${data.result}`);
+        } else {
+          this.listaEvaluacionMercadeo = data.result;
+          console.log(this.listaEvaluacionMercadeo);
+          this._chRef.detectChanges();
+        }
+      },
+      error: (err) => {
+        console.error(`Error al cargar evaluaciones: ${err}`);
+      }
+    });
+  }
+
+
+
 }
